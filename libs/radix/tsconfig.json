@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "target": "ES6",
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "bundler",
+    "noEmit": true
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src"]
+}
