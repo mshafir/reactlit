@@ -62,5 +62,6 @@ export function useCompoundReaclitState<
 export function useReactlitState<T extends Record<string, unknown>>(
   initialState: T
 ): ComboStateResult<T> {
-  return useCompoundReaclitState({}, useState(initialState));
+  const empty = useMemo<ComboState<{}>>(() => ({}), []);
+  return useCompoundReaclitState(empty, useState(initialState));
 }

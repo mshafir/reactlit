@@ -1,5 +1,5 @@
 import { Text, TextField } from '@radix-ui/themes';
-import { def, ViewComponentProps, withWrapper } from '@reactlit/core';
+import { defineView, ViewComponentProps, withWrapper } from '@reactlit/core';
 import { isValidElement, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { LabelType, renderLabel } from '../label';
@@ -54,4 +54,6 @@ export const TextInputComponent = withWrapper(
 );
 
 export const TextInput = (props: TextInputProps) =>
-  def(TextInputComponent, props);
+  defineView<string>((viewProps) => (
+    <TextInputComponent {...viewProps} {...props} />
+  ));

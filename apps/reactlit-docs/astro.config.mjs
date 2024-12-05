@@ -8,15 +8,17 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Reactlit',
+      logo: { src: '/src/assets/reactlit.svg' },
       social: {
-        github: 'https://github.com/withastro/starlight',
+        github: 'https://github.com/mshafir/reactlit',
       },
       sidebar: [
         {
           label: 'Guides',
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: 'Example Guide', slug: 'guides/example' },
+            { label: 'Getting Started', slug: 'guides/getting-started' },
+            { label: 'Installation', slug: 'guides/installation' },
           ],
         },
         {

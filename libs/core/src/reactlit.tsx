@@ -11,9 +11,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useDeepMemo } from './hooks/use-deep-memo';
-import { deepEqual } from './utils/deep-equal';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
+import { useDeepMemo } from './hooks/use-deep-memo';
+import { useReactlitState } from './hooks/use-reactlit-state';
+import { deepEqual } from './utils/deep-equal';
 // import useVigilante from '@mollycule/vigilante';
 
 export interface ViewComponentProps<T> {
@@ -22,33 +23,24 @@ export interface ViewComponentProps<T> {
   setValue: Dispatch<T>;
 }
 
-export type ViewComponent<ValueType, Props = any> = React.ComponentType<
-  ViewComponentProps<ValueType> & Props
->;
+export type ViewComponent<ValueType> = React.FC<ViewComponentProps<ValueType>>;
 
-export interface ViewDefinition<
-  ValueType,
-  ReturnType = ValueType,
-  Props = any
-> {
-  component: ViewComponent<ValueType, Props>;
-  props: Props;
-  getReturnValue?: (value: ValueType, props: Props) => ReturnType;
+export interface ViewDefinition<ValueType, ReturnType = ValueType> {
+  component: ViewComponent<ValueType>;
+  getReturnValue?: (props: ViewComponentProps<ValueType>) => ReturnType;
 }
 
-export function def<ValueType, Props = any>(
-  component: ViewComponent<ValueType, Props>,
-  props: Props
-): ViewDefinition<ValueType, ValueType, Props> {
-  return { component, props };
+export function defineView<ValueType>(
+  component: ViewComponent<ValueType>
+): ViewDefinition<ValueType, ValueType> {
+  return { component };
 }
 
-export function defReturn<ValueType, ReturnType = ValueType, Props = any>(
-  component: ViewComponent<ValueType, Props>,
-  props: Props,
-  getReturnValue: (value: ValueType, props: Props) => ReturnType
-): ViewDefinition<ValueType, ReturnType, Props> {
-  return { component, props, getReturnValue };
+export function defineTransformView<ValueType, ReturnType = ValueType>(
+  component: ViewComponent<ValueType>,
+  getReturnValue: (props: ViewComponentProps<ValueType>) => ReturnType
+): ViewDefinition<ValueType, ReturnType> {
+  return { component, getReturnValue };
 }
 
 export type ExtractDefProps<T> = T extends ComponentType<infer P>
@@ -77,9 +69,9 @@ export type StateBase = Record<string, unknown>;
 export type DisplayArgs = [string, ReactNode] | [ReactNode];
 
 export interface ReactlitContextType<T extends StateBase> {
-  view: <K extends keyof T & string, V, R, P>(
+  view: <K extends keyof T & string, V, R>(
     key: K,
-    def: ViewDefinition<V, R, P>
+    def: ViewDefinition<V, R>
   ) => R;
   set: <K extends keyof T & string>(key: K, value: T[K]) => T[K];
   display: (...args: DisplayArgs) => void;
@@ -94,8 +86,8 @@ export type ReactlitFunction<T extends StateBase> = (
 ) => Promise<void>;
 
 export interface ReactlitProps<T extends StateBase> {
-  state: T;
-  setState: <K extends keyof T>(key: K, value: SetStateAction<T[K]>) => void;
+  state?: T;
+  setState?: <K extends keyof T>(key: K, value: SetStateAction<T[K]>) => void;
   renderLoading?: (rendering: boolean) => ReactNode;
   renderError?: (props: {
     error: any;
@@ -133,6 +125,9 @@ export function Reactlit<T extends StateBase = any>({
   renderError = defaultRenderError,
   children,
 }: ReactlitProps<T>) {
+  const [defaultRawState, defaultSetState] = useReactlitState<T>({} as T);
+  rawState = rawState ?? defaultRawState;
+  setState = setState ?? defaultSetState;
   const [renderState, setRenderState] = useState<DisplayState>({
     position: 0,
     elements: [],
@@ -198,21 +193,18 @@ export function Reactlit<T extends StateBase = any>({
   );
 
   const view = useCallback<ReactlitContextType<T>['view']>(
-    <K extends keyof T & string, V, R, P>(
+    <K extends keyof T & string, V, R>(
       key: K,
-      { component, props, getReturnValue }: ViewDefinition<V, R, P>
+      { component, getReturnValue }: ViewDefinition<V, R>
     ) => {
       const value = state[key] as V;
-      display(
-        createElement(component, {
-          key,
-          stateKey: key,
-          value: value,
-          setValue: (value: any) => set(key, value),
-          ...props,
-        })
-      );
-      return getReturnValue ? getReturnValue(value, props) : (state[key] as R);
+      const props: ViewComponentProps<V> = {
+        stateKey: key,
+        value,
+        setValue: (value: any) => set(key, value),
+      };
+      display(component(props));
+      return getReturnValue ? getReturnValue(props) : (state[key] as R);
     },
     [state, set, display]
   );
@@ -261,7 +253,11 @@ export function Reactlit<T extends StateBase = any>({
       } catch (e: any) {
         // eslint-disable-next-line no-console
         console.error(e);
-        display(renderError?.(e) ?? <></>);
+        display(
+          renderError?.({ error: e, resetErrorBoundary: () => trigger() }) ?? (
+            <></>
+          )
+        );
       } finally {
         renderLock.current = false;
         if (renderAfter.current) {
@@ -284,8 +280,11 @@ export function Reactlit<T extends StateBase = any>({
     renderError,
   ]);
 
+  // NOTE: I leave this in whenever I have to debug infinite re-renders
   // useVigilante('re-render', {
   //   ...state,
+  //   rawState,
+  //   setState,
   //   triggerCounter,
   //   childArgs,
   //   children,

@@ -21,10 +21,9 @@ export default function HelloWorld() {
             })
           );
           if (!name) {
-            display(<div className="text-red-500">Please enter your name</div>);
-          } else {
-            display(<div>Hello {name}!</div>);
+            throw new Error('Please enter your name');
           }
+          display(<div>Hello {name}!</div>);
         }}
       </Reactlit>
     </Main>

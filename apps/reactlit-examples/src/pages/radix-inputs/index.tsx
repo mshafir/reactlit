@@ -143,7 +143,7 @@ export default function RadixInputs() {
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label>Range Slider</DataList.Label>
-                  <DataList.Value>{rangeSlider}</DataList.Value>
+                  <DataList.Value>{rangeSlider.join(' - ')}</DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label>Country</DataList.Label>

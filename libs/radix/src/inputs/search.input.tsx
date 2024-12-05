@@ -1,10 +1,9 @@
 import { TextInputComponent } from './text.input';
-
+import { Cross1Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { IconButton, TextField } from '@radix-ui/themes';
+import { defineTransformView, ViewComponentProps } from '@reactlit/core';
 import Fuse, { IFuseOptions } from 'fuse.js';
 import { TextInputProps } from './text.input';
-import { defReturn, ViewComponentProps } from '@reactlit/core';
-import { IconButton, TextField } from '@radix-ui/themes';
-import { Cross1Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
 export type SearchOptions<T> = Partial<IFuseOptions<T>>;
 
@@ -37,27 +36,33 @@ export function SearchInput<T>(
   data: T[] | undefined,
   { searchOptions, ...props }: SearchInputProps<T>
 ) {
-  return defReturn(
-    TextInputComponent,
-    {
-      label: 'Search',
-      placeholder: 'Search...',
-      type: 'search' as const,
-      children: ({ setValue }: ViewComponentProps<string>) => (
-        <>
-          <TextField.Slot>
-            <MagnifyingGlassIcon height="16" width="16" />
-          </TextField.Slot>
-          <TextField.Slot>
-            <IconButton size="1" variant="ghost">
-              <Cross1Icon height="14" width="14" onClick={() => setValue('')} />
-            </IconButton>
-          </TextField.Slot>
-        </>
-      ),
-      ...props,
-    },
-    (value, props) => {
+  return defineTransformView<string, T[]>(
+    (viewProps) => (
+      <TextInputComponent
+        {...viewProps}
+        label={'Search'}
+        placeholder={'Search...'}
+        type={'search' as const}
+        children={({ setValue }: ViewComponentProps<string>) => (
+          <>
+            <TextField.Slot>
+              <MagnifyingGlassIcon height="16" width="16" />
+            </TextField.Slot>
+            <TextField.Slot>
+              <IconButton size="1" variant="ghost">
+                <Cross1Icon
+                  height="14"
+                  width="14"
+                  onClick={() => setValue('')}
+                />
+              </IconButton>
+            </TextField.Slot>
+          </>
+        )}
+        {...props}
+      />
+    ),
+    ({ value }) => {
       return searchData(data ?? [], value, searchOptions);
     }
   );

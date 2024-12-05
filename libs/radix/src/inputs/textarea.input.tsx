@@ -1,6 +1,6 @@
 import { Text, TextArea, TextAreaProps } from '@radix-ui/themes';
 import {
-  def,
+  defineView,
   ExtractDefProps,
   ViewComponentProps,
   withWrapper,
@@ -51,4 +51,6 @@ export const TextAreaInputComponent = withWrapper(
 export type TextAreaInputProps = ExtractDefProps<typeof TextAreaInputComponent>;
 
 export const TextAreaInput = (props: TextAreaInputProps) =>
-  def(TextAreaInputComponent, props);
+  defineView<string>((viewProps) => (
+    <TextAreaInputComponent {...viewProps} {...props} />
+  ));

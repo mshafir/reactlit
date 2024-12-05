@@ -1,8 +1,8 @@
 import { RadioGroup } from '@radix-ui/themes';
-import { applyWrapper, def, ViewComponentProps, Wrapper } from '@reactlit/core';
+import { applyWrapper, defineView, ViewComponentProps } from '@reactlit/core';
 import { useMemo } from 'react';
-import { LabelType, renderLabel } from '../label';
 import { BaseProps } from '../config';
+import { LabelType, renderLabel } from '../label';
 
 export type RadioOptionsType<T> = T[] | Record<string, T>;
 
@@ -54,4 +54,7 @@ export type RadioInputProps<T extends string> = BaseRadioInputProps<T>;
 export const RadioInput = <T extends string>(
   options: RadioOptionsType<T>,
   props?: Omit<RadioInputProps<T>, 'options'>
-) => def(RadioInputComponent<T>, { options, ...props } as RadioInputProps<T>);
+) =>
+  defineView<T | undefined>((viewProps) => (
+    <RadioInputComponent {...viewProps} {...props} options={options} />
+  ));

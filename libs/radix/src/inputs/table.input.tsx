@@ -1,7 +1,7 @@
 import { Checkbox, Radio, ScrollArea, Table } from '@radix-ui/themes';
 import {
   applyWrapper,
-  defReturn,
+  defineTransformView,
   ViewComponentProps,
   ViewDefinition,
 } from '@reactlit/core';
@@ -153,25 +153,35 @@ export function SingleTableInputViewComponent<T>({
 }
 
 export type TableViewDefinition<T, P> = P extends { multiple: true }
-  ? ViewDefinition<string[], T[], P & { data: T[] }>
-  : ViewDefinition<string | undefined, T, P & { data: T[] }>;
+  ? ViewDefinition<string[], T[]>
+  : ViewDefinition<string | undefined, T>;
 
 export function TableInput<T, P extends Omit<TableInputProps<T>, 'data'>>(
   data: T[] | undefined,
   { multiple, ...props }: P
 ): TableViewDefinition<T, P> {
   if (multiple) {
-    return defReturn(
-      TableInputViewComponent,
-      { data: data ?? [], multiple: true, ...props },
-      (rowIds, { data, getRowId }) =>
-        data.filter((row) => rowIds.includes(getRowId(row)))
+    return defineTransformView<string[], T[]>(
+      (viewProps) => (
+        <TableInputViewComponent
+          {...viewProps}
+          data={data ?? []}
+          multiple
+          {...props}
+        />
+      ),
+      ({ value }) => data.filter((row) => value.includes(props.getRowId(row)))
     ) as TableViewDefinition<T, P>;
   } else {
-    return defReturn(
-      SingleTableInputViewComponent,
-      { data: data ?? [], ...props },
-      (rowId, { data, getRowId }) => data.find((row) => getRowId(row) === rowId)
+    return defineTransformView<string | undefined, T>(
+      (viewProps) => (
+        <SingleTableInputViewComponent
+          {...viewProps}
+          data={data ?? []}
+          {...props}
+        />
+      ),
+      ({ value }) => data.find((row) => props.getRowId(row) === value)
     ) as TableViewDefinition<T, P>;
   }
 }

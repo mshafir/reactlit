@@ -1,0 +1,37 @@
+---
+title: Getting Started
+description: How to get set up with Reactlit
+---
+
+## What is Reactlit?
+
+Reactlit is a headless, micro-app framework for React inspired by the simplicity of 
+python's [Streamlit](https://streamlit.io/) and modeled on the 
+API of [Observable Framework](https://observablehq.com/platform/framework). 
+A Reactlit is a React component that you can add to your existing React app. 
+It takes an async function in which you can define your UI procedurally.
+
+## Hello World
+
+import { Code, Card } from '@astrojs/starlight/components';
+import helloWorldCode from '/src/examples/hello-world.tsx?raw';
+import textInputCode from '/src/examples/inputs/basic-text-input.tsx?raw';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Hello World">
+    <Code lang="tsx" title="hello-world.tsx" code={helloWorldCode} />
+  </TabItem>
+  <TabItem label="TextInput">
+    <Code lang="tsx" title="inputs/basic-text-input.tsx" code={textInputCode} />
+  </TabItem>
+</Tabs>
+
+**See it live:**
+
+import HelloWorld from '/src/examples/hello-world.tsx';
+
+<Card>
+  <HelloWorld client:only="react" />
+</Card>
+

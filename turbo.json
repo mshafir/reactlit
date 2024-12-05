@@ -2,11 +2,20 @@
   "$schema": "https://turborepo.org/schema.json",
   "tasks": {
     "build": {
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        ".astro/**",
+        "!.next/cache/**"
+      ]
     },
     "test": {
-      "dependsOn": ["build"],
-      "outputs": ["coverage/**"]
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
     },
     "lint": {
       "outputs": []

@@ -1,8 +1,8 @@
 import { Select } from '@radix-ui/themes';
-import { applyWrapper, def, ViewComponentProps, Wrapper } from '@reactlit/core';
+import { applyWrapper, defineView, ViewComponentProps } from '@reactlit/core';
 import { useMemo } from 'react';
-import { LabelType, renderLabel } from '../label';
 import { BaseProps } from '../config';
+import { LabelType, renderLabel } from '../label';
 
 export type SelectOptionsType<T> = T[] | Record<string, T>;
 
@@ -54,4 +54,7 @@ export type SelectInputProps<T extends string> = BaseSelectInputProps<T>;
 export const SelectInput = <T extends string>(
   options: SelectOptionsType<T>,
   props?: Omit<SelectInputProps<T>, 'options'>
-) => def(SelectInputComponent<T>, { options, ...props } as SelectInputProps<T>);
+) =>
+  defineView<T | undefined>((viewProps) => (
+    <SelectInputComponent {...viewProps} {...props} options={options} />
+  ));

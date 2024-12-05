@@ -1,5 +1,5 @@
 import { Slider, SliderProps } from '@radix-ui/themes';
-import { def, ViewComponentProps, withWrapper } from '@reactlit/core';
+import { defineView, ViewComponentProps, withWrapper } from '@reactlit/core';
 import { LabelType, renderLabel } from '../label';
 
 export type SliderInputProps = Omit<SliderProps, 'value' | 'onValueChange'> & {
@@ -55,7 +55,11 @@ export const RangeSliderInputComponent = withWrapper(
 );
 
 export const SliderInput = (props: SliderInputProps) =>
-  def(SliderInputComponent, props);
+  defineView<number>((viewProps) => (
+    <SliderInputComponent {...viewProps} {...props} />
+  ));
 
 export const RangeSliderInput = (props: SliderInputProps) =>
-  def(RangeSliderInputComponent, props);
+  defineView<[number, number]>((viewProps) => (
+    <RangeSliderInputComponent {...viewProps} {...props} />
+  ));

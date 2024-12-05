@@ -1,8 +1,11 @@
 import { Button, ButtonProps } from '@radix-ui/themes';
-import { def, ViewComponentProps, withWrapper } from '@reactlit/core';
+import { defineView, ViewComponentProps, withWrapper } from '@reactlit/core';
 
 export interface AsyncButtonInputProps
-  extends Omit<ButtonProps, 'loading' | 'children' | 'onClick' | 'content'> {
+  extends Omit<
+    ButtonProps,
+    'loading' | 'children' | 'onClick' | 'content' | 'value'
+  > {
   content: React.ReactNode;
   onClick: () => Promise<void>;
 }
@@ -38,4 +41,7 @@ export const AsyncButtonViewComponent = withWrapper(
 export const AsyncButton = (
   onClick: () => Promise<void>,
   props: Omit<AsyncButtonInputProps, 'onClick'>
-) => def(AsyncButtonViewComponent, { ...props, onClick });
+) =>
+  defineView<boolean>((viewProps) => (
+    <AsyncButtonViewComponent {...viewProps} {...props} onClick={onClick} />
+  ));

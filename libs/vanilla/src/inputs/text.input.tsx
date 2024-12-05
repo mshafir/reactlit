@@ -1,9 +1,8 @@
 import {
-  def,
+  defineView,
   ExtractDefProps,
   ViewComponentProps,
   withWrapper,
-  Wrapper,
 } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
@@ -47,4 +46,6 @@ export const TextInputComponent = withWrapper(
 export type TextInputProps = ExtractDefProps<typeof TextInputComponent>;
 
 export const TextInput = (props: TextInputProps) =>
-  def(TextInputComponent, props);
+  defineView<string>((viewProps) => (
+    <TextInputComponent {...viewProps} {...props} />
+  ));
