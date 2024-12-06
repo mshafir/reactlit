@@ -50,10 +50,8 @@ export function TableInputViewComponent<T>({
 }: TableInputProps<T> & ViewComponentProps<string[]>) {
   const colDefs = useMemo<ColDef<T>[]>(() => {
     const firstRow = data.at(0);
-    if (!firstRow) {
-      return [];
-    }
-    const colKeys = columns ?? (Object.keys(data[0]) as (keyof T & string)[]);
+    const colKeys =
+      columns ?? (Object.keys(firstRow ?? {}) as (keyof T & string)[]);
     const areAllRowsSelected = value.length === data.length;
     return [
       {
@@ -86,6 +84,7 @@ export function TableInputViewComponent<T>({
               <Radio
                 name={stateKey}
                 value={getRowId(row)}
+                checked={getRowId(row) === value.at(0)}
                 onValueChange={(v) => setValue([v])}
               />
             );
@@ -100,8 +99,12 @@ export function TableInputViewComponent<T>({
     ];
   }, [data, columns]);
   return applyWrapper(
-    <ScrollArea type="auto" scrollbars="vertical" style={{ height: maxHeight }}>
-      <Table.Root style={{ height: maxHeight }} size="1" {...props}>
+    <ScrollArea
+      type="auto"
+      scrollbars="vertical"
+      style={{ maxHeight: maxHeight }}
+    >
+      <Table.Root style={{ maxHeight: maxHeight }} size="1" {...props}>
         <Table.Header>
           <Table.Row>
             {colDefs.map((col) => (
@@ -127,6 +130,11 @@ export function TableInputViewComponent<T>({
               ))}
             </Table.Row>
           ))}
+          {data.length === 0 && (
+            <Table.Row>
+              <Table.Cell colSpan={colDefs.length}>No data</Table.Cell>
+            </Table.Row>
+          )}
         </Table.Body>
       </Table.Root>
     </ScrollArea>,

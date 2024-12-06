@@ -20,26 +20,28 @@ export const AsyncButtonViewComponent = withWrapper(
     ...props
   }: AsyncButtonInputProps & ViewComponentProps<boolean>) => {
     return (
-      <Button
-        {...props}
-        loading={value}
-        onClick={async () => {
-          setValue(true);
-          try {
-            await onClick();
-          } finally {
-            setValue(false);
-          }
-        }}
-      >
-        {content}
-      </Button>
+      <div>
+        <Button
+          {...props}
+          loading={value}
+          onClick={async () => {
+            setValue(true);
+            try {
+              await onClick();
+            } finally {
+              setValue(false);
+            }
+          }}
+        >
+          {content}
+        </Button>
+      </div>
     );
   }
 );
 
 export const AsyncButton = (
-  onClick: () => Promise<void>,
+  onClick: () => Promise<any>,
   props: Omit<AsyncButtonInputProps, 'onClick'>
 ) =>
   defineView<boolean>((viewProps) => (

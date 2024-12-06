@@ -16,7 +16,9 @@ export function getBaseProps(config: RadixConfig): BaseProps {
   return {
     wrapper: (children: ReactNode) => (
       <Theme data-is-root-theme={false} {...config?.theme}>
-        {config?.wrapper?.(children) ?? DefaultWrapper(children)}
+        {config?.wrapper?.(children) ?? (
+          <DefaultWrapper>{children}</DefaultWrapper>
+        )}
       </Theme>
     ),
   };

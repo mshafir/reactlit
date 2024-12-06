@@ -1,5 +1,5 @@
 import { FormDefMap, FormInput, FormInputProps } from '@reactlit/core';
-import { RadixConfig, getBaseProps } from './config';
+import { BaseProps, RadixConfig, getBaseProps } from './config';
 import {
   AsyncButton,
   AsyncButtonInputProps,
@@ -16,17 +16,21 @@ import {
 import { TableInput, TableInputProps } from './inputs/table.input';
 import { TextInput, TextInputProps } from './inputs/text.input';
 import { TextAreaInput, TextAreaInputProps } from './inputs/textarea.input';
+import { SwitchInput, SwitchInputProps } from './inputs/switch.input';
 
 export function configureInputs(config?: RadixConfig) {
   const baseProps = getBaseProps(config);
   return {
-    Text: (props: TextInputProps) => TextInput({ ...baseProps, ...props }),
+    Text: (props: TextInputProps & BaseProps) =>
+      TextInput({ ...baseProps, ...props }),
     TextArea: (props: TextAreaInputProps) =>
       TextAreaInput({ ...baseProps, ...props }),
     Check: <T extends string>(
       options: CheckInputProps<T>['options'],
       props?: Omit<CheckInputProps<T>, 'options'>
     ) => CheckInput<T>(options, { ...baseProps, ...props }),
+    Switch: (props?: SwitchInputProps) =>
+      SwitchInput({ ...baseProps, ...props }),
     Radio: <T extends string>(
       options: RadioInputProps<T>['options'],
       props?: Omit<RadioInputProps<T>, 'options'>
@@ -42,7 +46,7 @@ export function configureInputs(config?: RadixConfig) {
     RangeSlider: (props: SliderInputProps) =>
       RangeSliderInput({ ...baseProps, ...props }),
     AsyncButton: (
-      onClick: () => Promise<void>,
+      onClick: () => Promise<any>,
       props: Omit<AsyncButtonInputProps, 'onClick'>
     ) => AsyncButton(onClick, { ...baseProps, ...props }),
     Table: <T, P extends Omit<TableInputProps<T>, 'data'>>(
@@ -53,3 +57,7 @@ export function configureInputs(config?: RadixConfig) {
       SearchInput<T>(data, { ...baseProps, ...props }),
   };
 }
+
+export const Inputs = configureInputs();
+
+export * from './default-wrapper';

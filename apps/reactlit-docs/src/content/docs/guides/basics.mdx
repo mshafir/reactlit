@@ -1,0 +1,182 @@
+---
+title: Basics
+description: Reactlit basics
+---
+
+Reactlit works by defining an application script. This script procedurally builds the UI, inserting elements
+into the DOM as needed. Similar to how Streamlit works, every state change reruns the script which
+in turn re-renders the UI. Reactlit employs a few tricks to try to minimize re-renders so that you should not
+see any flickering or lose focus state.
+
+## Primitives
+
+Reactlit core provides the following set of primitives to use in your application script.
+
+### Display
+
+The `display` function is used to render a React node.
+
+```tsx
+display(<div>Hello World</div>);
+display(`Hey there`);
+display(
+  <div>
+    <Spinner /> Loading...
+  </div>
+);
+```
+
+It can optionally take an first argument string to be an id for the display.
+This allows later code to update the display.
+
+```tsx
+display('loading-data', <div>Spinner /> Loading...</div>);
+const data = await fetchData();
+display('loading-data', <div>Data loaded!</div>);
+// or alternatively, this to clear the prior display
+display('loading-data', undefined);
+```
+
+### Set State
+
+The `set` function is used to set state. Most of the time you will not need to
+use it directly, instead you will use the `view` function below, but it is necessary on occasion.
+Additionally the raw `state` object is also provided as part of the context.
+
+```tsx
+set('mystate', 'Hello World');
+const mystate = state.mystate;
+```
+
+### View
+
+The `view` function is used to render an input view which has state and to return that state.
+Think of it as a special form of `display` with a return value.
+
+The first argument is the key of the view. This determines which state key the value will be stored in.
+
+The second argument is the view definition. Some built-in view definitions are provided in the add-on packages like
+`@reactlit/vanilla` and `@reactlit/radix`. Or you can define your own as described in the [Defining Views](/guides/defining-views) guide.
+
+The follow examples assume you have imported the `Inputs` object from the `@reactlit/radix` package.
+
+```tsx
+const name = view(
+  'name',
+  Inputs.Text({ label: 'Name', placeholder: 'Enter your name' })
+);
+const color = view(
+  'color',
+  Inputs.Select(['red', 'green', 'blue'], { label: 'Pick a color' })
+);
+
+display(
+  <div>
+    {name} picked {color}
+  </div>
+);
+```
+
+Views are type-safe and the types are determined by the view definition itself.
+
+#### Transform views
+
+Some views define a `getReturnValue` function which transforms the value returned by the view.
+Transforms allow the state you want to store (what you would get back from the `get` function) to be different
+from the value that is returned to work with. This is especially useful for elements like tables where
+the selected state should be some kind of a row id, but the view should return the full row data.
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside>
+  By storing only the id in state, the user selection can be maintained even if
+  mutations update the other data in the row.
+</Aside>
+
+Assuming you have a variable `users` which is an array of user objects, you can define a view like this:
+
+```tsx
+const selectedUser = view(
+  'user',
+  Inputs.Table(users, { getRowId: (row) => row.userId })
+);
+const selectedUserId = state.user;
+display(
+  <div>
+    Hello {selectedUser.name}. Your id is {selectedUserId}
+  </div>
+);
+```
+
+### Changed
+
+Sometimes you need to trigger side-effects when state changes. In React, we have `useEffect` to handle this.
+The equivalent in Reactlit is a `changed` function which tells you if the provided state keys have changed since the
+last run of the script.
+
+We use the `changed` function here to reset the state of the email input when the selected user changes.
+
+```tsx
+const selectedUser = view(
+  'user',
+  Inputs.Table(users, { getRowId: (row) => row.userId })
+);
+if (changed('user')) {
+  set('email', selectedUser.email);
+}
+const email = view('email', Inputs.Text({ label: 'Update your Email' }));
+display(
+  <button onClick={async () => setUserEmail(selectedUser.userId, email)}>
+    Update
+  </button>
+);
+```
+
+### Trigger
+
+Sometimes you need to trigger the script to rerun even if state has not changed. Typically you do this
+when you apply mutations and want to refetch data.
+
+```tsx
+display(
+  <button
+    onClick={async () => {
+      await setUserEmail(selectedUser.userId, email);
+      // rerun the script so the users table will re-fetch and be updated
+      trigger();
+    }}
+  >
+    Update
+  </button>
+);
+```
+
+## Putting it all together
+
+The following example application puts together all of these primitives so you can see how they fit together.
+
+import { Code, Card } from '@astrojs/starlight/components';
+import contactListCode from '/src/examples/apps/contact-list.tsx?raw';
+import contactListUsageCode from '/src/examples/contact-list.tsx?raw';
+import contactMockCode from '/src/examples/mocks/contacts.ts?raw';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Contact List App">
+    <Code lang="tsx" title="apps/contact-list.tsx" code={contactListCode} />
+  </TabItem>
+  <TabItem label="Contact List Component">
+    <Code lang="tsx" title="contact-list.tsx" code={contactListUsageCode} />
+  </TabItem>
+  <TabItem label="Contact Mock API">
+    <Code lang="ts" title="mocks/contacts.ts" code={contactMockCode} />
+  </TabItem>
+</Tabs>
+
+**See it live:**
+
+import ContactList from '/src/examples/contact-list.tsx';
+
+<Card>
+  <ContactList client:only="react" />
+</Card>

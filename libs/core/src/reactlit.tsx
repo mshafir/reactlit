@@ -68,7 +68,7 @@ export type StateBase = Record<string, unknown>;
 
 export type DisplayArgs = [string, ReactNode] | [ReactNode];
 
-export interface ReactlitContextType<T extends StateBase> {
+export interface ReactlitContext<T extends StateBase = any> {
   view: <K extends keyof T & string, V, R>(
     key: K,
     def: ViewDefinition<V, R>
@@ -77,12 +77,11 @@ export interface ReactlitContextType<T extends StateBase> {
   display: (...args: DisplayArgs) => void;
   changed: (...keys: (keyof T)[]) => boolean;
   trigger: () => void;
-
   state: T;
 }
 
-export type ReactlitFunction<T extends StateBase> = (
-  ctx: ReactlitContextType<T>
+export type ReactlitFunction<T extends StateBase = any> = (
+  ctx: ReactlitContext<T>
 ) => Promise<void>;
 
 export interface ReactlitProps<T extends StateBase> {
@@ -135,7 +134,7 @@ export function Reactlit<T extends StateBase = any>({
   const state = useDeepMemo(() => rawState, [rawState]);
   const [previousState, setPreviousState] = useState<T>(state);
 
-  const set = useCallback<ReactlitContextType<T>['set']>(
+  const set = useCallback<ReactlitContext<T>['set']>(
     (key, value) => {
       setState(key, (prev) => {
         if (deepEqual(prev, value)) return prev;
@@ -147,7 +146,7 @@ export function Reactlit<T extends StateBase = any>({
     [setState, state, setPreviousState]
   );
 
-  const display = useCallback<ReactlitContextType<T>['display']>(
+  const display = useCallback<ReactlitContext<T>['display']>(
     (...args: DisplayArgs) => {
       const node = args.length === 1 ? args[0] : args[1];
       const manualKey = args.length === 1 ? undefined : args[0];
@@ -178,7 +177,12 @@ export function Reactlit<T extends StateBase = any>({
             elements: [
               ...elements.slice(0, position),
               newEntry,
-              ...elements.slice(position + 1),
+              // for manual keys that haven't been found by the above case
+              // we don't want to overwrite the index element because
+              // it's likely a different element
+              ...elements
+                .slice(position + (manualKey ? 0 : 1))
+                .filter((e) => !manualKey || e[0] !== manualKey),
             ],
           };
         } else {
@@ -192,7 +196,7 @@ export function Reactlit<T extends StateBase = any>({
     [setRenderState, renderError]
   );
 
-  const view = useCallback<ReactlitContextType<T>['view']>(
+  const view = useCallback<ReactlitContext<T>['view']>(
     <K extends keyof T & string, V, R>(
       key: K,
       { component, getReturnValue }: ViewDefinition<V, R>
@@ -203,23 +207,39 @@ export function Reactlit<T extends StateBase = any>({
         value,
         setValue: (value: any) => set(key, value),
       };
-      display(component(props));
+      display(key, component(props));
       return getReturnValue ? getReturnValue(props) : (state[key] as R);
     },
     [state, set, display]
   );
 
-  const changed = useCallback<ReactlitContextType<T>['changed']>(
+  const changed = useCallback<ReactlitContext<T>['changed']>(
     (...keys) => {
       const changedKeys = deltas(state, previousState);
-      const isChanged = keys.some((k) => changedKeys.includes(k as string));
+      const selectedChangedKeys = keys.filter((k) =>
+        changedKeys.includes(k as string)
+      );
+      const isChanged = selectedChangedKeys.length > 0;
+      if (isChanged) {
+        for (const k of selectedChangedKeys) {
+          console.log(
+            `changed ${String(k)}: ${previousState?.[k]} -> ${state[k]}`
+          );
+        }
+        setPreviousState((prev) => {
+          let newState = prev;
+          for (const k of selectedChangedKeys) {
+            newState = { ...newState, [k]: state[k] };
+          }
+          return newState;
+        });
+      }
       return isChanged;
     },
     [state, previousState]
   );
 
   const [triggerCounter, setTriggerCounter] = useState(0);
-
   const trigger = useCallback(() => {
     setTriggerCounter((c) => c + 1);
   }, [setTriggerCounter]);
@@ -243,7 +263,7 @@ export function Reactlit<T extends StateBase = any>({
       renderLock.current = true;
       try {
         // eslint-disable-next-line no-console
-        console.debug('reactlit rendering state:', childArgs.state);
+        console.debug('reactlit rendering:', childArgs.state);
         setRenderState(({ elements }) => ({ elements, position: 0 }));
         await children(childArgs);
         setRenderState(({ elements, position }) => ({

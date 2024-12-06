@@ -21,9 +21,7 @@ export function Main({ children }: { children: React.ReactNode }) {
         <div className="font-semibold text-2xl mb-6">ReactLit</div>
         <Menu />
       </div>
-      <div className="flex-auto flex flex-col p-8 overflow-y-auto">
-        {children}
-      </div>
+      <div className="flex-auto p-8 overflow-y-auto">{children}</div>
     </main>
   );
 }
