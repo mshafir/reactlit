@@ -7,7 +7,7 @@ import { TextInputProps } from './text.input';
 
 export type SearchOptions<T> = Partial<IFuseOptions<T>>;
 
-export type SearchInputProps<T> = TextInputProps & {
+export type SearchInputProps<T> = Omit<TextInputProps, 'children'> & {
   searchOptions?: SearchOptions<T>;
 };
 
@@ -43,7 +43,9 @@ export function SearchInput<T>(
         label={'Search'}
         placeholder={'Search...'}
         type={'search' as const}
-        children={({ setValue }: ViewComponentProps<string>) => (
+        {...props}
+      >
+        {({ setValue }: ViewComponentProps<string>) => (
           <>
             <TextField.Slot>
               <MagnifyingGlassIcon height="16" width="16" />
@@ -59,8 +61,7 @@ export function SearchInput<T>(
             </TextField.Slot>
           </>
         )}
-        {...props}
-      />
+      </TextInputComponent>
     ),
     ({ value }) => {
       return searchData(data ?? [], value, searchOptions);

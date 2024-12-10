@@ -108,7 +108,18 @@ export function TableInputViewComponent<T>({
         },
       })),
     ];
-  }, [data, columns, loading]);
+  }, [
+    data,
+    columns,
+    loading,
+    getRowId,
+    setValue,
+    value,
+    header,
+    format,
+    multiple,
+    stateKey,
+  ]);
   return applyWrapper(
     <ScrollArea
       type="auto"

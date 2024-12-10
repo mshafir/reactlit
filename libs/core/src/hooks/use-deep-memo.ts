@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 import { deepEqual } from '../utils/deep-equal';
 
-
-
 /**
  * Memoize a result using deep equality. This hook has two advantages over
  * React.useMemo: it uses deep equality to compare memo keys, and it guarantees
