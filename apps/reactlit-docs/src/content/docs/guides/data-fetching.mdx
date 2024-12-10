@@ -1,0 +1,97 @@
+---
+title: Data Fetching
+description: Reactlit data fetching
+---
+
+## Simple Fetching
+
+Since Reactlit scripts are async functions, you can fetch data directly in your script. This works fine for simple use cases,
+but you should keep in mind that every time the script runs your fetch will be called.
+Generally, we recommend using a cache to store your data. To accomplish this, you can use solutions like [Next.js request memoization](https://nextjs.org/docs/app/building-your-application/caching#request-memoization)
+or [Tanstack Query](https://tanstack.com/query/latest/docs/react/guides/caching).
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="danger">
+  Not caching async network calls can result in exessive network traffic.
+</Aside>
+
+```tsx
+display('loading-items', <div>Loading Items...</div>);
+const data = await fetchItems();
+display('loading-items', undefined);
+```
+
+This will display a loading state while the data is being fetched, but then clear it.
+
+Let's take a look at the example from the basics guide, and see how it would work with async fetching and some request latency.
+
+import { Code, Card } from '@astrojs/starlight/components';
+import contactListCode from '/src/examples/apps/contact-list-basic-async.tsx?raw';
+import ContactListApp from '/src/examples/contact-list-basic-async.tsx';
+
+<Code
+  lang="tsx"
+  title="apps/contact-list.tsx"
+  code={contactListCode}
+  showLineNumbers
+  ins={[{ range: '7-8' }, { range: '11,12,14' }, { range: '44-57' }]}
+/>
+
+<Card>
+  <ContactListApp client:only="react" />
+</Card>
+
+While this app works okay, the loader appears even as you type text into the
+inputs (see caching discussion above). In fact, any update triggers loading
+the data again. Furthermore, the app does not disable interaction, if you try
+to type while the data is loading, your entry might revert, resulting in a
+poor user experience. This effect is more significant if the fetching is
+slower. If your API is very fast you may not need to worry about these issues.
+
+Next, we'll explore using the data fetching plugin to solve these issues.
+
+## Data Fetching Plugin
+
+The above fetching method works fine for simple use cases, but when you add a cache,
+you will need to coordinate invalidating the cache and triggering a re-render when the data changes.
+Additionally, the other components in your app have no way of responding to the loading state
+of the data and your app essentially pauses to wait for the data to load.
+
+The Data Fetching Plugin offers solutions to these problems. It is built on top of [Tanstack Query](https://tanstack.com/query) and provides a type-safe way to create a
+`DataFetcher` instance which can be used to get the current data synchronously, detect loading state, and update and invalidate the cache.
+
+<Aside>
+  Currently this plugin is provided in the core package, but this may change in
+  the future.
+</Aside>
+
+The following is an example of how you could use this plugin to improve the data fetching from above.
+
+import contactListDataFetchCode from '/src/examples/contact-list-data-fetch.tsx?raw';
+import ContactListDataFetchApp from '/src/examples/contact-list-data-fetch.tsx';
+
+<Code
+  lang="tsx"
+  title="apps/contact-list.tsx"
+  code={contactListDataFetchCode}
+  collapse={['1-24', '65-83']}
+  mark={['contactsFetcher']}
+  showLineNumbers
+  ins={[
+    { range: '30-31' },
+    { range: '39-41', label: 'fetcher' },
+    { range: '42-45', label: 'show loading' },
+    { range: '46-48', label: 'get data' },
+    { range: '53-56' },
+    { range: '57-58', label: 'refetch' },
+    { range: '92-99', label: 'update' },
+    { range: '102-103', label: 'disable' },
+  ]}
+/>
+
+The following app behaves much more smoothly even with a slower API.
+
+<Card>
+  <ContactListDataFetchApp client:only="react" />
+</Card>

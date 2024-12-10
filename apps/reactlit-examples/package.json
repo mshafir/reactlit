@@ -13,6 +13,7 @@
     "@reactlit/core": "workspace:*",
     "@reactlit/radix": "workspace:*",
     "@reactlit/vanilla": "workspace:*",
+    "@tanstack/react-query": "^5.62.3",
     "clsx": "^2.1.1",
     "next": "15.0.3",
     "next-themes": "^0.4.3",

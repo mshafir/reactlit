@@ -3,3 +3,104 @@ title: Defining Views
 description: Guide to defining Reactlit views
 ---
 
+Though we provide some pre-built views in the `@reactlit/vanilla` and `@reactlit/radix` packages,
+you can also define your own views. This lets you reuse components you already have in your application.
+
+## Basic Views
+
+To define a view, you can use the `defineView` function. It takes a functional component that has the following props:
+
+- `stateKey`: The key for the view in the state object.
+- `value`: The current value of the view.
+- `setValue`: A function to set the value of the view.
+
+Here is an example of how you can define a basic view:
+
+```tsx
+import { defineView } from '@reactlit/core';
+
+export const TextInput = defineView<string>(({ value, setValue, stateKey }) => (
+  <input
+    id={stateKey}
+    value={value ?? ''}
+    onChange={(e) => setValue(e.target.value)}
+    placeholder={`Enter ${stateKey}`}
+  />
+));
+```
+
+Often, you will want to pass props that can customize your view. For this, you can follow a pattern
+where you return the view from a function with args. For example, you can pass a label to the `TextInput` view:
+
+```tsx
+export const TextInput = (label: string) =>
+  defineView<string>(({ value, setValue, stateKey }) => (
+    <div>
+      <label htmlFor={stateKey}>{label}</label>
+      <input
+        id={stateKey}
+        value={value ?? ''}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={`Enter ${stateKey}`}
+      />
+    </div>
+  ));
+```
+
+You can then use this view in a Reactlit script like so:
+
+```tsx
+const name = view('name', TextInput('Name'));
+```
+
+## Transform Views
+
+You can use the `defineTransformView` function to define a view that returns a different value than the one
+you pass in. Transform views are explained in the [transform views](/guides/basics#transform-views) section.
+
+This function is similar to `defineView`, but it takes an additional argument, a function that takes the view props
+and returns the value you ultimately want to return from the view to the script.
+
+Here is an example view that takes a list and filters it.
+
+```tsx
+import { defineTransformView } from '@reactlit/core';
+
+export const FilterInput = (values: string[]) =>
+  // first type arg is the value type, second is the return type
+  defineTransformView<string, string[]>(
+    ({ value, setValue, stateKey }) => (
+      <input
+        id={stateKey}
+        value={value ?? ''}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={`Search`}
+      />
+    ),
+    (props) =>
+      values.filter(
+        (value) =>
+          !props.value ||
+          value.toLowerCase().includes(props.value.toLowerCase())
+      )
+  );
+```
+
+Now you can use this view in a Reactlit script like so:
+
+```tsx
+const users = ['Michael', 'Mary', 'John', 'Jane', 'Jim', 'Jill'];
+display('Search for a user: ');
+const filteredUsers = view('filteredUsers', FilterInput(users));
+if (filteredUsers.length === 0) {
+  throw new Error('No matching users found');
+}
+display(<div>You are filtering to {filteredUsers.join(', ')}</div>);
+```
+
+import { Card } from '@astrojs/starlight/components';
+import TransformViewApp from '/src/examples/transform-view.tsx';
+
+<Card>
+  <TransformViewApp client:only="react" />
+</Card>

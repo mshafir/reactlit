@@ -163,13 +163,28 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs>
   <TabItem label="Contact List App">
-    <Code lang="tsx" title="apps/contact-list.tsx" code={contactListCode} />
+    <Code
+      lang="tsx"
+      title="apps/contact-list.tsx"
+      code={contactListCode}
+      showLineNumbers
+    />
   </TabItem>
   <TabItem label="Contact List Component">
-    <Code lang="tsx" title="contact-list.tsx" code={contactListUsageCode} />
+    <Code
+      lang="tsx"
+      title="contact-list.tsx"
+      code={contactListUsageCode}
+      showLineNumbers
+    />
   </TabItem>
   <TabItem label="Contact Mock API">
-    <Code lang="ts" title="mocks/contacts.ts" code={contactMockCode} />
+    <Code
+      lang="ts"
+      title="mocks/contacts.ts"
+      code={contactMockCode}
+      showLineNumbers
+    />
   </TabItem>
 </Tabs>
 

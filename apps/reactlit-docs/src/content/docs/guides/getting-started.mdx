@@ -5,13 +5,15 @@ description: How to get set up with Reactlit
 
 ## What is Reactlit?
 
-Reactlit is a headless, micro-app framework for React inspired by the simplicity of 
-python's [Streamlit](https://streamlit.io/) and modeled on the 
-API of [Observable Framework](https://observablehq.com/platform/framework). 
-A Reactlit is a React component that you can add to your existing React app. 
+Reactlit is a headless, micro-app framework for React inspired by the simplicity of
+python's [Streamlit](https://streamlit.io/) and modeled on the
+API of [Observable Framework](https://observablehq.com/platform/framework).
+A Reactlit is a React component that you can add to your existing React app.
 It takes an async function in which you can define your UI procedurally.
 
-## Hello World
+Take a look at the following example to see how it works
+
+### Hello World Example
 
 import { Code, Card } from '@astrojs/starlight/components';
 import helloWorldCode from '/src/examples/hello-world.tsx?raw';
@@ -20,10 +22,20 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs>
   <TabItem label="Hello World">
-    <Code lang="tsx" title="hello-world.tsx" code={helloWorldCode} />
+    <Code
+      lang="tsx"
+      title="hello-world.tsx"
+      code={helloWorldCode}
+      showLineNumbers
+    />
   </TabItem>
   <TabItem label="TextInput">
-    <Code lang="tsx" title="inputs/basic-text-input.tsx" code={textInputCode} />
+    <Code
+      lang="tsx"
+      title="inputs/basic-text-input.tsx"
+      code={textInputCode}
+      showLineNumbers
+    />
   </TabItem>
 </Tabs>
 
@@ -35,3 +47,34 @@ import HelloWorld from '/src/examples/hello-world.tsx';
   <HelloWorld client:only="react" />
 </Card>
 
+## Why procedural UI?
+
+By defining UI procedurally you can treat your UI as functions that return data.
+This makes it easier to read and understand what the code is doing. Modern hook-based
+React has a lot of complexity. You have to know when to memoize, you have
+to follow the rules of hooks and declare their dependencies. Reactlit can't compete
+with the flexibility of React, but for many simpler use cases, it offers a higher-level
+abstraction that can result in code that is simpler and often shorter as well.
+
+By implementing this abstraction in pure React, you can reuse your existing
+React application and all of its components.
+
+Let's rewrite the same example as above, but this time we'll use native React.
+
+import helloWorldReactCode from '/src/examples/hello-world-react.tsx?raw';
+
+<Code
+  lang="tsx"
+  title="hello-world-react.tsx"
+  code={helloWorldReactCode}
+  showLineNumbers
+/>
+
+While similar in length, in order to read through this code you have to jump
+around. The state gets instantiated on line 4, but then set down on line 13 and used
+on lines 5 and 12. Notice how some of these are above the set and some are below.
+There are many ways to write this logic and the code can be ordered in many ways.
+This leads to a less consitent experience when reading the code.
+
+Especially when dealing with and responding to a lot of user input, the React model
+can be cumbersome. Reactlit is designed to give you another option in these situations.

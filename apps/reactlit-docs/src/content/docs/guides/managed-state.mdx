@@ -1,0 +1,62 @@
+---
+title: Managed State
+description: Learn how to use managed state in Reactlit.
+---
+
+By default, Reactlit manages state internally for you. However, you can also
+manage the state of the application yourself. This is useful if you want to
+persist parts of the state in different ways, i.e. in localStorage or in query params.
+
+The state a Reactlit takes is not exactly the same as what you get from a `useState` hook.
+Instead, it is an object made of several independant states. For this reason, we provide a
+few built-in hooks to help you manage the state of your application.
+
+## Simple State
+
+Here is a basic example of managed state which sets default state for the application.
+The `useReactlitState` hook is a wrapper around `useState` that allows you to set
+default state for the application.
+
+```tsx
+import { Reactlit, useReactlitState } from '@reactlit/core';
+
+function MyApp() {
+  const [appState, setAppState] = useReactlitState({
+    name: 'Jason',
+    favoriteColor: 'red',
+  });
+  return (
+    <Reactlit state={appState} setState={setAppState}>
+      {({ view, display }) => {
+        const name = view('name', TextInput);
+        const favoriteColor = view('favoriteColor', TextInput);
+        display(`${name}'s favorite color is ${favoriteColor}`);
+      }}
+    </Reactlit>
+  );
+}
+```
+
+## Compound State
+
+Sometimes, you want to manage state differently for different entries in the state object.
+For this, you can use the `useCompoundReactlitState` hook.
+
+It takes two arguments, the first is an object that maps keys to a `useState`-style state-and-setter tuple.
+The second argument is the default state and setter for all other keys. Here is how you can
+combine it to customzie the state management for your application.
+
+```tsx
+const [appState, setAppState] = useCompoundReactlitState(
+  {
+    user: useQueryParam('user'),
+    bio: useLocalStorage('bio'),
+  },
+  useState({
+    email: '',
+  })
+);
+```
+
+This composes nicely with [transform views](/guides/basics#transform-views) whereby you can
+return a full user object for a view, but the state will only store the userId.

@@ -1,4 +1,4 @@
-import { ReactNode, SetStateAction, useMemo } from 'react';
+import { Fragment, ReactNode, SetStateAction, useMemo } from 'react';
 import { defineView, ViewDefinition } from '../reactlit';
 import { ViewComponentProps } from '../reactlit';
 import { applyWrapper, Wrapper } from '../utils/with-wrapper';
@@ -33,7 +33,7 @@ export function FormInputViewComponent<T>({
             [key]: isSetStateFunction(v) ? v(value?.[key]) : v,
           }),
       };
-      views.push(def.component(props));
+      views.push(<Fragment key={key}>{def.component(props)}</Fragment>);
     }
     return views;
   }, [form, value, setValue, stateKey]);

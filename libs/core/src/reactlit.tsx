@@ -1,6 +1,5 @@
 import {
   ComponentType,
-  createElement,
   Dispatch,
   Fragment,
   ReactNode,
@@ -80,21 +79,60 @@ export interface ReactlitContext<T extends StateBase = any> {
   state: T;
 }
 
-export type ReactlitFunction<T extends StateBase = any> = (
-  ctx: ReactlitContext<T>
-) => Promise<void>;
+type GenericPluginResult<Base, Plugin> = Plugin extends (ctx: Base) => infer C
+  ? C
+  : never;
 
-export interface ReactlitProps<T extends StateBase> {
+type ApplyPlugins<Base, Plugins> = Plugins extends [infer Plugin, ...infer Rest]
+  ? GenericPluginResult<Base, Plugin> & ApplyPlugins<Base, Rest>
+  : {};
+
+export type ReactlitPlugin<T extends StateBase, C> = (
+  ctx: ReactlitContext<T>
+) => C;
+
+export type ReactlitPlugins<T extends StateBase> = ReactlitPlugin<T, any>[];
+
+export type ReactlitPluginContext<
+  T extends StateBase,
+  P extends ReactlitPlugins<T>
+> = ReactlitContext<T> & ApplyPlugins<ReactlitContext<T>, P>;
+
+export function definePlugin<T extends StateBase = StateBase, C = any>(
+  plugin: ReactlitPlugin<T, C>
+) {
+  return plugin;
+}
+
+export function usePlugin<C, T extends StateBase = StateBase>(
+  plugin: ReactlitPlugin<T, C>,
+  deps: any[]
+) {
+  return useCallback(plugin, deps);
+}
+
+export type ReactlitFunction<
+  T extends StateBase = any,
+  C extends ReactlitContext<T> = ReactlitContext<T>
+> = (ctx: C) => Promise<void>;
+
+export type ReactlitStateSetter<T> = <K extends keyof T>(
+  key: K,
+  value: SetStateAction<T[K]>
+) => void;
+
+export type ReactlitProps<T extends StateBase, P extends ReactlitPlugins<T>> = {
   state?: T;
-  setState?: <K extends keyof T>(key: K, value: SetStateAction<T[K]>) => void;
+  setState?: ReactlitStateSetter<T>;
   renderLoading?: (rendering: boolean) => ReactNode;
   renderError?: (props: {
     error: any;
     resetErrorBoundary: (...args: any[]) => void;
   }) => ReactNode;
   className?: string;
-  children: ReactlitFunction<T>;
-}
+  plugins?: P;
+  children: ReactlitFunction<T, ReactlitPluginContext<T, P>>;
+};
 
 function deltas<T extends StateBase>(
   state: T,
@@ -117,13 +155,29 @@ const defaultRenderError = ({ error }) => (
   </div>
 );
 
-export function Reactlit<T extends StateBase = any>({
+export function Reactlit<
+  T extends StateBase = any,
+  P extends ReactlitPlugins<T> = []
+>({
   state: rawState,
   setState,
   renderLoading,
   renderError = defaultRenderError,
+  plugins,
   children,
-}: ReactlitProps<T>) {
+}: ReactlitProps<T, P>) {
+  const appFunc = useCallback(
+    async (ctx: ReactlitContext<T>) => {
+      return children(
+        (plugins ?? []).reduce(
+          (acc, plugin) => ({ ...acc, ...plugin(ctx) }),
+          ctx as any
+        )
+      );
+    },
+    [children, ...(plugins ?? [])]
+  );
+
   const [defaultRawState, defaultSetState] = useReactlitState<T>({} as T);
   rawState = rawState ?? defaultRawState;
   setState = setState ?? defaultSetState;
@@ -265,7 +319,7 @@ export function Reactlit<T extends StateBase = any>({
         // eslint-disable-next-line no-console
         console.debug('reactlit rendering:', childArgs.state);
         setRenderState(({ elements }) => ({ elements, position: 0 }));
-        await children(childArgs);
+        await appFunc(childArgs);
         setRenderState(({ elements, position }) => ({
           position,
           elements: elements.slice(0, position),
@@ -290,7 +344,7 @@ export function Reactlit<T extends StateBase = any>({
     }
     runScript();
   }, [
-    children,
+    appFunc,
     childArgs,
     triggerCounter,
     trigger,

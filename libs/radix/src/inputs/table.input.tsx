@@ -1,4 +1,4 @@
-import { Checkbox, Radio, ScrollArea, Table } from '@radix-ui/themes';
+import { Checkbox, Radio, ScrollArea, Skeleton, Table } from '@radix-ui/themes';
 import {
   applyWrapper,
   defineTransformView,
@@ -8,6 +8,7 @@ import {
 import { ReactNode, useMemo } from 'react';
 import { BaseProps } from '../config';
 import { userFriendlyName } from '../utils/user-friendly-name';
+import { repeatElement } from '../utils/repeat-element';
 
 export type TableInputProps<T> = Table.RootProps &
   BaseProps & {
@@ -18,6 +19,7 @@ export type TableInputProps<T> = Table.RootProps &
     format?: ColumnDisplayMapping<T>;
     maxHeight?: string;
     multiple?: boolean;
+    loading?: boolean;
   };
 
 type ColumnHeaderMapping<T> = {
@@ -46,6 +48,7 @@ export function TableInputViewComponent<T>({
   getRowId,
   wrapper,
   maxHeight = '300px',
+  loading,
   ...props
 }: TableInputProps<T> & ViewComponentProps<string[]>) {
   const colDefs = useMemo<ColDef<T>[]>(() => {
@@ -66,7 +69,13 @@ export function TableInputViewComponent<T>({
         ) : undefined,
         cell: ({ row }) => {
           const rowId = getRowId(row);
-          if (multiple) {
+          if (loading) {
+            return (
+              <Skeleton>
+                {multiple ? <Checkbox /> : <Radio value={getRowId(row)} />}
+              </Skeleton>
+            );
+          } else if (multiple) {
             return (
               <Checkbox
                 checked={value.includes(rowId)}
@@ -94,10 +103,12 @@ export function TableInputViewComponent<T>({
       ...colKeys.map((key) => ({
         id: key,
         header: header?.[key] ?? userFriendlyName(key),
-        cell: ({ row }) => format?.[key]?.(row[key]) ?? String(row[key]),
+        cell: ({ row }) => {
+          return format?.[key]?.(row[key]) ?? String(row[key]);
+        },
       })),
     ];
-  }, [data, columns]);
+  }, [data, columns, loading]);
   return applyWrapper(
     <ScrollArea
       type="auto"
@@ -130,7 +141,20 @@ export function TableInputViewComponent<T>({
               ))}
             </Table.Row>
           ))}
-          {data.length === 0 && (
+          {loading &&
+            data.length === 0 &&
+            repeatElement(
+              <Table.Row>
+                {repeatElement(
+                  <Table.Cell>
+                    <Skeleton>Loading...</Skeleton>
+                  </Table.Cell>,
+                  colDefs.length
+                )}
+              </Table.Row>,
+              3
+            )}
+          {!loading && data.length === 0 && (
             <Table.Row>
               <Table.Cell colSpan={colDefs.length}>No data</Table.Cell>
             </Table.Row>

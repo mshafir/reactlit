@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-
 import react from '@astrojs/react';
 
 // https://astro.build/config
@@ -18,26 +17,22 @@ export default defineConfig({
       social: {
         github: 'https://github.com/mshafir/reactlit',
       },
-      expressiveCode: {
-        styleOverrides: {
-          codeFontSize: '12px',
-        },
-      },
       sidebar: [
         {
           label: 'Guides',
           items: [
-            // Each item here is one entry in the navigation menu.
             { label: 'Getting Started', slug: 'guides/getting-started' },
             { label: 'Installation', slug: 'guides/installation' },
             { label: 'Basics', slug: 'guides/basics' },
+            { label: 'Data Fetching', slug: 'guides/data-fetching' },
+            { label: 'Managed State', slug: 'guides/managed-state' },
             { label: 'Defining Views', slug: 'guides/defining-views' },
           ],
         },
-        {
-          label: 'Reference',
-          autogenerate: { directory: 'reference' },
-        },
+        // {
+        //   label: 'Reference',
+        //   autogenerate: { directory: 'reference' },
+        // },
       ],
     }),
     react(),

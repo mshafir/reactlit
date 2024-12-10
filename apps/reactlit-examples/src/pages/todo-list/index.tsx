@@ -1,6 +1,6 @@
 import { Main } from '@/components/main';
 import { Spinner } from '@radix-ui/themes';
-import { Reactlit } from '@reactlit/core';
+import { DataFetchingPlugin, Reactlit } from '@reactlit/core';
 import { DefaultWrapper, Inputs } from '@reactlit/radix';
 import tunnel from 'tunnel-rat';
 import { TodoService } from '../../mocks/todos';
@@ -13,52 +13,29 @@ export const Loader = ({ message }: { message: string }) => {
   );
 };
 
-class LocalCache {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private cacheData = new Map<string, any>();
-
-  async cache<T>(key: string, fn: () => Promise<T>): Promise<T> {
-    if (this.cacheData.has(key)) {
-      return this.cacheData.get(key);
-    }
-    const result = await fn();
-    this.cacheData.set(key, result);
-    return result;
-  }
-
-  invalidate(key?: string) {
-    if (key) {
-      this.cacheData.delete(key);
-    } else {
-      this.cacheData.clear();
-    }
-  }
-}
-
-const cache = new LocalCache();
 const api = new TodoService([], 1000);
 
 export default function TodoList() {
   return (
     <Main>
-      <Reactlit>
-        {async ({ display, view, trigger, set, changed }) => {
+      <Reactlit plugins={[DataFetchingPlugin] as const}>
+        {async ({ display, view, set, changed, fetcher }) => {
+          const todosFetcher = fetcher(['todos'], () => api.getTodos());
           view(
             'adding',
             Inputs.AsyncButton(
               async () => {
                 const newTodo = await api.addTodo();
+                await todosFetcher.refetch();
                 set('selectedTodo', newTodo.id);
-                cache.invalidate('todos');
               },
               {
+                disabled: todosFetcher.isFetching(),
                 content: 'Add Todo',
               }
             )
           );
-          display('loading', <Loader message="Loading todos..." />);
-          const todos = await cache.cache('todos', api.getTodos);
-          display('loading', undefined);
+          const todos = todosFetcher.get() ?? [];
           const selectedTodo = view(
             'selectedTodo',
             Inputs.Table(todos, {
@@ -106,11 +83,18 @@ export default function TodoList() {
               'updaing',
               Inputs.AsyncButton(
                 async () => {
+                  // todosFetcher.update((todos) => {
+                  //   return todos.map((todo) =>
+                  //     todo.id === selectedTodo.id
+                  //       ? { ...todo, task, completed }
+                  //       : todo
+                  //   );
+                  // });
                   await api.updateTodo(selectedTodo.id, { task, completed });
-                  cache.invalidate('todos');
-                  trigger();
+                  await todosFetcher.refetch();
                 },
                 {
+                  disabled: todosFetcher.isFetching(),
                   content: 'Update',
                 }
               )

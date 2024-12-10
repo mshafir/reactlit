@@ -33,7 +33,7 @@ export class TodoService {
     await wait(this.delay);
     const index = this.todos.findIndex((t) => t.id === id);
     if (index === -1) {
-      throw new Error('Todo not found');
+      throw new Error(`Todo not found: ${id}`);
     }
     this.todos = [
       ...this.todos.slice(0, index),
