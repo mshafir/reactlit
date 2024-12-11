@@ -13,8 +13,12 @@ export default defineConfig({
   site: 'https://mshafir.github.io',
   integrations: [
     starlight({
-      title: '',
-      logo: { src: '/src/assets/ReactlitwText.png' },
+      title: 'Reactlit',
+      logo: {
+        src: '/src/assets/ReactlitwText.png',
+        alt: 'Reactlit',
+        replacesTitle: true,
+      },
       customCss: ['/src/styles/app.css'],
       social: {
         github: 'https://github.com/mshafir/reactlit',
@@ -27,6 +31,7 @@ export default defineConfig({
             { label: 'Installation', slug: 'guides/installation' },
             { label: 'Basics', slug: 'guides/basics' },
             { label: 'Data Fetching', slug: 'guides/data-fetching' },
+            { label: 'Layout Plugin', slug: 'guides/layout' },
             { label: 'Managed State', slug: 'guides/managed-state' },
             { label: 'Defining Views', slug: 'guides/defining-views' },
           ],

@@ -108,6 +108,7 @@ export function usePlugin<C, T extends StateBase = StateBase>(
   plugin: ReactlitPlugin<T, C>,
   deps: any[]
 ) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useCallback(plugin, deps);
 }
 
@@ -175,6 +176,7 @@ export function Reactlit<
         )
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [children, ...(plugins ?? [])]
   );
 
@@ -276,7 +278,8 @@ export function Reactlit<
       const isChanged = selectedChangedKeys.length > 0;
       if (isChanged) {
         for (const k of selectedChangedKeys) {
-          console.log(
+          // eslint-disable-next-line no-console
+          console.debug(
             `changed ${String(k)}: ${previousState?.[k]} -> ${state[k]}`
           );
         }

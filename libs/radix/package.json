@@ -1,7 +1,7 @@
 {
   "name": "@reactlit/radix",
   "description": "Radix-ui themes input components for Reactlit",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "homepage": "https://github.com/mshafir/reactlit",
   "repository": "github:mshafir/reactlit",
@@ -23,7 +23,7 @@
   "scripts": {
     "prebuild": "cp ../../README.md .",
     "build": "tsup && tsc",
-    "dev": "tsup --watch",
+    "dev": "tsup --dts --watch",
     "clean": "rm -rf dist",
     "lint": "eslint src/**/*.ts* --fix"
   },

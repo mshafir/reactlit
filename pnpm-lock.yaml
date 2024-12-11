@@ -105,9 +105,6 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2(@types/react@18.3.12)(react@19.0.0)
     devDependencies:
-      '@types/node':
-        specifier: ^20
-        version: 20.17.9
       '@types/react':
         specifier: ^18
         version: 18.3.12
@@ -141,6 +138,9 @@ importers:
       react-error-boundary:
         specifier: ^4.1.2
         version: 4.1.2(react@18.1.0)
+      tunnel-rat:
+        specifier: ^0.1.2
+        version: 0.1.2(@types/react@18.3.12)(react@18.1.0)
     devDependencies:
       '@mollycule/vigilante':
         specifier: ^1.0.2
@@ -11949,6 +11949,14 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
+  tunnel-rat@0.1.2(@types/react@18.3.12)(react@18.1.0):
+    dependencies:
+      zustand: 4.5.5(@types/react@18.3.12)(react@18.1.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
+      - react
+
   tunnel-rat@0.1.2(@types/react@18.3.12)(react@19.0.0):
     dependencies:
       zustand: 4.5.5(@types/react@18.3.12)(react@19.0.0)
@@ -12155,6 +12163,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.12
 
+  use-sync-external-store@1.2.2(react@18.1.0):
+    dependencies:
+      react: 18.1.0
+
   use-sync-external-store@1.2.2(react@19.0.0):
     dependencies:
       react: 19.0.0
@@ -12309,6 +12321,13 @@ snapshots:
       zod: 3.23.8
 
   zod@3.23.8: {}
+
+  zustand@4.5.5(@types/react@18.3.12)(react@18.1.0):
+    dependencies:
+      use-sync-external-store: 1.2.2(react@18.1.0)
+    optionalDependencies:
+      '@types/react': 18.3.12
+      react: 18.1.0
 
   zustand@4.5.5(@types/react@18.3.12)(react@19.0.0):
     dependencies:

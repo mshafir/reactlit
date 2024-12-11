@@ -1,0 +1,55 @@
+---
+title: Layout Plugin
+description: How to use the layout plugin
+---
+
+By default, Reactlit uses a simple layout system where each `display` call
+concatenates a `ReactNode` to the DOM. This works great for simple applications,
+where you are ok just showing your content in a single column,
+but as your application grows, you may want to have more control over the layout.
+
+The plugin provides a `layout` helper function to let you define more custom layouts with
+your Reactlit script.
+
+import { Card, Aside } from '@astrojs/starlight/components';
+
+<Aside>
+  Currently this plugin is provided in the core package, but this may change in
+  the future.
+</Aside>
+
+The `layout` function works via the [tunnel-rat](https://github.com/pmndrs/tunnel-rat)
+library. It takes a number of slots to expose and a render function that defines how
+those slots are layed out. Then, for each slot, it returns a mini-context with
+`view` and `display` functions that render specifically within that slot.
+
+This is a bit abstract, so let's look at an example.
+
+import layoutExampleCode from '/src/examples/layout-example.tsx?raw';
+import threeColumnLayoutCode from '/src/examples/layouts/three-column-layout.tsx?raw';
+import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Layout Example App">
+    <Code
+      lang="tsx"
+      title="layout-example.tsx"
+      code={layoutExampleCode}
+      showLineNumbers
+    />
+  </TabItem>
+  <TabItem label="Layout Definition">
+    <Code
+      lang="tsx"
+      title="layouts/three-column-layout.tsx"
+      code={threeColumnLayoutCode}
+      showLineNumbers
+    />
+  </TabItem>
+</Tabs>
+
+import LayoutExample from '/src/examples/layout-example.tsx';
+
+<Card>
+  <LayoutExample client:only="react" />
+</Card>
