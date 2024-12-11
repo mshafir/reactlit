@@ -1,5 +1,11 @@
 # @reactlit/core
 
+## 0.0.5
+
+### Patch Changes
+
+- c0a2938: Added layout plugin
+
 ## 0.0.4
 
 ### Patch Changes
