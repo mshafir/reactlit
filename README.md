@@ -10,6 +10,9 @@
   <a href="https://github.com/mshafir/reactlit/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
+  <a href="https://github.com/mshafir/reactlit/actions/workflows/main.yml">
+    <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/mshafir/reactlit/main.yml">
+  </a>
   <a href="https://github.com/mshafir/reactlit/stargazers">
     <img src="https://img.shields.io/github/stars/mshafir/reactlit.svg" alt="GitHub stars">
   </a>
