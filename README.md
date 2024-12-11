@@ -26,8 +26,12 @@
 <strong>Reactlit</strong> is a headless, procedural UI component for React inspired by [Streamlit](https://streamlit.io/) and modeled after [Observable Framework](https://observablehq.com/platform/framework).
 
 <p align="center">
+<div align="center">
 <img src="https://raw.githubusercontent.com/mshafir/reactlit/refs/heads/main/hello-world-example.png" alt="Hello World Example" width="500">
+</div>
+<div align="center">
 <img src="https://raw.githubusercontent.com/mshafir/reactlit/refs/heads/main/HelloReactlit.gif" alt="Basic Text Input Example" width="200">
+</div>
 </p>
 
 ## Motivation
