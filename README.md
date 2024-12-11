@@ -1,11 +1,8 @@
 <div align="center">
-  <p style="margin-bottom: 0; display: flex; align-items: center; gap: 10px; justify-content: center;">
-    <img alt="Reactlit" src="./reactlit.svg" />
-    <span style="font-size: 36px; letter-spacing: 0.03em;" align="center">Reactlit</span>
+  <p align="center">
+    <div><img alt="Reactlit" src="https://raw.githubusercontent.com/mshafir/reactlit/refs/heads/main/ReactlitwText.png" /></div>
+    <em>A faster way to build React apps.</em>
   </p>
-  <em>A faster way to build React apps.</em>
-  <br />
-  <br />
   <p align="center">
   <a href="https://www.npmjs.com/package/@reactlit/core">
     <img src="https://img.shields.io/npm/v/%40reactlit%2Fcore?logo=npm" alt="npm version">
@@ -17,7 +14,6 @@
     <img src="https://img.shields.io/github/stars/mshafir/reactlit.svg" alt="GitHub stars">
   </a>
   <br/>
-  <br/>
   <a href="https://reactlit.dev">Explore the docs →</a>
 </p>
 </div>
@@ -25,7 +21,7 @@
 <strong>Reactlit</strong> is a headless, procedural UI component for React inspired by [Streamlit](https://streamlit.io/) and modeled after [Observable Framework](https://observablehq.com/platform/framework).
 
 <p align="center">
-<img src="./hello-world-example.png" alt="Hello World" width="500">
+<img src="https://raw.githubusercontent.com/mshafir/reactlit/refs/heads/main/hello-world-example.png" alt="Hello World Example" width="500">
 </p>
 
 ## Motivation

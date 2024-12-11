@@ -36,3 +36,5 @@ deploy-test
 
 test-report.xml
 junit.xml
+
+**/README.md
