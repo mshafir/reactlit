@@ -22,9 +22,9 @@
   },
   "scripts": {
     "prebuild": "cp ../../README.md .",
-    "build": "tsup --dts",
+    "build": "tsup && tsc",
     "dev": "tsup --watch",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "clean": "rm -rf dist",
     "lint": "eslint src/**/*.ts* --fix"
   },
   "dependencies": {

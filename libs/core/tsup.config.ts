@@ -6,7 +6,6 @@ export default defineConfig({
   sourcemap: 'inline',
   minify: true,
   clean: false,
-  dts: true,
   splitting: false,
   format: ['cjs', 'esm'],
   external: ['react'],

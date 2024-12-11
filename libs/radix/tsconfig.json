@@ -9,7 +9,8 @@
     "allowSyntheticDefaultImports": true,
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "bundler",
-    "noEmit": true
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]
