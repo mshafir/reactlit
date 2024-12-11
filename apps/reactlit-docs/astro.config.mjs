@@ -9,10 +9,12 @@ export default defineConfig({
       noExternal: ['@radix-ui/themes'],
     },
   },
+  base: 'reactlit',
+  site: 'https://mshafir.github.io',
   integrations: [
     starlight({
-      title: 'Reactlit',
-      logo: { src: '/src/assets/reactlit.svg' },
+      title: '',
+      logo: { src: '/src/assets/ReactlitwText.png' },
       customCss: ['/src/styles/app.css'],
       social: {
         github: 'https://github.com/mshafir/reactlit',
