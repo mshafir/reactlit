@@ -17,14 +17,17 @@
     <img src="https://img.shields.io/github/stars/mshafir/reactlit.svg" alt="GitHub stars">
   </a>
   <br/>
-  <a href="https://mshafir.github.io/reactlit">Explore the docs →</a>
-</p>
+  <p align="center">
+  <a href="https://mshafir.github.io/reactlit">Explore the Docs</a> | 
+  <a href="https://stackblitz.com/edit/reactlit-demo?file=src%2FApp.tsx">Demo on StackBlitz</a>
+  </p>
 </div>
 
 <strong>Reactlit</strong> is a headless, procedural UI component for React inspired by [Streamlit](https://streamlit.io/) and modeled after [Observable Framework](https://observablehq.com/platform/framework).
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/mshafir/reactlit/refs/heads/main/hello-world-example.png" alt="Hello World Example" width="500">
+<img src="https://raw.githubusercontent.com/mshafir/reactlit/refs/heads/main/HelloReactlit.gif" alt="Basic Text Input Example" width="200">
 </p>
 
 ## Motivation
