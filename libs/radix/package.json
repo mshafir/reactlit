@@ -23,7 +23,7 @@
   "scripts": {
     "prebuild": "cp ../../README.md .",
     "build": "tsup && tsc",
-    "dev": "tsup --watch",
+    "dev": "tsup --dts --watch",
     "clean": "rm -rf dist",
     "lint": "eslint src/**/*.ts* --fix"
   },

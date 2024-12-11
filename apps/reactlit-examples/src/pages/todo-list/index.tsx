@@ -15,6 +15,9 @@ export const Loader = ({ message }: { message: string }) => {
 
 const api = new TodoService([], 1000);
 
+const c1 = tunnel();
+const c2 = tunnel();
+
 export default function TodoList() {
   return (
     <Main>
@@ -51,8 +54,6 @@ export default function TodoList() {
               set('task', selectedTodo.task);
               set('completed', selectedTodo.completed);
             }
-            const c1 = tunnel();
-            const c2 = tunnel();
             display(
               <DefaultWrapper>
                 <div className="grid grid-cols-3 gap-4">
