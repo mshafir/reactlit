@@ -1,5 +1,14 @@
 # reactlit-examples
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [741e8bc]
+  - @reactlit/core@0.0.4
+  - @reactlit/radix@0.0.4
+  - @reactlit/vanilla@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
