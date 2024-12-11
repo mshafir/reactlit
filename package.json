@@ -12,10 +12,11 @@
     "test": "turbo run test",
     "clean": "turbo run clean",
     "lint": "turbo run lint",
+    "ci": "turbo run build lint test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "turbo": "turbo",
     "add-changesets": "changeset add",
-    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+    "publish-packages": "turbo run ci && changeset version && changeset publish"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.10",

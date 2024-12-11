@@ -21,6 +21,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
+    "prebuild": "cp ../../README.md .",
     "build": "tsup --dts",
     "dev": "tsup --watch",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
