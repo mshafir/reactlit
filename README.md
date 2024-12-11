@@ -17,7 +17,7 @@
     <img src="https://img.shields.io/github/stars/mshafir/reactlit.svg" alt="GitHub stars">
   </a>
   <br/>
-  <a href="https://reactlit.dev">Explore the docs →</a>
+  <a href="https://mshafir.github.io/reactlit">Explore the docs →</a>
 </p>
 </div>
 
@@ -44,7 +44,7 @@ To get started with Reactlit, you can install the core package. We offer a set o
 npm install @reactlit/core @reactlit/radix
 ```
 
-See the [Getting Started](https://reactlit.dev/docs/guides/getting-started) guide for more information.
+See the [Getting Started](https://mshafir.github.io/reactlit/guides/getting-started) guide for more information.
 
 ## Contributing
 
