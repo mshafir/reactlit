@@ -132,9 +132,6 @@ importers:
 
   libs/core:
     dependencies:
-      '@mollycule/vigilante':
-        specifier: ^1.0.2
-        version: 1.0.2(@babel/core@7.26.0)(react-dom@18.1.0(react@18.1.0))(react-is@16.13.1)(react@18.1.0)
       '@tanstack/react-query':
         specifier: ^5.62.3
         version: 5.62.3(react@18.1.0)
@@ -145,6 +142,9 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2(react@18.1.0)
     devDependencies:
+      '@mollycule/vigilante':
+        specifier: ^1.0.2
+        version: 1.0.2(@babel/core@7.26.0)(react-dom@18.1.0(react@18.1.0))(react-is@16.13.1)(react@18.1.0)
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.12
