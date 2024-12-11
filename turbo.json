@@ -6,7 +6,8 @@
     },
     "build": {
       "dependsOn": [
-        "prebuild"
+        "prebuild",
+        "^build"
       ],
       "outputs": [
         "dist/**",
