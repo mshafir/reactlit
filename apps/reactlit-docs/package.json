@@ -19,11 +19,11 @@
     "@reactlit/core": "workspace:*",
     "@reactlit/radix": "workspace:*",
     "@tanstack/react-query": "^5.62.3",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "astro": "^4.16.10",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "sharp": "^0.32.5",
     "starlight-package-managers": "^0.8.0"
   }
