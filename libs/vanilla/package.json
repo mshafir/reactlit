@@ -1,7 +1,7 @@
 {
   "name": "@reactlit/vanilla",
   "description": "Vanilla unstyled input components for Reactlit",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
   "homepage": "https://github.com/mshafir/reactlit",
   "repository": "github:mshafir/reactlit",
@@ -45,7 +45,7 @@
     "typescript": "latest"
   },
   "peerDependencies": {
-    "react": "18",
-    "react-dom": "18"
+    "react": ">=17 <=19",
+    "react-dom": ">=17 <=19"
   }
 }
