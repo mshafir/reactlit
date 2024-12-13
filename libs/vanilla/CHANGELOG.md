@@ -1,5 +1,13 @@
 # @reactlit/vanilla
 
+## 0.0.6
+
+### Patch Changes
+
+- 8081958: updated peer deps
+- Updated dependencies [8081958]
+  - @reactlit/core@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes

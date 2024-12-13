@@ -1,7 +1,7 @@
 {
   "name": "@reactlit/core",
   "description": "Simple micro-app framework for React",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
   "homepage": "https://github.com/mshafir/reactlit",
   "repository": "github:mshafir/reactlit",

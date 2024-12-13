@@ -1,5 +1,11 @@
 # @reactlit/core
 
+## 0.0.6
+
+### Patch Changes
+
+- 8081958: updated peer deps
+
 ## 0.0.5
 
 ### Patch Changes
