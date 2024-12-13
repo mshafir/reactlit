@@ -99,7 +99,7 @@ export type ReactlitPluginContext<
   // in a mostly typesafe way. Would be nice to figure out a better pattern
   // where plugins can be typed to the stricter T type
   P extends ReactlitPlugins<StateBase>
-> = ReactlitContext<T> & ApplyPlugins<ReactlitContext<T>, P>;
+> = ReactlitContext<T> & ApplyPlugins<ReactlitContext<StateBase>, P>;
 
 export function definePlugin<T extends StateBase = StateBase, C = any>(
   plugin: ReactlitPlugin<T, C>
@@ -125,7 +125,10 @@ export type ReactlitStateSetter<T> = <K extends keyof T>(
   value: SetStateAction<T[K]>
 ) => void;
 
-export type ReactlitProps<T extends StateBase, P extends ReactlitPlugins<T>> = {
+export type ReactlitProps<
+  T extends StateBase,
+  P extends ReactlitPlugins<StateBase>
+> = {
   state?: T;
   setState?: ReactlitStateSetter<T>;
   renderLoading?: (rendering: boolean) => ReactNode;
@@ -161,7 +164,7 @@ const defaultRenderError = ({ error }) => (
 
 export function Reactlit<
   T extends StateBase = any,
-  P extends ReactlitPlugins<T> = []
+  P extends ReactlitPlugins<StateBase> = []
 >({
   state: rawState,
   setState,
