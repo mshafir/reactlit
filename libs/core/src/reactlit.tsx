@@ -95,7 +95,10 @@ export type ReactlitPlugins<T extends StateBase> = ReactlitPlugin<T, any>[];
 
 export type ReactlitPluginContext<
   T extends StateBase,
-  P extends ReactlitPlugins<T>
+  // for now, simplifying this type so that plugins are easlier to register
+  // in a mostly typesafe way. Would be nice to figure out a better pattern
+  // where plugins can be typed to the stricter T type
+  P extends ReactlitPlugins<StateBase>
 > = ReactlitContext<T> & ApplyPlugins<ReactlitContext<T>, P>;
 
 export function definePlugin<T extends StateBase = StateBase, C = any>(
