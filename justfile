@@ -2,7 +2,7 @@ build:
   pnpm run build
 
 rebuild:
-  turbo run clean build --force
+  turbo run clean && pnpm i && turbo run build --force
 
 dev:
   pnpm run dev

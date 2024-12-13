@@ -1,9 +1,6 @@
-import { TextInputComponent } from './text.input';
-import { Cross1Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { IconButton, TextField } from '@radix-ui/themes';
-import { defineTransformView, ViewComponentProps } from '@reactlit/core';
+import { defineTransformView } from '@reactlit/core';
 import Fuse, { IFuseOptions } from 'fuse.js';
-import { TextInputProps } from './text.input';
+import { TextInputComponent, TextInputProps } from './text.input';
 
 export type SearchOptions<T> = Partial<IFuseOptions<T>>;
 
@@ -45,22 +42,19 @@ export function SearchInput<T>(
         type={'search' as const}
         {...props}
       >
-        {({ setValue }: ViewComponentProps<string>) => (
+        ∏
+        {/* {({ setValue }: ViewComponentProps<string>) => (
           <>
             <TextField.Slot>
-              <MagnifyingGlassIcon height="16" width="16" />
+              <SearchIcon height="16" width="16" />
             </TextField.Slot>
             <TextField.Slot>
               <IconButton size="1" variant="ghost">
-                <Cross1Icon
-                  height="14"
-                  width="14"
-                  onClick={() => setValue('')}
-                />
+                <X height="14" width="14" onClick={() => setValue('')} />
               </IconButton>
             </TextField.Slot>
           </>
-        )}
+        )} */}
       </TextInputComponent>
     ),
     ({ value }) => {

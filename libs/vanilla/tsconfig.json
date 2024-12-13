@@ -9,6 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "lib": ["ES2021", "DOM"],
     "moduleResolution": "bundler",
+    "skipLibCheck": true,
     "declaration": true,
     "emitDeclarationOnly": true
   },

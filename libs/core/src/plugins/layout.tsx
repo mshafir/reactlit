@@ -1,11 +1,10 @@
-import { ReactNode } from 'react';
+import tunnel from 'tunnel-rat';
 import {
   definePlugin,
   ReactlitContext,
   StateBase,
   ViewDefinition,
 } from '../reactlit';
-import tunnel from 'tunnel-rat';
 
 type Repeat<
   T,

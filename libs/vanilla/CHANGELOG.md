@@ -1,5 +1,13 @@
 # @reactlit/vanilla
 
+## 0.0.8
+
+### Patch Changes
+
+- add3d03: Had to move to lucide icons because radix ones were having issues with React19
+- Updated dependencies [add3d03]
+  - @reactlit/core@0.0.8
+
 ## 0.0.7
 
 ### Patch Changes

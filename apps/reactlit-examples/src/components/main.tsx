@@ -1,27 +1,86 @@
-import localFont from 'next/font/local';
+import { MoonIcon, SunIcon } from 'lucide-react';
+import { Box, Button, Container, Flex, Text, Tooltip } from '@radix-ui/themes';
+import { useTheme } from 'next-themes';
+import { Geist, Geist_Mono } from 'next/font/google';
+import Head from 'next/head';
 import { Menu } from './menu';
 
-const geistSans = localFont({
-  src: '../fonts/GeistVF.woff',
+const geistSans = Geist({
   variable: '--font-geist-sans',
-  weight: '100 900',
-});
-const geistMono = localFont({
-  src: '../fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
+  subsets: ['latin'],
 });
 
-export function Main({ children }: { children: React.ReactNode }) {
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+});
+
+export function Main({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  const { resolvedTheme, setTheme } = useTheme();
   return (
-    <main
-      className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)] flex gap-8 h-screen`}
+    <div
+      className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)]`}
     >
-      <div className="flex flex-col w-[20%] p-8 border-r">
-        <div className="font-semibold text-2xl mb-6">ReactLit</div>
-        <Menu />
-      </div>
-      <div className="flex-auto p-8 overflow-y-auto">{children}</div>
-    </main>
+      <main>
+        <Head>
+          <title>{title}</title>
+        </Head>
+        <Box style={{ background: 'var(--gray-2)' }}>
+          <Flex direction="column" height="100vh">
+            <Flex
+              width="100%"
+              p="4"
+              align="center"
+              style={{
+                background: 'var(--color-background)',
+                borderBottom: '1px solid var(--gray-4)',
+              }}
+            >
+              <Text size="3" weight={'bold'}>
+                {title}
+              </Text>
+              <Box flexGrow={'1'} />
+              <Tooltip content="Toggle theme">
+                <Button
+                  size="1"
+                  variant="ghost"
+                  onClick={() =>
+                    setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
+                  }
+                >
+                  {resolvedTheme === 'dark' ? <MoonIcon /> : <SunIcon />}
+                </Button>
+              </Tooltip>
+            </Flex>
+            <Flex flexGrow={'1'} overflow={'hidden'}>
+              <Flex direction={'column'} overflow={'auto'}>
+                <Menu />
+              </Flex>
+              <Flex flexGrow={'1'} direction={'column'} overflow={'auto'}>
+                <Container size="4" flexGrow={'1'} height={'100%'}>
+                  <Box
+                    p="4"
+                    style={{
+                      background: 'var(--color-background)',
+                      boxShadow: 'var(--shadow-3)',
+                      minHeight: '30rem',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {children}
+                  </Box>
+                </Container>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Box>
+      </main>
+    </div>
   );
 }

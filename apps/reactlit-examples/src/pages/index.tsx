@@ -1,12 +1,12 @@
-import { Main } from '../components/main';
+import { ArrowBigLeftDash } from 'lucide-react';
 
 export default function Home() {
   return (
-    <Main>
-      <div className="justify-center items-center ">
-        <h1 className="text-4xl font-bold">Welcome to ReactLit.</h1>
-        Explore the examples to get started.
+    <div className="justify-center items-center">
+      <h1 className="text-4xl font-bold pb-4">Welcome to ReactLit.</h1>
+      <div className="flex items-center">
+        <ArrowBigLeftDash /> Explore the examples to get started.
       </div>
-    </Main>
+    </div>
   );
 }
