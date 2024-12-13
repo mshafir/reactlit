@@ -1,3 +1,3 @@
-import equal from 'fast-deep-equal/es6/react';
+import equal from 'fast-deep-equal';
 
 export const deepEqual = equal;
