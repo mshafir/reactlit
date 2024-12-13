@@ -1,7 +1,7 @@
 {
   "name": "@reactlit/radix",
   "description": "Radix-ui themes input components for Reactlit",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "homepage": "https://github.com/mshafir/reactlit",
   "repository": "github:mshafir/reactlit",

@@ -1,5 +1,11 @@
 # @reactlit/core
 
+## 0.0.7
+
+### Patch Changes
+
+- e5ad19b: Fix import of deep-equal and simplify plugin typing
+
 ## 0.0.6
 
 ### Patch Changes

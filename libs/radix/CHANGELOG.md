@@ -1,5 +1,13 @@
 # @reactlit/radix
 
+## 0.0.7
+
+### Patch Changes
+
+- e5ad19b: Fix import of deep-equal and simplify plugin typing
+- Updated dependencies [e5ad19b]
+  - @reactlit/core@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes
