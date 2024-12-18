@@ -1,6 +1,4 @@
-import { MoonIcon, SunIcon } from 'lucide-react';
-import { Box, Button, Container, Flex, Text, Tooltip } from '@radix-ui/themes';
-import { useTheme } from 'next-themes';
+import { Box, Container, Flex, Text } from '@radix-ui/themes';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Head from 'next/head';
 import { Menu } from './menu';
