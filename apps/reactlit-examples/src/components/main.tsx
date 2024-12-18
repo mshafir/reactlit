@@ -1,9 +1,8 @@
-import { MoonIcon, SunIcon } from 'lucide-react';
-import { Box, Button, Container, Flex, Text, Tooltip } from '@radix-ui/themes';
-import { useTheme } from 'next-themes';
+import { Box, Container, Flex, Text } from '@radix-ui/themes';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Head from 'next/head';
 import { Menu } from './menu';
+import { ThemeToggle } from './theme-toggle';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -22,7 +21,6 @@ export function Main({
   title: string;
   children: React.ReactNode;
 }) {
-  const { resolvedTheme, setTheme } = useTheme();
   return (
     <div
       className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)]`}
@@ -46,17 +44,7 @@ export function Main({
                 {title}
               </Text>
               <Box flexGrow={'1'} />
-              <Tooltip content="Toggle theme">
-                <Button
-                  size="1"
-                  variant="ghost"
-                  onClick={() =>
-                    setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
-                  }
-                >
-                  {resolvedTheme === 'dark' ? <MoonIcon /> : <SunIcon />}
-                </Button>
-              </Tooltip>
+              <ThemeToggle />
             </Flex>
             <Flex flexGrow={'1'} overflow={'hidden'}>
               <Flex direction={'column'} overflow={'auto'}>
