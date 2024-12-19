@@ -6,19 +6,22 @@ import {
 } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
 
-type BaseCheckInputProps = Omit<
+type CheckInputValue = string | Object;
+
+type BaseCheckInputProps<T> = Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >,
   'value' | 'disabled'
 > & {
+  label?: string | React.ReactNode;
   containerClassName?: string;
-  format?: (value: any) => string | React.ReactNode;
-  keyof?: (value: any) => string | number;
-  valueof?: (value: any) => string | number;
-  options: string[] | Object[];
-  disabled?: string[] | Object[];
+  format?: (value: T) => string | React.ReactNode;
+  keyof?: (value: T) => string;
+  valueof?: (value: T) => string;
+  options: T[];
+  disabled?: T[];
 };
 
 export const CheckInputComponent = withWrapper(
@@ -33,51 +36,56 @@ export const CheckInputComponent = withWrapper(
     valueof,
     options,
     disabled,
+    label,
     ...props
-  }: BaseCheckInputProps & ViewComponentProps<string[] | Object[]>) => {
+  }: BaseCheckInputProps<CheckInputValue> &
+    ViewComponentProps<CheckInputValue[]>) => {
     return (
-      <div className={containerClassName}>
-        {options.map((item, index) => {
-          const isChecked = valueof
-            ? value.includes(valueof(item).toString())
-            : !!value.find((v) => {
-                if (keyof) return keyof?.(v) === keyof?.(item);
-                else return v === item;
-              });
+      <div className="flex gap-2 items-center">
+        {label && <label htmlFor={props.id}>{label}</label>}
+        <div className={containerClassName}>
+          {options.map((item, index) => {
+            const isChecked = valueof
+              ? value.includes(valueof(item).toString())
+              : !!value.find((v) => {
+                  if (keyof) return keyof?.(v) === keyof?.(item);
+                  else return v === item;
+                });
 
-          return (
-            <div key={keyof?.(item) || index}>
-              <input
-                type="checkbox"
-                checked={isChecked}
-                name={keyof?.(item) || item}
-                onChange={(e) => {
-                  const _value = valueof?.(item) || item;
-                  if (e.target.checked) setValue([...value, _value]);
-                  else
-                    setValue(
-                      value.filter((v) => {
-                        if (valueof) {
+            return (
+              <div key={keyof?.(item) ?? index}>
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  name={keyof?.(item) ?? item.toString()}
+                  onChange={(e) => {
+                    const _value = valueof?.(item) ?? item;
+                    if (e.target.checked) setValue([...value, _value]);
+                    else
+                      setValue(
+                        value.filter((v) => {
+                          if (valueof) {
+                            return v !== _value;
+                          } else if (keyof) {
+                            return keyof(v) !== keyof(item);
+                          }
                           return v !== _value;
-                        } else if (keyof) {
-                          return keyof(v) !== keyof(item);
-                        }
-                        return v !== _value;
-                      })
-                    );
-                }}
-                disabled={
-                  (keyof && disabled?.includes(keyof(item).toString())) ||
-                  disabled?.includes(valueof?.(item) || item)
-                }
-                {...props}
-              />
-              <label htmlFor={keyof?.(item) || item}>
-                {format?.(item) || item}
-              </label>
-            </div>
-          );
-        })}
+                        })
+                      );
+                  }}
+                  disabled={
+                    (keyof && disabled?.includes(keyof(item).toString())) ||
+                    disabled?.includes(valueof?.(item) ?? item)
+                  }
+                  {...props}
+                />
+                <label htmlFor={keyof?.(item) ?? item.toString()}>
+                  {format?.(item) ?? item.toString()}
+                </label>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
@@ -86,6 +94,6 @@ export const CheckInputComponent = withWrapper(
 export type CheckInputProps = ExtractDefProps<typeof CheckInputComponent>;
 
 export const CheckInput = (props: CheckInputProps) =>
-  defineView<string[] | Object[]>((viewProps) => (
+  defineView<CheckInputValue[]>((viewProps) => (
     <CheckInputComponent {...viewProps} {...props} />
   ));
