@@ -1,8 +1,10 @@
 import {
   applyWrapper,
   defineTransformView,
+  defineView,
   ExtractDefProps,
   ViewComponentProps,
+  ViewDefinition,
 } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
 import { VanillaConfig } from '../config';
@@ -19,8 +21,8 @@ type BaseCheckInputProps<T> = Omit<
     label?: string | React.ReactNode;
     containerClassName?: string;
     format?: (value: T) => string | React.ReactNode;
+    valueof?: (value: T) => string;
     keyof?: (value: T) => string;
-    valueof: (value: T) => string;
     disabled?: string[];
   };
 
@@ -38,13 +40,15 @@ export const CheckInputComponent = <T,>({
   label,
   wrapper,
   ...props
-}: BaseCheckInputProps<T> & ViewComponentProps<string[]>) => {
+}: BaseCheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
   return applyWrapper(
     <div className="flex gap-2 items-center">
       {label && <label htmlFor={stateKey}>{label}</label>}
       <div className={containerClassName}>
         {data.map((item, index) => {
-          const isChecked = value.includes(valueof(item));
+          const isChecked = !!value.find((v) =>
+            valueof ? valueof(item) === v : item === v
+          );
 
           return (
             <div key={keyof?.(item) ?? index}>
@@ -53,13 +57,13 @@ export const CheckInputComponent = <T,>({
                 checked={isChecked}
                 name={keyof?.(item) ?? item.toString()}
                 onChange={(e) => {
-                  const _value = valueof(item);
+                  const _value = valueof?.(item) ?? item;
                   if (e.target.checked) setValue([...value, _value]);
                   else setValue(value.filter((v) => v !== _value));
                 }}
                 disabled={
                   (keyof && disabled?.includes(keyof(item))) ||
-                  disabled?.includes(valueof(item))
+                  disabled?.includes(valueof?.(item) ?? item.toString())
                 }
                 {...props}
               />
@@ -80,12 +84,31 @@ export type CheckInputProps<T> = Omit<
   'data'
 >;
 
-export const CheckInput = <T,>(data: T[], props: CheckInputProps<T>) =>
-  defineTransformView<string[], T[]>(
-    (viewProps) => (
+export type CheckInputDefinition<T, P> = P extends { valueof: (v: T) => string }
+  ? ViewDefinition<string[], T[]>
+  : ViewDefinition<T[]>;
+
+export const CheckInput = <T, P extends CheckInputProps<T>>(
+  data: T[],
+  { valueof, ...props }: P
+): CheckInputDefinition<T, P> => {
+  if (valueof) {
+    return defineTransformView<string[], T[]>(
+      (viewProps) => (
+        <CheckInputComponent
+          data={data}
+          {...viewProps}
+          {...props}
+          valueof={valueof}
+        />
+      ),
+      ({ value }) => {
+        return value.map((v) => data.find((d) => valueof(d) === v));
+      }
+    ) as CheckInputDefinition<T, P>;
+  } else {
+    return defineView<T[]>((viewProps) => (
       <CheckInputComponent data={data} {...viewProps} {...props} />
-    ),
-    ({ value }) => {
-      return value.map((v) => data.find((d) => props.valueof(d) === v));
-    }
-  );
+    )) as CheckInputDefinition<T, P>;
+  }
+};

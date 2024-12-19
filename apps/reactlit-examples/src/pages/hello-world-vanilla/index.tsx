@@ -29,7 +29,6 @@ export default function HelloWorldVanilla() {
             className: 'border p-0.5 mr-1',
             label: 'Pick any number',
             containerClassName: 'flex gap-2',
-            valueof: (item) => item,
           })
         );
         display(<div>Picked: {picked.join(', ')}!</div>);

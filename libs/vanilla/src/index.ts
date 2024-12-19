@@ -5,8 +5,8 @@ import { TextInput, TextInputProps } from './inputs/text.input';
 export function configureInputs(config?: VanillaConfig) {
   return {
     Text: (props?: TextInputProps) => TextInput({ ...config, ...props }),
-    Check: <T>(data: T[], props?: CheckInputProps<T>) =>
-      CheckInput<T>(data, { ...config, ...props }),
+    Check: <T, P extends CheckInputProps<T>>(data: T[], props: P) =>
+      CheckInput<T, P>(data, { ...config, ...props }),
   };
 }
 
