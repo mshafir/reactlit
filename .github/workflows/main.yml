@@ -22,13 +22,15 @@ jobs:
         with:
           publish: pnpm run publish-packages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Upload Docs
         uses: actions/upload-pages-artifact@v3
         id: docs
         with:
           path: apps/reactlit-docs/dist
+    permissions:
+      pages: write
+      id-token: write
   deploy-docs:
     runs-on: ubuntu-latest
     needs: build
