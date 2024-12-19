@@ -25,35 +25,35 @@ export default function HelloWorldVanilla() {
         display(<div>Hello {name}!</div>);
         const picked = view(
           'pickedNumbers',
-          Inputs.Check({
-            id: 'number-input',
+          Inputs.Check(['One', 'Two', 'Three'], {
             className: 'border p-0.5 mr-1',
             label: 'Pick any number',
             containerClassName: 'flex gap-2',
-            options: ['One', 'Two', 'Three'],
+            valueof: (item) => item,
           })
         );
         display(<div>Picked: {picked.join(', ')}!</div>);
         const pickedColors = view(
           'pickedColors',
-          Inputs.Check({
-            id: 'color-input',
-            className: 'border p-0.5 mr-1',
-            label: 'Pick any color',
-            containerClassName: 'flex gap-2',
-            valueof: (item: any) => item.value,
-            format: (item: any) => (
-              <span style={{ color: item.value }}>{item.label}</span>
-            ),
-            keyof: (item: any) => item.label,
-            options: [
+          Inputs.Check(
+            [
               { label: 'Red', value: '#FF0000' },
               { label: 'Green', value: '#00FF00' },
               { label: 'Blue', value: '#0000FF' },
               { label: 'White', value: '#FFFFFF' },
             ],
-            disabled: ['White'],
-          })
+            {
+              className: 'border p-0.5 mr-1',
+              label: 'Pick any color',
+              containerClassName: 'flex gap-2',
+              valueof: (item) => item.value,
+              format: (item) => (
+                <span style={{ color: item.value }}>{item.label}</span>
+              ),
+              keyof: (item) => item.label,
+              disabled: ['White'],
+            }
+          )
         );
         display(<div>Colors: {JSON.stringify(pickedColors)}!</div>);
       }}
