@@ -14,7 +14,8 @@ const Inputs = (label: string) =>
 export default function HelloWorldVanilla() {
   const [appState, setAppState] = useReactlitState({
     name: '',
-    checked: false,
+    pickedNumbers: [],
+    pickedColors: [],
   });
   return (
     <Reactlit state={appState} setState={setAppState}>
@@ -29,14 +30,37 @@ export default function HelloWorldVanilla() {
           })
         );
         display(<div>Hello {name}!</div>);
-        const checked = view(
-          'checked',
-          Inputs('Checkbox').Check({
+        const picked = view(
+          'pickedNumbers',
+          Inputs('Pick any number').Check({
             id: 'number-input',
-            className: 'border p-0.5',
+            className: 'border p-0.5 mr-1',
+            containerClassName: 'flex gap-2',
+            options: ['One', 'Two', 'Three'],
           })
         );
-        display(<div>Checked: {checked ? 'Yes' : 'No'}!</div>);
+        display(<div>Picked: {picked.join(', ')}!</div>);
+        const pickedColors = view(
+          'pickedColors',
+          Inputs('Pick any color').Check({
+            id: 'color-input',
+            className: 'border p-0.5 mr-1',
+            containerClassName: 'flex gap-2',
+            valueof: (item) => item.value,
+            format: (item) => (
+              <span style={{ color: item.value }}>{item.label}</span>
+            ),
+            keyof: (item) => item.label,
+            options: [
+              { label: 'Red', value: '#FF0000' },
+              { label: 'Green', value: '#00FF00' },
+              { label: 'Blue', value: '#0000FF' },
+              { label: 'White', value: '#FFFFFF' },
+            ],
+            disabled: ['White'],
+          })
+        );
+        display(<div>Colors: {JSON.stringify(pickedColors)}!</div>);
       }}
     </Reactlit>
   );
