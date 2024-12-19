@@ -1,18 +1,20 @@
 import { Reactlit, useReactlitState } from '@reactlit/core';
 import { configureInputs } from '@reactlit/vanilla';
 
-const Inputs = configureInputs({
-  wrapper: (children) => (
-    <div className="flex gap-2 items-center">
-      <label htmlFor="name-input">Name</label>
-      {children}
-    </div>
-  ),
-});
+const Inputs = (label: string) =>
+  configureInputs({
+    wrapper: (children) => (
+      <div className="flex gap-2 items-center">
+        <label htmlFor="name-input">{label}</label>
+        {children}
+      </div>
+    ),
+  });
 
 export default function HelloWorldVanilla() {
   const [appState, setAppState] = useReactlitState({
     name: '',
+    checked: false,
   });
   return (
     <Reactlit state={appState} setState={setAppState}>
@@ -20,13 +22,21 @@ export default function HelloWorldVanilla() {
         display(<div className="text-2xl">Hello World Vanilla</div>);
         const name = view(
           'name',
-          Inputs.Text({
+          Inputs('Name').Text({
             id: 'name-input',
             className: 'border p-0.5',
             placeholder: 'Enter your name',
           })
         );
         display(<div>Hello {name}!</div>);
+        const checked = view(
+          'checked',
+          Inputs('Checkbox').Check({
+            id: 'number-input',
+            className: 'border p-0.5',
+          })
+        );
+        display(<div>Checked: {checked ? 'Yes' : 'No'}!</div>);
       }}
     </Reactlit>
   );
