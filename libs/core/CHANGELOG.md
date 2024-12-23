@@ -1,5 +1,11 @@
 # @reactlit/core
 
+## 0.0.9
+
+### Patch Changes
+
+- 7108a16: Add main export
+
 ## 0.0.8
 
 ### Patch Changes
