@@ -42,7 +42,6 @@ export function SearchInput<T>(
         type={'search' as const}
         {...props}
       >
-        ∏
         {/* {({ setValue }: ViewComponentProps<string>) => (
           <>
             <TextField.Slot>
