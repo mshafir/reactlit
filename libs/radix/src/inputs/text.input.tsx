@@ -1,6 +1,6 @@
 import { Text, TextField } from '@radix-ui/themes';
 import { defineView, ViewComponentProps, withWrapper } from '@reactlit/core';
-import { isValidElement, useEffect, useState } from 'react';
+import { isValidElement, ReactNode, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { LabelType, renderLabel } from '../label';
 
@@ -43,7 +43,7 @@ export const TextInputComponent = withWrapper(
           {...props}
         >
           {isValidElement(children)
-            ? children
+            ? (children as ReactNode)
             : typeof children === 'function'
             ? children({ value, stateKey, setValue })
             : undefined}
