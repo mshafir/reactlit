@@ -1,10 +1,5 @@
 import tunnel from 'tunnel-rat';
-import {
-  definePlugin,
-  ReactlitContext,
-  StateBase,
-  ViewDefinition,
-} from '../reactlit';
+import { ReactlitContext, StateBase, ViewDefinition } from '../reactlit';
 
 type Repeat<
   T,
@@ -78,19 +73,24 @@ function createLayoutSlot<T extends StateBase = StateBase>(
   };
 }
 
-export const TypedLayoutPlugin = <T extends StateBase>() =>
-  definePlugin<T, LayoutPluginContext<T>>((ctx) => ({
-    layout<N extends number>({
-      layout,
-      tunnels,
-    }: LayoutDefinition<N>): Repeat<LayoutSlot, N> {
-      const inputSlots: LayoutSlot[] = [];
-      for (const t of tunnels as Tunnel[]) {
-        inputSlots.push(createLayoutSlot(ctx, t));
-      }
-      ctx.display(layout);
-      return inputSlots as Repeat<LayoutSlot, N>;
-    },
-  }));
+export function makeLayoutPlugin<T extends StateBase>(ctx: ReactlitContext<T>) {
+  return function layout<N extends number>({
+    layout,
+    tunnels,
+  }: LayoutDefinition<N>): Repeat<LayoutSlot<T>, N> {
+    const inputSlots: LayoutSlot<T>[] = [];
+    for (const t of tunnels as Tunnel[]) {
+      inputSlots.push(createLayoutSlot<T>(ctx, t));
+    }
+    ctx.display(layout);
+    return inputSlots as Repeat<LayoutSlot<T>, N>;
+  };
+}
 
-export const LayoutPlugin = TypedLayoutPlugin<StateBase>();
+export function LayoutPlugin<T extends StateBase = StateBase>(
+  ctx: ReactlitContext<any>
+) {
+  return {
+    layout: makeLayoutPlugin<T>(ctx),
+  };
+}

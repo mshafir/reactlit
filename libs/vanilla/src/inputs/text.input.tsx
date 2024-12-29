@@ -1,13 +1,8 @@
-import {
-  defineView,
-  ExtractDefProps,
-  ViewComponentProps,
-  withWrapper,
-} from '@reactlit/core';
+import { defineView, ViewComponentProps, withWrapper } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-type BaseTextInputProps = Omit<
+export type TextInputProps = Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
@@ -27,7 +22,7 @@ export const TextInputComponent = withWrapper(
     debounceDelay = 200,
     label,
     ...props
-  }: BaseTextInputProps & ViewComponentProps<string>) => {
+  }: TextInputProps & ViewComponentProps<string>) => {
     const debouncedSetValue = useDebouncedCallback((value) => {
       setValue(value);
     }, debounceDelay);
@@ -47,8 +42,6 @@ export const TextInputComponent = withWrapper(
     );
   }
 );
-
-export type TextInputProps = ExtractDefProps<typeof TextInputComponent>;
 
 export const TextInput = (props: TextInputProps) =>
   defineView<string>((viewProps) => (

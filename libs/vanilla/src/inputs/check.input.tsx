@@ -2,14 +2,13 @@ import {
   applyWrapper,
   defineTransformView,
   defineView,
-  ExtractDefProps,
   ViewComponentProps,
   ViewDefinition,
 } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
 import { VanillaConfig } from '../config';
 
-type BaseCheckInputProps<T> = Omit<
+export type CheckInputProps<T> = Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
@@ -40,7 +39,7 @@ export const CheckInputComponent = <T,>({
   label,
   wrapper,
   ...props
-}: BaseCheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
+}: CheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
   return applyWrapper(
     <div className="flex gap-2 items-center">
       {label && <label htmlFor={stateKey}>{label}</label>}
@@ -79,18 +78,13 @@ export const CheckInputComponent = <T,>({
   );
 };
 
-export type CheckInputProps<T> = Omit<
-  ExtractDefProps<typeof CheckInputComponent<T>>,
-  'data'
->;
-
 export type CheckInputDefinition<T, P> = P extends { valueof: (v: T) => string }
   ? ViewDefinition<string[], T[]>
   : ViewDefinition<T[]>;
 
 export const CheckInput = <T, P extends CheckInputProps<T>>(
-  data: T[],
-  { valueof, ...props }: P
+  data: P['data'],
+  { valueof, ...props }: Omit<P, 'data'>
 ): CheckInputDefinition<T, P> => {
   if (valueof) {
     return defineTransformView<string[], T[]>(

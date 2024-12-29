@@ -24,7 +24,7 @@
   },
   "scripts": {
     "prebuild": "cp ../../README.md .",
-    "build": "tsup && tsc",
+    "build": "tsup && tsc --project tsconfig.build.json",
     "dev": "tsup --dts --watch",
     "test": "jest",
     "clean": "rm -rf node_modules && rm -rf .turbo && rm -rf dist",

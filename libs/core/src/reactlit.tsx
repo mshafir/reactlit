@@ -1,5 +1,4 @@
 import {
-  ComponentType,
   Dispatch,
   Fragment,
   ReactNode,
@@ -14,7 +13,6 @@ import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { useDeepMemo } from './hooks/use-deep-memo';
 import { useReactlitState } from './hooks/use-reactlit-state';
 import { deepEqual } from './utils/deep-equal';
-// import useVigilante from '@mollycule/vigilante';
 
 export interface ViewComponentProps<T> {
   stateKey: string;
@@ -42,27 +40,6 @@ export function defineTransformView<ValueType, ReturnType = ValueType>(
   return { component, getReturnValue };
 }
 
-export type ExtractDefProps<T> = T extends ComponentType<infer P>
-  ? Omit<P, 'value' | 'setValue' | 'stateKey'>
-  : never;
-
-export type PromiseResult<T> =
-  | {
-      loading: true;
-      data?: undefined;
-      error?: undefined;
-    }
-  | {
-      loading: false;
-      data: T;
-      error?: undefined;
-    }
-  | {
-      loading: false;
-      data?: undefined;
-      error: Error;
-    };
-
 export type StateBase = Record<string, unknown>;
 
 export type DisplayArgs = [string, ReactNode] | [ReactNode];
@@ -79,42 +56,6 @@ export interface ReactlitContext<T extends StateBase = any> {
   state: T;
 }
 
-type GenericPluginResult<Base, Plugin> = Plugin extends (ctx: Base) => infer C
-  ? C
-  : never;
-
-type ApplyPlugins<Base, Plugins> = Plugins extends [infer Plugin, ...infer Rest]
-  ? GenericPluginResult<Base, Plugin> & ApplyPlugins<Base, Rest>
-  : {};
-
-export type ReactlitPlugin<T extends StateBase, C> = (
-  ctx: ReactlitContext<T>
-) => C;
-
-export type ReactlitPlugins<T extends StateBase> = ReactlitPlugin<T, any>[];
-
-export type ReactlitPluginContext<
-  T extends StateBase,
-  // for now, simplifying this type so that plugins are easlier to register
-  // in a mostly typesafe way. Would be nice to figure out a better pattern
-  // where plugins can be typed to the stricter T type
-  P extends ReactlitPlugins<StateBase>
-> = ReactlitContext<T> & ApplyPlugins<ReactlitContext<StateBase>, P>;
-
-export function definePlugin<T extends StateBase = StateBase, C = any>(
-  plugin: ReactlitPlugin<T, C>
-) {
-  return plugin;
-}
-
-export function usePlugin<C, T extends StateBase = StateBase>(
-  plugin: ReactlitPlugin<T, C>,
-  deps: any[]
-) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback(plugin, deps);
-}
-
 export type ReactlitFunction<
   T extends StateBase = any,
   C extends ReactlitContext<T> = ReactlitContext<T>
@@ -125,10 +66,7 @@ export type ReactlitStateSetter<T> = <K extends keyof T>(
   value: SetStateAction<T[K]>
 ) => void;
 
-export type ReactlitProps<
-  T extends StateBase,
-  P extends ReactlitPlugins<StateBase>
-> = {
+export type ReactlitProps<T extends StateBase> = {
   state?: T;
   setState?: ReactlitStateSetter<T>;
   renderLoading?: (rendering: boolean) => ReactNode;
@@ -137,8 +75,8 @@ export type ReactlitProps<
     resetErrorBoundary: (...args: any[]) => void;
   }) => ReactNode;
   className?: string;
-  plugins?: P;
-  children: ReactlitFunction<T, ReactlitPluginContext<T, P>>;
+  debug?: boolean;
+  children: ReactlitFunction<T>;
 };
 
 function deltas<T extends StateBase>(
@@ -162,30 +100,14 @@ const defaultRenderError = ({ error }) => (
   </div>
 );
 
-export function Reactlit<
-  T extends StateBase = any,
-  P extends ReactlitPlugins<StateBase> = []
->({
+export function Reactlit<T extends StateBase = any>({
   state: rawState,
   setState,
   renderLoading,
   renderError = defaultRenderError,
-  plugins,
+  debug,
   children,
-}: ReactlitProps<T, P>) {
-  const appFunc = useCallback(
-    async (ctx: ReactlitContext<T>) => {
-      return children(
-        (plugins ?? []).reduce(
-          (acc, plugin) => ({ ...acc, ...plugin(ctx) }),
-          ctx as any
-        )
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [children, ...(plugins ?? [])]
-  );
-
+}: ReactlitProps<T>) {
   const [defaultRawState, defaultSetState] = useReactlitState<T>({} as T);
   rawState = rawState ?? defaultRawState;
   setState = setState ?? defaultSetState;
@@ -283,11 +205,13 @@ export function Reactlit<
       );
       const isChanged = selectedChangedKeys.length > 0;
       if (isChanged) {
-        for (const k of selectedChangedKeys) {
-          // eslint-disable-next-line no-console
-          console.debug(
-            `changed ${String(k)}: ${previousState?.[k]} -> ${state[k]}`
-          );
+        if (debug) {
+          for (const k of selectedChangedKeys) {
+            // eslint-disable-next-line no-console
+            console.debug(
+              `changed ${String(k)}: ${previousState?.[k]} -> ${state[k]}`
+            );
+          }
         }
         setPreviousState((prev) => {
           let newState = prev;
@@ -299,7 +223,7 @@ export function Reactlit<
       }
       return isChanged;
     },
-    [state, previousState]
+    [state, previousState, debug]
   );
 
   const [triggerCounter, setTriggerCounter] = useState(0);
@@ -326,16 +250,16 @@ export function Reactlit<
       renderLock.current = true;
       try {
         // eslint-disable-next-line no-console
-        console.debug('reactlit rendering:', childArgs.state);
+        debug && console.debug('reactlit rendering:', childArgs.state);
         setRenderState(({ elements }) => ({ elements, position: 0 }));
-        await appFunc(childArgs);
+        await children(childArgs);
         setRenderState(({ elements, position }) => ({
           position,
           elements: elements.slice(0, position),
         }));
       } catch (e: any) {
         // eslint-disable-next-line no-console
-        console.error(e);
+        debug && console.error(e);
         display(
           renderError?.({ error: e, resetErrorBoundary: () => trigger() }) ?? (
             <></>
@@ -353,7 +277,7 @@ export function Reactlit<
     }
     runScript();
   }, [
-    appFunc,
+    children,
     childArgs,
     triggerCounter,
     trigger,
@@ -361,17 +285,8 @@ export function Reactlit<
     setRendering,
     setRenderState,
     renderError,
+    debug,
   ]);
-
-  // NOTE: I leave this in whenever I have to debug infinite re-renders
-  // useVigilante('re-render', {
-  //   ...state,
-  //   rawState,
-  //   setState,
-  //   triggerCounter,
-  //   childArgs,
-  //   children,
-  // });
 
   return (
     <>

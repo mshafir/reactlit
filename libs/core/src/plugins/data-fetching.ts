@@ -6,7 +6,7 @@ import {
   QueryObserver,
   Updater,
 } from '@tanstack/react-query';
-import { definePlugin } from '../reactlit';
+import { definePlugin } from '../hooks/use-reactlit';
 
 export class DataFetcher<T> {
   constructor(
@@ -57,7 +57,7 @@ export class DataFetcher<T> {
   }
 }
 
-export function defineDataFetchingPlugin(config?: QueryClientConfig) {
+export function makeDataFetchingPlugin(config?: QueryClientConfig) {
   const client = new QueryClient(config);
   let isMounted = false;
   return definePlugin((ctx) => {
@@ -83,8 +83,4 @@ export function defineDataFetchingPlugin(config?: QueryClientConfig) {
   });
 }
 
-export const DataFetchingPlugin = defineDataFetchingPlugin();
-
-export type DataFetchingPluginContext = ReturnType<
-  ReturnType<typeof defineDataFetchingPlugin>
->;
+export const DataFetchingPlugin = makeDataFetchingPlugin();

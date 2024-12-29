@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { defineView, Reactlit } from '../src/index';
+import { defineView, Reactlit } from '.';
 
 export const TextInput = defineView<string>(({ value, setValue, stateKey }) => (
   <input

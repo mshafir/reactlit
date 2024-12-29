@@ -1,10 +1,12 @@
 import { LayoutPlugin, Reactlit } from '@reactlit/core';
 import { TextInput } from './inputs/basic-text-input';
 import { ThreeColumnLayout } from './layouts/three-column-layout';
+import { useReactlit } from '../../../../libs/core/dist/hooks/use-reactlit';
 
 export default function LayoutExample() {
+  const Reactlit = useReactlit(LayoutPlugin);
   return (
-    <Reactlit plugins={[LayoutPlugin] as const}>
+    <Reactlit>
       {async ({ layout }) => {
         const [col1, col2, col3] = layout(ThreeColumnLayout);
 
