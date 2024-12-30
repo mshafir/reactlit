@@ -1,30 +1,26 @@
 import {
-  applyWrapper,
   defineTransformView,
   defineView,
-  ExtractDefProps,
   ViewComponentProps,
   ViewDefinition,
 } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
-import { VanillaConfig } from '../config';
 
-type BaseCheckInputProps<T> = Omit<
+export type CheckInputProps<T> = Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >,
   'value' | 'disabled'
-> &
-  VanillaConfig & {
-    data: T[];
-    label?: string | React.ReactNode;
-    containerClassName?: string;
-    format?: (value: T) => string | React.ReactNode;
-    valueof?: (value: T) => string;
-    keyof?: (value: T) => string;
-    disabled?: string[];
-  };
+> & {
+  data: T[];
+  label?: string | React.ReactNode;
+  containerClassName?: string;
+  format?: (value: T) => string | React.ReactNode;
+  valueof?: (value: T) => string;
+  keyof?: (value: T) => string;
+  disabled?: string[];
+};
 
 export const CheckInputComponent = <T,>({
   value,
@@ -38,10 +34,9 @@ export const CheckInputComponent = <T,>({
   valueof,
   disabled,
   label,
-  wrapper,
   ...props
-}: BaseCheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
-  return applyWrapper(
+}: CheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
+  return (
     <div className="flex gap-2 items-center">
       {label && <label htmlFor={stateKey}>{label}</label>}
       <div className={containerClassName}>
@@ -74,23 +69,17 @@ export const CheckInputComponent = <T,>({
           );
         })}
       </div>
-    </div>,
-    wrapper
+    </div>
   );
 };
-
-export type CheckInputProps<T> = Omit<
-  ExtractDefProps<typeof CheckInputComponent<T>>,
-  'data'
->;
 
 export type CheckInputDefinition<T, P> = P extends { valueof: (v: T) => string }
   ? ViewDefinition<string[], T[]>
   : ViewDefinition<T[]>;
 
 export const CheckInput = <T, P extends CheckInputProps<T>>(
-  data: T[],
-  { valueof, ...props }: P
+  data: P['data'],
+  { valueof, ...props }: Omit<P, 'data'>
 ): CheckInputDefinition<T, P> => {
   if (valueof) {
     return defineTransformView<string[], T[]>(

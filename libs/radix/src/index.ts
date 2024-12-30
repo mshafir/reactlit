@@ -9,4 +9,4 @@ export * from './inputs/select.input';
 export * from './inputs/text.input';
 export * from './inputs/textarea.input';
 export * from './inputs/switch.input';
-export * from './default-wrapper';
+export * from './radix-wrapper';

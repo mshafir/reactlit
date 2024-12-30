@@ -1,7 +1,6 @@
 import { RadioGroup } from '@radix-ui/themes';
-import { applyWrapper, defineView, ViewComponentProps } from '@reactlit/core';
+import { defineView, ViewComponentProps } from '@reactlit/core';
 import { useMemo } from 'react';
-import { BaseProps } from '../config';
 import { LabelType, renderLabel } from '../label';
 
 export type RadioOptionsType<T> = T[] | Record<string, T>;
@@ -13,11 +12,10 @@ type NamedRadioGroupProps = Omit<
 >;
 
 // Update the BaseRadioInputProps to use the named type alias
-export type BaseRadioInputProps<T extends string> = NamedRadioGroupProps &
-  BaseProps & {
-    label?: LabelType;
-    options: RadioOptionsType<T>;
-  };
+export type BaseRadioInputProps<T extends string> = NamedRadioGroupProps & {
+  label?: LabelType;
+  options: RadioOptionsType<T>;
+};
 
 export const RadioInputComponent = <T extends string>({
   value,
@@ -25,7 +23,6 @@ export const RadioInputComponent = <T extends string>({
   setValue,
   label,
   options,
-  wrapper,
   ...props
 }: BaseRadioInputProps<T> & ViewComponentProps<T | undefined>) => {
   const optionsEntries = useMemo(() => {
@@ -34,7 +31,7 @@ export const RadioInputComponent = <T extends string>({
     }
     return Object.entries(options) as [string, T][];
   }, [options]);
-  return applyWrapper(
+  return (
     <>
       {renderLabel(label)}
       <RadioGroup.Root value={value} onValueChange={setValue} {...props}>
@@ -44,8 +41,7 @@ export const RadioInputComponent = <T extends string>({
           </RadioGroup.Item>
         ))}
       </RadioGroup.Root>
-    </>,
-    wrapper
+    </>
   );
 };
 

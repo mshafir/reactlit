@@ -1,7 +1,6 @@
 import { CheckboxGroup } from '@radix-ui/themes';
-import { applyWrapper, defineView, ViewComponentProps } from '@reactlit/core';
+import { defineView, ViewComponentProps } from '@reactlit/core';
 import { useMemo } from 'react';
-import { BaseProps } from '../config';
 import { LabelType, renderLabel } from '../label';
 
 export type CheckOptionsType<T> = T[] | Record<string, T>;
@@ -9,11 +8,10 @@ export type CheckOptionsType<T> = T[] | Record<string, T>;
 export type BaseCheckInputProps<T extends string> = Omit<
   CheckboxGroup.RootProps,
   'value' | 'onValueChange'
-> &
-  BaseProps & {
-    label?: LabelType;
-    options: CheckOptionsType<T>;
-  };
+> & {
+  label?: LabelType;
+  options: CheckOptionsType<T>;
+};
 
 export const CheckInputComponent = <T extends string>({
   value,
@@ -21,7 +19,6 @@ export const CheckInputComponent = <T extends string>({
   setValue,
   label,
   options,
-  wrapper,
   ...props
 }: BaseCheckInputProps<T> & ViewComponentProps<T[]>) => {
   const optionsEntries = useMemo(() => {
@@ -30,7 +27,7 @@ export const CheckInputComponent = <T extends string>({
     }
     return Object.entries(options) as [string, T][];
   }, [options]);
-  return applyWrapper(
+  return (
     <>
       {renderLabel(label)}
       <CheckboxGroup.Root
@@ -44,8 +41,7 @@ export const CheckInputComponent = <T extends string>({
           </CheckboxGroup.Item>
         ))}
       </CheckboxGroup.Root>
-    </>,
-    wrapper
+    </>
   );
 };
 

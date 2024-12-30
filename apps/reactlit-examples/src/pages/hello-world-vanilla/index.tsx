@@ -1,7 +1,5 @@
 import { Reactlit, useReactlitState } from '@reactlit/core';
-import { configureInputs } from '@reactlit/vanilla';
-
-const Inputs = configureInputs();
+import { Inputs } from '@reactlit/vanilla';
 
 export default function HelloWorldVanilla() {
   const [appState, setAppState] = useReactlitState({
