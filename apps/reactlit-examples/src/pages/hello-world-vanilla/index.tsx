@@ -45,7 +45,16 @@ export default function HelloWorldVanilla() {
               containerClassName: 'flex gap-2',
               valueof: (item) => item.value,
               format: (item) => (
-                <span style={{ color: item.value }}>{item.label}</span>
+                <span
+                  style={{
+                    color: item.value,
+                    backgroundColor: '#aaa',
+                    padding: '0rem 0.5rem',
+                    borderRadius: '0.2rem',
+                  }}
+                >
+                  {item.label}
+                </span>
               ),
               keyof: (item) => item.label,
               disabled: ['White'],

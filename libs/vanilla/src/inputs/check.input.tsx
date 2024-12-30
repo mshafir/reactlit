@@ -40,17 +40,19 @@ export const CheckInputComponent = <T,>({
     <div className="flex gap-2 items-center">
       {label && <label htmlFor={stateKey}>{label}</label>}
       <div className={containerClassName}>
-        {data.map((item, index) => {
+        {data.map((item) => {
           const isChecked = !!value.find((v) =>
             valueof ? valueof(item) === v : item === v
           );
+          const itemKey = `${stateKey}-${keyof?.(item) ?? item.toString()}`;
 
           return (
-            <div key={keyof?.(item) ?? index}>
+            <div key={itemKey}>
               <input
                 type="checkbox"
                 checked={isChecked}
-                name={keyof?.(item) ?? item.toString()}
+                id={itemKey}
+                name={itemKey}
                 onChange={(e) => {
                   const _value = valueof?.(item) ?? item;
                   if (e.target.checked) setValue([...value, _value]);
@@ -62,7 +64,7 @@ export const CheckInputComponent = <T,>({
                 }
                 {...props}
               />
-              <label htmlFor={keyof?.(item) ?? item.toString()}>
+              <label htmlFor={itemKey}>
                 {format?.(item) ?? item.toString()}
               </label>
             </div>
