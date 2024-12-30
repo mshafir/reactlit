@@ -6,7 +6,7 @@ import {
   useReactlit,
   useReactlitState,
 } from '@reactlit/core';
-import { Inputs } from '@reactlit/radix';
+import { Inputs, DefaultRadixWrapper } from '@reactlit/radix';
 
 export default function Starter() {
   const [appState, setAppState] = useReactlitState({
@@ -19,7 +19,11 @@ export default function Starter() {
     DataFetchingPlugin
   );
   return (
-    <Reactlit state={appState} setState={setAppState}>
+    <Reactlit
+      state={appState}
+      setState={setAppState}
+      wrapper={DefaultRadixWrapper}
+    >
       {async ({ display, view }) => {
         const name = view(
           'name',

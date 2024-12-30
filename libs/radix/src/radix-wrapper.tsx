@@ -21,5 +21,7 @@ export const RadixThemeWrapper = (theme?: ThemeProps) => {
 };
 
 export const RadixWrapper = (theme?: ThemeProps) => {
-  return combineWrappers(RadixThemeWrapper(theme), BoxContainerWrapper);
+  return combineWrappers(BoxContainerWrapper, RadixThemeWrapper(theme));
 };
+
+export const DefaultRadixWrapper = RadixWrapper();
