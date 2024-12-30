@@ -13,6 +13,7 @@ import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { useDeepMemo } from './hooks/use-deep-memo';
 import { useReactlitState } from './hooks/use-reactlit-state';
 import { deepEqual } from './utils/deep-equal';
+import { applyWrapper, Wrapper } from './utils/apply-wrapper';
 
 export interface ViewComponentProps<T> {
   stateKey: string;
@@ -69,13 +70,28 @@ export type ReactlitStateSetter<T> = <K extends keyof T>(
 export type ReactlitProps<T extends StateBase> = {
   state?: T;
   setState?: ReactlitStateSetter<T>;
+  /**
+   * Render function to display a loading message
+   */
   renderLoading?: (rendering: boolean) => ReactNode;
+  /**
+   * Render function to display an error message
+   */
   renderError?: (props: {
     error: any;
     resetErrorBoundary: (...args: any[]) => void;
   }) => ReactNode;
-  className?: string;
+  /**
+   * Whether to log debug messages to the console
+   */
   debug?: boolean;
+  /**
+   * Wrapper to apply around all displayed elements
+   */
+  wrapper?: Wrapper;
+  /**
+   * Function for the Reactlit rendering logic
+   */
   children: ReactlitFunction<T>;
 };
 
@@ -107,6 +123,7 @@ export function Reactlit<T extends StateBase = any>({
   renderError = defaultRenderError,
   debug,
   children,
+  wrapper,
 }: ReactlitProps<T>) {
   const [defaultRawState, defaultSetState] = useReactlitState<T>({} as T);
   rawState = rawState ?? defaultRawState;
@@ -141,7 +158,7 @@ export function Reactlit<T extends StateBase = any>({
           .findIndex(([k]) => manualKey && k === manualKey);
         const element = (
           <ReactErrorBoundary key={key} fallbackRender={renderError}>
-            {node}
+            {applyWrapper(node, wrapper)}
           </ReactErrorBoundary>
         );
         const newEntry = [key, element] as [string, React.ReactNode];
@@ -177,7 +194,7 @@ export function Reactlit<T extends StateBase = any>({
         }
       });
     },
-    [setRenderState, renderError]
+    [setRenderState, renderError, wrapper]
   );
 
   const view = useCallback<ReactlitContext<T>['view']>(

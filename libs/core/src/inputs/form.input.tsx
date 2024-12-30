@@ -1,7 +1,7 @@
 import { Fragment, ReactNode, SetStateAction, useMemo } from 'react';
 import { defineView, ViewDefinition } from '../reactlit';
 import { ViewComponentProps } from '../reactlit';
-import { applyWrapper, Wrapper } from '../utils/with-wrapper';
+import { applyWrapper, Wrapper } from '../utils/apply-wrapper';
 import { isSetStateFunction } from '../hooks/use-reactlit-state';
 
 export type FormDefMap<T> = {

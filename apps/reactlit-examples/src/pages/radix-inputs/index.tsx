@@ -1,8 +1,6 @@
 import { Badge, DataList } from '@radix-ui/themes';
 import { Reactlit, useReactlitState } from '@reactlit/core';
-import { configureInputs } from '@reactlit/radix';
-
-const Inputs = configureInputs();
+import { Inputs, RadixWrapper } from '@reactlit/radix';
 
 interface Country {
   name: string;
@@ -34,6 +32,8 @@ export async function fetchCountries(): Promise<Country[]> {
   }));
 }
 
+const wrapper = RadixWrapper();
+
 export default function RadixInputs() {
   const [appState, setAppState] = useReactlitState({
     countrySearch: '',
@@ -49,7 +49,7 @@ export default function RadixInputs() {
     },
   });
   return (
-    <Reactlit state={appState} setState={setAppState}>
+    <Reactlit state={appState} setState={setAppState} wrapper={wrapper}>
       {async ({ display, view }) => {
         display(<div className="text-2xl">Inputs test</div>);
         const results = view(

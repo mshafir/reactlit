@@ -1,7 +1,5 @@
 import { Reactlit, useReactlitState } from '@reactlit/core';
-import { configureInputs } from '@reactlit/radix';
-
-const Inputs = configureInputs();
+import { Inputs } from '@reactlit/radix';
 
 export default function HelloWorld() {
   const [appState, setAppState] = useReactlitState({

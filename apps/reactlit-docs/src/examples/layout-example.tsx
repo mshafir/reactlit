@@ -1,7 +1,6 @@
-import { LayoutPlugin, Reactlit } from '@reactlit/core';
+import { LayoutPlugin, useReactlit } from '@reactlit/core';
 import { TextInput } from './inputs/basic-text-input';
 import { ThreeColumnLayout } from './layouts/three-column-layout';
-import { useReactlit } from '../../../../libs/core/dist/hooks/use-reactlit';
 
 export default function LayoutExample() {
   const Reactlit = useReactlit(LayoutPlugin);

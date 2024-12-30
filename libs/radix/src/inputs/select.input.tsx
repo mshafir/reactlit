@@ -1,7 +1,6 @@
 import { Select } from '@radix-ui/themes';
-import { applyWrapper, defineView, ViewComponentProps } from '@reactlit/core';
+import { defineView, ViewComponentProps } from '@reactlit/core';
 import { useMemo } from 'react';
-import { BaseProps } from '../config';
 import { LabelType, renderLabel } from '../label';
 
 export type SelectOptionsType<T> = T[] | Record<string, T>;
@@ -10,11 +9,10 @@ export type SelectOptionsType<T> = T[] | Record<string, T>;
 type NamedSelectGroupProps = Omit<Select.RootProps, 'value' | 'onValueChange'>;
 
 // Update the BaseSelectInputProps to use the named type alias
-export type BaseSelectInputProps<T extends string> = NamedSelectGroupProps &
-  BaseProps & {
-    label?: LabelType;
-    options: SelectOptionsType<T>;
-  };
+export type BaseSelectInputProps<T extends string> = NamedSelectGroupProps & {
+  label?: LabelType;
+  options: SelectOptionsType<T>;
+};
 
 export const SelectInputComponent = <T extends string>({
   value,
@@ -22,7 +20,6 @@ export const SelectInputComponent = <T extends string>({
   setValue,
   label,
   options,
-  wrapper,
   ...props
 }: BaseSelectInputProps<T> & ViewComponentProps<T | undefined>) => {
   const optionsEntries = useMemo(() => {
@@ -31,7 +28,7 @@ export const SelectInputComponent = <T extends string>({
     }
     return Object.entries(options) as [string, T][];
   }, [options]);
-  return applyWrapper(
+  return (
     <>
       {renderLabel(label)}
       <Select.Root value={value} onValueChange={setValue} {...props}>
@@ -44,8 +41,7 @@ export const SelectInputComponent = <T extends string>({
           ))}
         </Select.Content>
       </Select.Root>
-    </>,
-    wrapper
+    </>
   );
 };
 

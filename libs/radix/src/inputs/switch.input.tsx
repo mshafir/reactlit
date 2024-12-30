@@ -1,30 +1,26 @@
 import { Switch, SwitchProps } from '@radix-ui/themes';
-import { applyWrapper, defineView, ViewComponentProps } from '@reactlit/core';
-import { BaseProps } from '../config';
+import { defineView, ViewComponentProps } from '@reactlit/core';
 import { LabelType, renderLabel } from '../label';
 
 export type SwitchInputProps = Omit<
   SwitchProps,
   'checked' | 'onCheckedChange' | 'value' | 'onValueChange'
-> &
-  BaseProps & {
-    label?: LabelType;
-  };
+> & {
+  label?: LabelType;
+};
 
 export const SwitchInputComponent = ({
   value,
   stateKey,
   setValue,
   label,
-  wrapper,
   ...props
 }: SwitchInputProps & ViewComponentProps<boolean>) => {
-  return applyWrapper(
+  return (
     <>
       {renderLabel(label)}
       <Switch checked={value} onCheckedChange={setValue} {...props} />
-    </>,
-    wrapper
+    </>
   );
 };
 

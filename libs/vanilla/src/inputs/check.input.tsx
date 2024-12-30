@@ -1,12 +1,10 @@
 import {
-  applyWrapper,
   defineTransformView,
   defineView,
   ViewComponentProps,
   ViewDefinition,
 } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
-import { VanillaConfig } from '../config';
 
 export type CheckInputProps<T> = Omit<
   DetailedHTMLProps<
@@ -14,16 +12,15 @@ export type CheckInputProps<T> = Omit<
     HTMLInputElement
   >,
   'value' | 'disabled'
-> &
-  VanillaConfig & {
-    data: T[];
-    label?: string | React.ReactNode;
-    containerClassName?: string;
-    format?: (value: T) => string | React.ReactNode;
-    valueof?: (value: T) => string;
-    keyof?: (value: T) => string;
-    disabled?: string[];
-  };
+> & {
+  data: T[];
+  label?: string | React.ReactNode;
+  containerClassName?: string;
+  format?: (value: T) => string | React.ReactNode;
+  valueof?: (value: T) => string;
+  keyof?: (value: T) => string;
+  disabled?: string[];
+};
 
 export const CheckInputComponent = <T,>({
   value,
@@ -37,10 +34,9 @@ export const CheckInputComponent = <T,>({
   valueof,
   disabled,
   label,
-  wrapper,
   ...props
 }: CheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
-  return applyWrapper(
+  return (
     <div className="flex gap-2 items-center">
       {label && <label htmlFor={stateKey}>{label}</label>}
       <div className={containerClassName}>
@@ -73,8 +69,7 @@ export const CheckInputComponent = <T,>({
           );
         })}
       </div>
-    </div>,
-    wrapper
+    </div>
   );
 };
 

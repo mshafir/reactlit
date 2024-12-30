@@ -3,7 +3,7 @@ import { textPropDefs } from '@radix-ui/themes/props';
 import {
   DataFetchingPlugin,
   LayoutPlugin,
-  Reactlit,
+  useReactlit,
   useReactlitState,
 } from '@reactlit/core';
 import { Inputs } from '@reactlit/radix';
@@ -14,12 +14,12 @@ export default function Starter() {
     weight: 'regular',
     size: 1,
   });
+  const Reactlit = useReactlit(
+    LayoutPlugin<typeof appState>,
+    DataFetchingPlugin
+  );
   return (
-    <Reactlit
-      state={appState}
-      setState={setAppState}
-      plugins={[LayoutPlugin, DataFetchingPlugin] as const}
-    >
+    <Reactlit state={appState} setState={setAppState}>
       {async ({ display, view }) => {
         const name = view(
           'name',

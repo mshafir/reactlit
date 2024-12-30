@@ -1,26 +1,23 @@
 import { Checkbox, Radio, ScrollArea, Skeleton, Table } from '@radix-ui/themes';
 import {
-  applyWrapper,
   defineTransformView,
   ViewComponentProps,
   ViewDefinition,
 } from '@reactlit/core';
 import { ReactNode, useMemo } from 'react';
-import { BaseProps } from '../config';
-import { userFriendlyName } from '../utils/user-friendly-name';
 import { repeatElement } from '../utils/repeat-element';
+import { userFriendlyName } from '../utils/user-friendly-name';
 
-export type TableInputProps<T> = Table.RootProps &
-  BaseProps & {
-    data: T[];
-    getRowId: (row: T) => string;
-    columns?: (keyof T & string)[];
-    header?: ColumnHeaderMapping<T>;
-    format?: ColumnDisplayMapping<T>;
-    maxHeight?: string;
-    multiple?: boolean;
-    loading?: boolean;
-  };
+export type TableInputProps<T> = Table.RootProps & {
+  data: T[];
+  getRowId: (row: T) => string;
+  columns?: (keyof T & string)[];
+  header?: ColumnHeaderMapping<T>;
+  format?: ColumnDisplayMapping<T>;
+  maxHeight?: string;
+  multiple?: boolean;
+  loading?: boolean;
+};
 
 type ColumnHeaderMapping<T> = {
   [K in keyof T]?: ReactNode;
@@ -46,7 +43,6 @@ export function TableInputViewComponent<T>({
   format,
   multiple,
   getRowId,
-  wrapper,
   maxHeight = '300px',
   loading,
   ...props
@@ -120,7 +116,7 @@ export function TableInputViewComponent<T>({
     multiple,
     stateKey,
   ]);
-  return applyWrapper(
+  return (
     <ScrollArea
       type="auto"
       scrollbars="vertical"
@@ -172,8 +168,7 @@ export function TableInputViewComponent<T>({
           )}
         </Table.Body>
       </Table.Root>
-    </ScrollArea>,
-    wrapper
+    </ScrollArea>
   );
 }
 
