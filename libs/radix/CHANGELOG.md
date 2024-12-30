@@ -1,5 +1,16 @@
 # @reactlit/radix
 
+## 0.1.0
+
+### Minor Changes
+
+- b242a09: Removed per-input wrapper props, updated plugin mechanism, removing plugin prop in favor of a useReactlit hook
+
+### Patch Changes
+
+- Updated dependencies [b242a09]
+  - @reactlit/core@0.1.0
+
 ## 0.0.9
 
 ### Patch Changes

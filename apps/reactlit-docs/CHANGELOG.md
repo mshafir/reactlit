@@ -1,5 +1,13 @@
 # reactlit-docs
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [b242a09]
+  - @reactlit/radix@0.1.0
+  - @reactlit/core@0.1.0
+
 ## 0.0.9
 
 ### Patch Changes
