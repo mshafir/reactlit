@@ -1,5 +1,11 @@
 # @reactlit/core
 
+## 0.1.3
+
+### Patch Changes
+
+- d000d25: Fix to plugin helper type
+
 ## 0.1.2
 
 ### Patch Changes
