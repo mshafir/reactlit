@@ -6,7 +6,7 @@ import {
   QueryObserver,
   Updater,
 } from '@tanstack/react-query';
-import { definePlugin } from '../hooks/use-reactlit';
+import { definePlugin, ReactlitPlugin } from '../hooks/use-reactlit';
 
 export class DataFetcher<T> {
   constructor(
@@ -57,7 +57,17 @@ export class DataFetcher<T> {
   }
 }
 
-export function makeDataFetchingPlugin(config?: QueryClientConfig) {
+export type DataFetchingContext = {
+  fetcher<T>(
+    key: QueryKey,
+    fn: () => Promise<T>,
+    options?: Partial<EnsureQueryDataOptions<T, Error, T, QueryKey, never>>
+  ): DataFetcher<T>;
+};
+
+export function makeDataFetchingPlugin(
+  config?: QueryClientConfig
+): ReactlitPlugin<DataFetchingContext> {
   const client = new QueryClient(config);
   let isMounted = false;
   return definePlugin((ctx) => {
@@ -84,6 +94,3 @@ export function makeDataFetchingPlugin(config?: QueryClientConfig) {
 }
 
 export const DataFetchingPlugin = makeDataFetchingPlugin();
-
-// re-export to avoid portability errors
-export { QueryKey, EnsureQueryDataOptions };

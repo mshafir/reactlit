@@ -8,7 +8,7 @@
     "target": "ES6",
     "allowSyntheticDefaultImports": true,
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "declaration": true,
     "emitDeclarationOnly": true
   },
