@@ -1,5 +1,11 @@
 # @reactlit/core
 
+## 0.1.2
+
+### Patch Changes
+
+- d414d22: Added helper type for plugins, fix tanstack export portability
+
 ## 0.1.1
 
 ### Patch Changes
