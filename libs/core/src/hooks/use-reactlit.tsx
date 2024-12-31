@@ -19,7 +19,12 @@ type GenericPluginResult<Plugin> = Plugin extends ReactlitPlugin<infer C>
 
 type ApplyPlugins<Plugins> = Plugins extends [infer Plugin, ...infer Rest]
   ? GenericPluginResult<Plugin> & ApplyPlugins<Rest>
-  : {};
+  : Record<string, never>;
+
+export type ReactlitFunctionWithPlugins<
+  T extends StateBase,
+  P extends ReactlitPlugin<any>[]
+> = ReactlitFunction<T, ApplyPlugins<P> & ReactlitContext<T>>;
 
 export function useReactlit<P extends ReactlitPlugin<any>[]>(...plugins: P) {
   return useMemo(() => {

@@ -84,3 +84,6 @@ export function makeDataFetchingPlugin(config?: QueryClientConfig) {
 }
 
 export const DataFetchingPlugin = makeDataFetchingPlugin();
+
+// re-export to avoid portability errors
+export { QueryKey, EnsureQueryDataOptions };
