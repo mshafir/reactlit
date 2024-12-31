@@ -1,5 +1,13 @@
 # @reactlit/radix
 
+## 0.1.2
+
+### Patch Changes
+
+- d414d22: Added helper type for plugins, fix tanstack export portability
+- Updated dependencies [d414d22]
+  - @reactlit/core@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
