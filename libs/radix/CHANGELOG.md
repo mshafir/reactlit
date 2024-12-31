@@ -1,5 +1,13 @@
 # @reactlit/radix
 
+## 0.1.1
+
+### Patch Changes
+
+- 63e281a: Fix radix wrapper, vanilla checkbox
+- Updated dependencies [63e281a]
+  - @reactlit/core@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
