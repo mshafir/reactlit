@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": ["ES2021", "DOM"],
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "declaration": true,
     "emitDeclarationOnly": true
   },
