@@ -1,13 +1,9 @@
-import { VanillaConfig } from './config';
-import { CheckInput, CheckInputProps } from './inputs/check.input';
-import { TextInput, TextInputProps } from './inputs/text.input';
+import { CheckInput } from './inputs/check.input';
+import { RadioInput } from './inputs/radio.input';
+import { TextInput } from './inputs/text.input';
 
-export function configureInputs(config?: VanillaConfig) {
-  return {
-    Text: (props?: TextInputProps) => TextInput({ ...config, ...props }),
-    Check: <T, P extends CheckInputProps<T>>(data: T[], props: P) =>
-      CheckInput<T, P>(data, { ...config, ...props }),
-  };
-}
-
-export const Inputs = configureInputs();
+export const Inputs = {
+  Text: TextInput,
+  Check: CheckInput,
+  Radio: RadioInput,
+};
