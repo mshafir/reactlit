@@ -6,6 +6,8 @@ export default function HelloWorldVanilla() {
     name: '',
     pickedNumbers: [],
     pickedColors: [],
+    choosedNumber: '',
+    choosedColor: '',
   });
   return (
     <Reactlit state={appState} setState={setAppState}>
@@ -56,12 +58,51 @@ export default function HelloWorldVanilla() {
                   {item.label}
                 </span>
               ),
-              keyof: (item) => item.label,
-              disabled: ['White'],
+              disabled: (item) => item.value === '#FFFFFF',
             }
           )
         );
         display(<div>Colors: {JSON.stringify(pickedColors)}!</div>);
+        const choosedNumber = view(
+          'choosedNumber',
+          Inputs.Radio(['One', 'Two', 'Three'], {
+            className: 'border p-0.5 mr-1',
+            label: 'Choose a number',
+            containerClassName: 'flex gap-2',
+          })
+        );
+        display(<div>Choosed Number: {choosedNumber}!</div>);
+        const choosedColor = view(
+          'choosedColor',
+          Inputs.Radio(
+            [
+              { label: 'Red', value: '#FF0000' },
+              { label: 'Green', value: '#00FF00' },
+              { label: 'Blue', value: '#0000FF' },
+              { label: 'White', value: '#FFFFFF' },
+            ],
+            {
+              className: 'border p-0.5 mr-1',
+              label: 'Choose a color',
+              containerClassName: 'flex gap-2',
+              valueof: (item) => item.value,
+              format: (item) => (
+                <span
+                  style={{
+                    color: item.value,
+                    backgroundColor: '#aaa',
+                    padding: '0rem 0.5rem',
+                    borderRadius: '0.2rem',
+                  }}
+                >
+                  {item.label}
+                </span>
+              ),
+              disabled: (item) => item.value === '#FFFFFF',
+            }
+          )
+        );
+        display(<div>Color: {JSON.stringify(choosedColor)}!</div>);
       }}
     </Reactlit>
   );
