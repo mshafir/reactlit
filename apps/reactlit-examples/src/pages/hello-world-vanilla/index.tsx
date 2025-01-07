@@ -6,8 +6,8 @@ export default function HelloWorldVanilla() {
     name: '',
     pickedNumbers: [],
     pickedColors: [],
-    choosedNumber: '',
-    choosedColor: '',
+    chosenNumber: '',
+    chosenColor: '',
   });
   return (
     <Reactlit state={appState} setState={setAppState}>
@@ -26,9 +26,14 @@ export default function HelloWorldVanilla() {
         const picked = view(
           'pickedNumbers',
           Inputs.Check(['One', 'Two', 'Three'], {
-            className: 'border p-0.5 mr-1',
+            className: {
+              container: 'flex gap-2 items-center',
+              wrapper: 'flex gap-2',
+              item: {
+                input: 'border p-0.5 mr-1',
+              },
+            },
             label: 'Pick any number',
-            containerClassName: 'flex gap-2',
           })
         );
         display(<div>Picked: {picked.join(', ')}!</div>);
@@ -42,9 +47,14 @@ export default function HelloWorldVanilla() {
               { label: 'White', value: '#FFFFFF' },
             ],
             {
-              className: 'border p-0.5 mr-1',
+              className: {
+                container: 'flex gap-2 items-center',
+                wrapper: 'flex gap-2',
+                item: {
+                  input: 'border p-0.5 mr-1',
+                },
+              },
               label: 'Pick any color',
-              containerClassName: 'flex gap-2',
               valueof: (item) => item.value,
               format: (item) => (
                 <span
@@ -63,17 +73,22 @@ export default function HelloWorldVanilla() {
           )
         );
         display(<div>Colors: {JSON.stringify(pickedColors)}!</div>);
-        const choosedNumber = view(
-          'choosedNumber',
+        const chosenNumber = view(
+          'chosenNumber',
           Inputs.Radio(['One', 'Two', 'Three'], {
-            className: 'border p-0.5 mr-1',
+            className: {
+              container: 'flex gap-2 items-center',
+              wrapper: 'flex gap-2',
+              item: {
+                input: 'border p-0.5 mr-1',
+              },
+            },
             label: 'Choose a number',
-            containerClassName: 'flex gap-2',
           })
         );
-        display(<div>Choosed Number: {choosedNumber}!</div>);
-        const choosedColor = view(
-          'choosedColor',
+        display(<div>Chosen Number: {chosenNumber}!</div>);
+        const chosenColor = view(
+          'chosenColor',
           Inputs.Radio(
             [
               { label: 'Red', value: '#FF0000' },
@@ -82,9 +97,14 @@ export default function HelloWorldVanilla() {
               { label: 'White', value: '#FFFFFF' },
             ],
             {
-              className: 'border p-0.5 mr-1',
+              className: {
+                container: 'flex gap-2 items-center',
+                wrapper: 'flex gap-2',
+                item: {
+                  input: 'border p-0.5 mr-1',
+                },
+              },
               label: 'Choose a color',
-              containerClassName: 'flex gap-2',
               valueof: (item) => item.value,
               format: (item) => (
                 <span
@@ -102,7 +122,7 @@ export default function HelloWorldVanilla() {
             }
           )
         );
-        display(<div>Color: {JSON.stringify(choosedColor)}!</div>);
+        display(<div>Chosen Color: {JSON.stringify(chosenColor)}!</div>);
       }}
     </Reactlit>
   );

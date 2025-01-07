@@ -11,11 +11,20 @@ export type CheckInputProps<T> = Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >,
-  'value' | 'disabled'
+  'value' | 'disabled' | 'className'
 > & {
   data: T[];
   label?: string | React.ReactNode;
-  containerClassName?: string;
+  className?: {
+    container?: string;
+    wrapper?: string;
+    label?: string;
+    item?: {
+      wrapper?: string;
+      input?: string;
+      label?: string;
+    };
+  };
   format?: (value: T) => string | React.ReactNode;
   valueof?: (value: T) => string;
   disabled?: string[] | ((value: T) => boolean);
@@ -27,7 +36,7 @@ export const CheckInputComponent = <T,>({
   setValue,
   onChange,
   data,
-  containerClassName,
+  className,
   format,
   valueof,
   disabled,
@@ -35,9 +44,13 @@ export const CheckInputComponent = <T,>({
   ...props
 }: CheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
   return (
-    <div className="flex gap-2 items-center">
-      {label && <label htmlFor={stateKey}>{label}</label>}
-      <div className={containerClassName}>
+    <div className={className?.container}>
+      {label && (
+        <label htmlFor={stateKey} className={className?.label}>
+          {label}
+        </label>
+      )}
+      <div className={className?.wrapper}>
         {data.map((item) => {
           const isChecked = !!value.find((v) =>
             valueof ? valueof(item) === v : item === v
@@ -54,12 +67,13 @@ export const CheckInputComponent = <T,>({
           }
 
           return (
-            <div key={itemKey}>
+            <div key={itemKey} className={className?.item?.wrapper}>
               <input
                 type="checkbox"
                 checked={isChecked}
                 id={itemKey}
                 name={itemKey}
+                className={className?.item?.input}
                 onChange={(e) => {
                   const _value = valueof?.(item) ?? item;
                   if (e.target.checked) setValue([...value, _value]);
@@ -68,7 +82,7 @@ export const CheckInputComponent = <T,>({
                 disabled={disabledValue}
                 {...props}
               />
-              <label htmlFor={itemKey}>
+              <label htmlFor={itemKey} className={className?.item?.label}>
                 {format?.(item) ?? item.toString()}
               </label>
             </div>

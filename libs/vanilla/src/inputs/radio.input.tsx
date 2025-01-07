@@ -11,11 +11,20 @@ export type RadioInputProps<T> = Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >,
-  'value' | 'disabled'
+  'value' | 'disabled' | 'className'
 > & {
   data: T[];
   label?: string | React.ReactNode;
-  containerClassName?: string;
+  className?: {
+    container?: string;
+    wrapper?: string;
+    label?: string;
+    item?: {
+      wrapper?: string;
+      input?: string;
+      label?: string;
+    };
+  };
   format?: (value: T) => string | React.ReactNode;
   valueof?: (value: T) => string;
   disabled?: string[] | ((value: T) => boolean);
@@ -27,17 +36,22 @@ export const RadioInputComponent = <T,>({
   setValue,
   onChange,
   data,
-  containerClassName,
+  className,
   format,
   valueof,
   disabled,
   label,
   ...props
 }: RadioInputProps<T> & ViewComponentProps<string | T>) => {
+  console.log(className);
   return (
-    <div className="flex gap-2 items-center">
-      {label && <label htmlFor={stateKey}>{label}</label>}
-      <div className={containerClassName}>
+    <div className={className?.container}>
+      {label && (
+        <label htmlFor={stateKey} className={className?.label}>
+          {label}
+        </label>
+      )}
+      <div className={className?.wrapper}>
         {data.map((item) => {
           const isChecked = valueof ? valueof(item) === value : item === value;
           const itemKey = `${stateKey}-${valueof?.(item) ?? item.toString()}`;
@@ -52,12 +66,13 @@ export const RadioInputComponent = <T,>({
           }
 
           return (
-            <div key={itemKey}>
+            <div key={itemKey} className={className?.item?.wrapper}>
               <input
                 type="radio"
                 checked={isChecked}
                 id={itemKey}
                 name={itemKey}
+                className={className?.item?.input}
                 onChange={(e) => {
                   const _value = valueof?.(item) ?? item;
                   if (e.target.checked) setValue(_value);
@@ -65,7 +80,7 @@ export const RadioInputComponent = <T,>({
                 disabled={disabledValue}
                 {...props}
               />
-              <label htmlFor={itemKey}>
+              <label htmlFor={itemKey} className={className?.item?.label}>
                 {format?.(item) ?? item.toString()}
               </label>
             </div>
