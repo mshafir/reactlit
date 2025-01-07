@@ -43,7 +43,6 @@ export const RadioInputComponent = <T,>({
   label,
   ...props
 }: RadioInputProps<T> & ViewComponentProps<string | T>) => {
-  console.log(className);
   return (
     <div className={className?.container}>
       {label && (
