@@ -6,7 +6,7 @@ import {
 } from '@reactlit/core';
 import { DetailedHTMLProps } from 'react';
 
-export type CheckInputProps<T> = Omit<
+export type RadioInputProps<T> = Omit<
   DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
@@ -30,7 +30,7 @@ export type CheckInputProps<T> = Omit<
   disabled?: string[] | ((value: T) => boolean);
 };
 
-export const CheckInputComponent = <T,>({
+export const RadioInputComponent = <T,>({
   value,
   stateKey,
   setValue,
@@ -42,7 +42,7 @@ export const CheckInputComponent = <T,>({
   disabled,
   label,
   ...props
-}: CheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
+}: RadioInputProps<T> & ViewComponentProps<string | T>) => {
   return (
     <div className={className?.container}>
       {label && (
@@ -52,9 +52,7 @@ export const CheckInputComponent = <T,>({
       )}
       <div className={className?.wrapper}>
         {data.map((item) => {
-          const isChecked = !!value.find((v) =>
-            valueof ? valueof(item) === v : item === v
-          );
+          const isChecked = valueof ? valueof(item) === value : item === value;
           const itemKey = `${stateKey}-${valueof?.(item) ?? item.toString()}`;
           let disabledValue = false;
 
@@ -69,15 +67,14 @@ export const CheckInputComponent = <T,>({
           return (
             <div key={itemKey} className={className?.item?.wrapper}>
               <input
-                type="checkbox"
+                type="radio"
                 checked={isChecked}
                 id={itemKey}
                 name={itemKey}
                 className={className?.item?.input}
                 onChange={(e) => {
                   const _value = valueof?.(item) ?? item;
-                  if (e.target.checked) setValue([...value, _value]);
-                  else setValue(value.filter((v) => v !== _value));
+                  if (e.target.checked) setValue(_value);
                 }}
                 disabled={disabledValue}
                 {...props}
@@ -93,31 +90,29 @@ export const CheckInputComponent = <T,>({
   );
 };
 
-export type CheckInputDefinition<T, P> = P extends { valueof: (v: T) => string }
-  ? ViewDefinition<string[], T[]>
-  : ViewDefinition<T[]>;
+export type RadioInputDefinition<T, P> = P extends { valueof: (v: T) => string }
+  ? ViewDefinition<string | T, T>
+  : ViewDefinition<T>;
 
-export const CheckInput = <T, P extends CheckInputProps<T>>(
+export const RadioInput = <T, P extends RadioInputProps<T>>(
   data: P['data'],
   { valueof, ...props }: Omit<P, 'data'>
-): CheckInputDefinition<T, P> => {
+): RadioInputDefinition<T, P> => {
   if (valueof) {
-    return defineTransformView<string[], T[]>(
+    return defineTransformView<string | T, T>(
       (viewProps) => (
-        <CheckInputComponent
+        <RadioInputComponent
           data={data}
           {...viewProps}
           {...props}
           valueof={valueof}
         />
       ),
-      ({ value }) => {
-        return value.map((v) => data.find((d) => valueof(d) === v));
-      }
-    ) as CheckInputDefinition<T, P>;
+      ({ value }) => data.find((d) => valueof(d) === value)
+    ) as RadioInputDefinition<T, P>;
   } else {
-    return defineView<T[]>((viewProps) => (
-      <CheckInputComponent data={data} {...viewProps} {...props} />
-    )) as CheckInputDefinition<T, P>;
+    return defineView<T>((viewProps) => (
+      <RadioInputComponent data={data} {...viewProps} {...props} />
+    )) as RadioInputDefinition<T, P>;
   }
 };
