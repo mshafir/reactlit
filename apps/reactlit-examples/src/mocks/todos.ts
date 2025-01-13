@@ -12,8 +12,12 @@ export type Todo = {
 export class TodoService {
   constructor(private todos: Todo[], private readonly delay: number = 0) {}
 
-  async getTodos() {
+  async getTodos(fail?: boolean) {
+    console.log('getTodos');
     await wait(this.delay);
+    if (fail) {
+      throw new Error('purposefully failed');
+    }
     return this.todos;
   }
 

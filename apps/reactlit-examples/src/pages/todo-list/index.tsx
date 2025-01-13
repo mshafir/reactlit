@@ -1,11 +1,15 @@
-import { Callout, Spinner } from '@radix-ui/themes';
+import { Button, Callout, Spinner } from '@radix-ui/themes';
 import {
   DataFetchingPlugin,
   defineLayout,
   LayoutPlugin,
   useReactlit,
 } from '@reactlit/core';
-import { BoxContainerWrapper, Inputs } from '@reactlit/radix';
+import {
+  BoxContainerWrapper,
+  DefaultRadixWrapper,
+  Inputs,
+} from '@reactlit/radix';
 import { InfoIcon } from 'lucide-react';
 import { TodoService } from '../../mocks/todos';
 
@@ -37,7 +41,7 @@ const TwoColumnLayout = defineLayout(2, ({ slots: [Slot1, Slot2] }) => {
 export default function TodoList() {
   const Reactlit = useReactlit(LayoutPlugin, DataFetchingPlugin);
   return (
-    <Reactlit>
+    <Reactlit wrapper={DefaultRadixWrapper}>
       {async ({ display, view, set, changed, fetcher, layout }) => {
         display(
           <Callout.Root>
@@ -51,6 +55,11 @@ export default function TodoList() {
           </Callout.Root>
         );
         const todosFetcher = fetcher(['todos'], () => api.getTodos());
+        display(
+          <div>
+            <Button onClick={() => todosFetcher.refetch()}>Refetch</Button>
+          </div>
+        );
         view(
           'adding',
           Inputs.AsyncButton(

@@ -10,7 +10,7 @@ import { definePlugin, ReactlitPlugin } from '../hooks/use-reactlit';
 
 export class DataFetcher<T> {
   constructor(
-    private client: QueryClient,
+    public client: QueryClient,
     private trigger: () => void,
     private key: QueryKey,
     private fn: () => Promise<T>,
@@ -20,6 +20,12 @@ export class DataFetcher<T> {
   ) {}
 
   get() {
+    if (this.key.some((k) => k === undefined)) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'One or more of the data fetching keys are undefined, this can result in unexpected behavior'
+      );
+    }
     const state = this.client.getQueryState(this.key);
     if (state?.status === 'error') {
       throw state.error;
