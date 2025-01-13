@@ -270,10 +270,6 @@ export function Reactlit<T extends StateBase = any>({
         debug && console.debug('reactlit rendering:', childArgs.state);
         setRenderState(({ elements }) => ({ elements, position: 0 }));
         await children(childArgs);
-        setRenderState(({ elements, position }) => ({
-          position,
-          elements: elements.slice(0, position),
-        }));
       } catch (e: any) {
         // eslint-disable-next-line no-console
         debug && console.error(e);
@@ -283,6 +279,10 @@ export function Reactlit<T extends StateBase = any>({
           )
         );
       } finally {
+        setRenderState(({ elements, position }) => ({
+          position,
+          elements: elements.slice(0, position),
+        }));
         renderLock.current = false;
         if (renderAfter.current) {
           renderAfter.current = false;
