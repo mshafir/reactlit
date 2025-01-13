@@ -1,5 +1,13 @@
 # @reactlit/vanilla
 
+## 0.1.4
+
+### Patch Changes
+
+- c1b7dbe: warn about data fetching with undefined keys and fix bug with old content post-error
+- Updated dependencies [c1b7dbe]
+  - @reactlit/core@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes
