@@ -1,15 +1,6 @@
 import { Button, Callout, Spinner } from '@radix-ui/themes';
-import {
-  DataFetchingPlugin,
-  defineLayout,
-  LayoutPlugin,
-  useReactlit,
-} from '@reactlit/core';
-import {
-  BoxContainerWrapper,
-  DefaultRadixWrapper,
-  Inputs,
-} from '@reactlit/radix';
+import { DataFetchingPlugin, useReactlit } from '@reactlit/core';
+import { DefaultRadixWrapper, Inputs } from '@reactlit/radix';
 import { InfoIcon } from 'lucide-react';
 import { TodoService } from '../../mocks/todos';
 
@@ -23,23 +14,8 @@ export const Loader = ({ message }: { message: string }) => {
 
 const api = new TodoService([], 1000);
 
-const TwoColumnLayout = defineLayout(2, ({ slots: [Slot1, Slot2] }) => {
-  return (
-    <BoxContainerWrapper>
-      <div className="grid grid-cols-3 gap-4">
-        <BoxContainerWrapper>
-          <Slot1 />
-        </BoxContainerWrapper>
-        <BoxContainerWrapper>
-          <Slot2 />
-        </BoxContainerWrapper>
-      </div>
-    </BoxContainerWrapper>
-  );
-});
-
 export default function TodoList() {
-  const Reactlit = useReactlit(LayoutPlugin, DataFetchingPlugin);
+  const Reactlit = useReactlit(DataFetchingPlugin);
   return (
     <Reactlit wrapper={DefaultRadixWrapper}>
       {async ({ display, view, set, changed, fetcher, layout }) => {
@@ -90,14 +66,13 @@ export default function TodoList() {
             set('task', selectedTodo.task);
             set('completed', selectedTodo.completed);
           }
-          const [c1, c2] = layout(TwoColumnLayout);
-          const task = c1.view(
+          const task = view(
             'task',
             Inputs.Text({
               label: 'Task',
             })
           );
-          const completed = c2.view(
+          const completed = view(
             'completed',
             Inputs.Switch({
               label: 'Completed',

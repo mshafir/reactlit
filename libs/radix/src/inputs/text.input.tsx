@@ -1,6 +1,6 @@
 import { Text, TextField } from '@radix-ui/themes';
 import { defineView, ViewComponentProps } from '@reactlit/core';
-import { isValidElement, ReactNode, useEffect, useState } from 'react';
+import { isValidElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { LabelType, renderLabel } from '../label';
 

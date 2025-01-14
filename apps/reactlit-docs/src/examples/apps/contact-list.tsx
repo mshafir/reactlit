@@ -1,4 +1,4 @@
-import { FormInput, type ReactlitContext } from '@reactlit/core';
+import { FormView, type ReactlitContext } from '@reactlit/core';
 import { Inputs } from '@reactlit/radix';
 import { ContactMockApi as api } from '../mocks/contacts';
 import { Button } from '@radix-ui/themes';
@@ -27,10 +27,10 @@ export async function ContactListApp(app: ReactlitContext) {
   if (app.changed('selectedContact')) {
     app.set('updates', selectedContact);
   }
-  // the built-in FormInput allows you to group inputs together
+  // the built-in FormView allows you to group inputs together
   const updates = app.view(
     'updates',
-    FormInput({
+    FormView({
       name: Inputs.Text({ label: 'Name' }),
       email: Inputs.Text({ label: 'Email' }),
     })

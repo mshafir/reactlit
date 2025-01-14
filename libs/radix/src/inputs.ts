@@ -1,4 +1,4 @@
-import { FormInput } from '@reactlit/core';
+import { FormView } from '@reactlit/core';
 import { AsyncButton } from './inputs/async-button.input';
 import { CheckInput } from './inputs/check.input';
 import { RadioInput } from './inputs/radio.input';
@@ -17,7 +17,7 @@ export const Inputs = {
   Switch: SwitchInput,
   Radio: RadioInput,
   Select: SelectInput,
-  Form: FormInput,
+  Form: FormView,
   Slider: SliderInput,
   RangeSlider: RangeSliderInput,
   AsyncButton: AsyncButton,

@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react';
+import { Reactlit } from '../reactlit';
 import {
-  Reactlit,
   ReactlitContext,
   ReactlitFunction,
   ReactlitProps,
   StateBase,
-} from '../reactlit';
+} from '../builtins/types';
 
 export type ReactlitPlugin<C> = (ctx: ReactlitContext<any>) => C;
 

@@ -1,5 +1,5 @@
 import { Button } from '@radix-ui/themes';
-import { FormInput, type ReactlitContext } from '@reactlit/core';
+import { FormView, type ReactlitContext } from '@reactlit/core';
 import { Inputs } from '@reactlit/radix';
 import { TopRightLoader } from '../components/loader';
 import { ContactsMockService } from '../mocks/contacts';
@@ -36,7 +36,7 @@ export async function ContactListApp(app: ReactlitContext) {
   }
   const updates = app.view(
     'updates',
-    FormInput({
+    FormView({
       name: Inputs.Text({ label: 'Name' }),
       email: Inputs.Text({ label: 'Email' }),
     })

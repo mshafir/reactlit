@@ -1,25 +1,25 @@
 import { Fragment, ReactNode, SetStateAction, useMemo } from 'react';
-import { defineView, ViewDefinition } from '../reactlit';
-import { ViewComponentProps } from '../reactlit';
 import { applyWrapper, Wrapper } from '../utils/apply-wrapper';
 import { isSetStateFunction } from '../hooks/use-reactlit-state';
+import { ViewComponentProps, ViewDefinition } from '../builtins/types';
+import { defineView } from '../builtins/view';
 
 export type FormDefMap<T> = {
   [K in keyof T]: ViewDefinition<T[K], T[K]>;
 };
 
-export interface FormInputProps<T> {
+export interface FormViewProps<T> {
   form: FormDefMap<T>;
   wrapper?: Wrapper;
 }
 
-export function FormInputViewComponent<T>({
+export function FormViewComponent<T>({
   form,
   value,
   stateKey,
   setValue,
   wrapper,
-}: FormInputProps<T> & ViewComponentProps<T>) {
+}: FormViewProps<T> & ViewComponentProps<T>) {
   const views = useMemo(() => {
     const views: ReactNode[] = [];
     for (const key in form) {
@@ -40,11 +40,11 @@ export function FormInputViewComponent<T>({
   return applyWrapper(<>{views}</>, wrapper);
 }
 
-export function FormInput<T>(
+export function FormView<T>(
   form: FormDefMap<T>,
-  props?: Omit<FormInputProps<T>, 'form'>
+  props?: Omit<FormViewProps<T>, 'form'>
 ) {
   return defineView<T>((viewProps) => (
-    <FormInputViewComponent form={form} {...props} {...viewProps} />
+    <FormViewComponent form={form} {...props} {...viewProps} />
   ));
 }
