@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction } from 'react';
-import { Wrapper } from '../utils/apply-wrapper';
+import { Wrapper } from '../wrappers';
 import { DisplayArgs } from './display';
 import { ViewArgs } from './view';
 
@@ -9,6 +9,10 @@ export interface ViewComponentProps<T> {
   stateKey: string;
   value: T;
   setValue: Dispatch<T>;
+  display: (...args: DisplayArgs) => void;
+  view: <T extends StateBase, K extends keyof T & string, V, R>(
+    ...args: ViewArgs<T, K, V, R>
+  ) => R;
 }
 
 export type ViewComponent<ValueType> = React.FC<ViewComponentProps<ValueType>>;

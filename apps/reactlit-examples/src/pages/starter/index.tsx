@@ -2,16 +2,21 @@ import { Box, Text } from '@radix-ui/themes';
 import { textPropDefs } from '@radix-ui/themes/props';
 import {
   DataFetchingPlugin,
+  LayoutView,
   useReactlit,
   useReactlitState,
-  LayoutView,
   Wrapper,
 } from '@reactlit/core';
-import { DefaultRadixWrapper, Inputs } from '@reactlit/radix';
+import { Inputs, RadixTheme } from '@reactlit/radix';
 
-const TwoColWrapper: Wrapper = ({ children }) => (
-  <div className="grid grid-cols-2 gap-4">{children}</div>
-);
+const StarterWrapper: Wrapper = ({ children, stateKey }) => {
+  return (
+    <div className="grid grid-cols-[auto_1fr] gap-2 items-center border rounded-md mb-2 overflow-hidden">
+      <div className="min-w-16 p-2 h-full border-r text-xs">{stateKey}</div>
+      <div className="flex-auto p-2">{children}</div>
+    </div>
+  );
+};
 
 export default function Starter() {
   const [appState, setAppState] = useReactlitState<any>({
@@ -21,43 +26,45 @@ export default function Starter() {
   });
   const Reactlit = useReactlit(DataFetchingPlugin);
   return (
-    <Reactlit
-      debug
-      state={appState}
-      setState={setAppState}
-      wrapper={DefaultRadixWrapper}
-    >
-      {async (ctx) => {
-        const { display, view } = ctx;
-        const name = view(
-          'name',
-          Inputs.Text({
-            label: 'What is your name?',
-            placeholder: 'Enter name',
-          })
-        );
-        const weight = view(
-          'weight',
-          Inputs.Radio(['light', 'regular', 'medium', 'bold'] as const, {
-            label: 'Weight',
-          })
-        );
-        const size = view(
-          'size',
-          Inputs.Slider({
-            label: 'Size',
-            min: 1,
-            max: 9,
-          })
-        );
+    <RadixTheme>
+      <Reactlit
+        debug
+        state={appState}
+        setState={setAppState}
+        wrapper={StarterWrapper}
+      >
+        {async (ctx) => {
+          const { display, view } = ctx;
+          const name = view(
+            'name',
+            Inputs.Text({
+              label: 'What is your name?',
+              placeholder: 'Enter name',
+            })
+          );
+          const weight = view(
+            'weight',
+            Inputs.Radio(['light', 'regular', 'medium', 'bold'] as const, {
+              label: 'Weight',
+            })
+          );
+          const size = view(
+            'size',
+            Inputs.Slider({
+              label: 'Size',
+              min: 1,
+              max: 9,
+            })
+          );
 
-        display(
-          <Box py={'4'}>
-            <hr />
-          </Box>
-        );
-        display(
-          <Box py={'2'}>
+          display(
+            <Box py={'4'}>
+              <hr />
+            </Box>
+          );
+          display(
+            StarterWrapper,
+            <Box py={'2'} />,
             <Text
               weight={weight}
               size={`${size}` as (typeof textPropDefs.size.values)[number]}
@@ -65,25 +72,25 @@ export default function Starter() {
               Hello to {name ? name : <Text color="red">Enter Name</Text>} from
               Reactlit!
             </Text>
-          </Box>
-        );
+          );
 
-        if (view('show', Inputs.Radio(['show', 'hide'] as const)) === 'show') {
-          const [col1, col2] = view('l1', TwoColWrapper, LayoutView(2));
-          const v1 = view(
+          const [col1, col2] = view(
+            'l1',
+            <div className="grid grid-cols-2 gap-4" />,
+            LayoutView(2)
+          );
+          const v1 = col1.view(
             'leftInput',
-            col1,
             Inputs.Text({ label: 'Column Left' })
           );
-          display(col1, v1);
-          view('rightInput', col2, Inputs.Text({ label: 'Column Right' }));
-        }
-
-        display('Separator');
-        const [col1B, col2B] = view('l2', TwoColWrapper, LayoutView(2));
-        view('c1B', col1B, Inputs.Text({ label: 'Column 1 B' }));
-        view('c2B', col2B, Inputs.Text({ label: 'Column 2 B' }));
-      }}
-    </Reactlit>
+          col1.display(v1);
+          const v2 = col2.view(
+            'rightInput',
+            Inputs.Text({ label: 'Column Right' })
+          );
+          col2.display(v2);
+        }}
+      </Reactlit>
+    </RadixTheme>
   );
 }

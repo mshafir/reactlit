@@ -1,8 +1,7 @@
 import { Fragment, ReactNode, SetStateAction, useMemo } from 'react';
-import { applyWrapper, Wrapper } from '../utils/apply-wrapper';
-import { isSetStateFunction } from '../hooks/use-reactlit-state';
 import { ViewComponentProps, ViewDefinition } from '../builtins/types';
 import { defineView } from '../builtins/view';
+import { isSetStateFunction } from '../hooks/use-reactlit-state';
 
 export type FormDefMap<T> = {
   [K in keyof T]: ViewDefinition<T[K], T[K]>;
@@ -10,7 +9,10 @@ export type FormDefMap<T> = {
 
 export interface FormViewProps<T> {
   form: FormDefMap<T>;
-  wrapper?: Wrapper;
+  wrapperProps?: React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  >;
 }
 
 export function FormViewComponent<T>({
@@ -18,7 +20,9 @@ export function FormViewComponent<T>({
   value,
   stateKey,
   setValue,
-  wrapper,
+  display,
+  view,
+  wrapperProps,
 }: FormViewProps<T> & ViewComponentProps<T>) {
   const views = useMemo(() => {
     const views: ReactNode[] = [];
@@ -32,17 +36,19 @@ export function FormViewComponent<T>({
             ...value,
             [key]: isSetStateFunction(v) ? v(value?.[key]) : v,
           }),
+        display,
+        view,
       };
       views.push(<Fragment key={key}>{def.component(props)}</Fragment>);
     }
     return views;
-  }, [form, value, setValue, stateKey]);
-  return applyWrapper(<>{views}</>, wrapper);
+  }, [form, value, setValue, stateKey, display, view]);
+  return <div {...wrapperProps}>{views}</div>;
 }
 
 export function FormView<T>(
   form: FormDefMap<T>,
-  props?: Omit<FormViewProps<T>, 'form'>
+  props?: FormViewProps<T>['wrapperProps']
 ) {
   return defineView<T>((viewProps) => (
     <FormViewComponent form={form} {...props} {...viewProps} />

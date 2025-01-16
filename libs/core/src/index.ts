@@ -3,7 +3,7 @@ export * from './builtins/types';
 export { defineView, defineTransformView } from './builtins/view';
 export * from './hooks/use-reactlit';
 export * from './hooks/use-reactlit-state';
-export * from './utils/apply-wrapper';
+export * from './wrappers';
 export * from './inputs/form.view';
 export * from './inputs/layout.view';
 export * from './plugins/data-fetching';

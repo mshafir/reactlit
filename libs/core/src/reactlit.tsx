@@ -14,7 +14,7 @@ import { useReactlitSet } from './builtins/set';
 import { ReactlitProps, StateBase } from './builtins/types';
 import { useReactlitView } from './builtins/view';
 import { useReactlitState } from './hooks/use-reactlit-state';
-import { Wrapper } from './utils/apply-wrapper';
+import { Wrapper } from './wrappers';
 
 const defaultRenderError = ({ error }) => (
   <div style={{ color: 'red' }}>

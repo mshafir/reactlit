@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useState } from 'react';
+import { Fragment, ReactNode, useCallback, useState } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-import { ApplyWrappers, Wrapper } from '../utils/apply-wrapper';
+import { ApplyWrappers, Wrapper } from '../wrappers';
 import { tail } from '../utils/tail';
 import { ReactlitContext, ReactlitProps, StateBase } from './types';
 
@@ -9,13 +9,28 @@ interface DisplayState {
   elements: [string, React.ReactNode][];
 }
 
-type KeyedDisplayArgs = [string, ...Wrapper[], ReactNode];
-type UnkeyedDisplayArgs = [...Wrapper[], ReactNode];
+type KeyedDisplayArgs = [string, ...(Wrapper | 'default')[], ReactNode];
+type UnkeyedDisplayArgs = [...(Wrapper | 'default')[], ReactNode];
 
 export type DisplayArgs = KeyedDisplayArgs | UnkeyedDisplayArgs;
 
-function isKeyedDisplayArgs(args: DisplayArgs): args is KeyedDisplayArgs {
+export function isKeyedDisplayArgs(
+  args: DisplayArgs
+): args is KeyedDisplayArgs {
   return args.length > 1 && typeof args[0] === 'string';
+}
+
+export function normalizeDisplayArgs(args: DisplayArgs) {
+  const manualKey = isKeyedDisplayArgs(args) ? args[0] : undefined;
+  const restArgs = isKeyedDisplayArgs(args)
+    ? (args.slice(1) as UnkeyedDisplayArgs)
+    : args;
+  const [wrappers, node] = tail(restArgs);
+  return {
+    manualKey,
+    wrappers,
+    node,
+  };
 }
 
 export function useReactlitDisplay<T extends StateBase>({
@@ -29,20 +44,24 @@ export function useReactlitDisplay<T extends StateBase>({
 
   const display = useCallback<ReactlitContext<T>['display']>(
     (...args: DisplayArgs) => {
-      const manualKey = isKeyedDisplayArgs(args) ? args[0] : undefined;
-      const restArgs = isKeyedDisplayArgs(args)
-        ? (args.slice(1) as UnkeyedDisplayArgs)
-        : args;
-      const [wrappers, node] = tail(restArgs);
+      const { manualKey, wrappers, node } = normalizeDisplayArgs(args);
 
       setRenderState(({ position, elements }) => {
         const key = manualKey ?? `${position}`;
         const keyIndex = elements
           .slice(0, position)
           .findIndex(([k]) => manualKey && k === manualKey);
+
         const element = (
           <ReactErrorBoundary key={key} fallbackRender={renderError}>
-            <ApplyWrappers wrappers={[...wrappers, wrapper]}>
+            <ApplyWrappers
+              wrappers={wrappers}
+              defaultWrapper={wrapper}
+              props={{
+                position,
+                stateKey: key,
+              }}
+            >
               {node}
             </ApplyWrappers>
           </ReactErrorBoundary>

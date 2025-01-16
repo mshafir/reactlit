@@ -1,8 +1,19 @@
 import { useEffect, useRef } from 'react';
 import tunnel from 'tunnel-rat';
-import { ViewComponentProps } from '../builtins/types';
-import { defineTransformView } from '../builtins/view';
-import { Wrapper } from '../utils/apply-wrapper';
+import {
+  ReactlitContext,
+  StateBase,
+  ViewComponentProps,
+  ViewDefinition,
+} from '../builtins/types';
+import {
+  defineTransformView,
+  normalizeViewArgs,
+  ViewArgs,
+} from '../builtins/view';
+import { Wrapper } from '../wrappers';
+import { isKeyedDisplayArgs, normalizeDisplayArgs } from '../builtins/display';
+import { tail } from '../utils/tail';
 
 type Tunnel = ReturnType<typeof tunnel>;
 
@@ -15,31 +26,30 @@ type Repeat<
   ? Result
   : Repeat<T, C, [...Result, T], [...Counter, unknown]>;
 
-// export function createLayoutSlot<T extends StateBase = StateBase>(
-//   ctx: ReactlitContext<T>,
-//   t: ReturnType<typeof tunnel>
-// ): LayoutSlot<T> {
-//   return {
-//     display(...args) {
-//       const node = args.length === 1 ? args[0] : args[1];
-//       const manualKey = args.length === 1 ? undefined : args[0];
-//       const wrappedNode = <t.In>{node}</t.In>;
-//       const passArgs =
-//         manualKey === undefined
-//           ? ([wrappedNode] as const)
-//           : ([manualKey, wrappedNode] as const);
-//       ctx.display(...passArgs);
-//     },
-//     view<K extends keyof T & string, V, R>(key: K, def: ViewDefinition<V, R>) {
-//       return ctx.view(key, {
-//         ...def,
-//         component: (props) => {
-//           return <t.In key={props.stateKey}>{def.component(props)}</t.In>;
-//         },
-//       });
-//     },
-//   };
-// }
+export type LayoutSlot<T extends StateBase = StateBase> = Pick<
+  ReactlitContext<T>,
+  'display' | 'view'
+>;
+
+function createLayoutSlot<T extends StateBase = StateBase>(
+  ctx: Pick<ReactlitContext<T>, 'display' | 'view'>,
+  t: ReturnType<typeof tunnel>
+): LayoutSlot<T> {
+  return {
+    display(...args) {
+      const { manualKey, wrappers, node } = normalizeDisplayArgs(args);
+      if (manualKey) {
+        ctx.display(manualKey, t.In as Wrapper, 'default', ...wrappers, node);
+      } else {
+        ctx.display(t.In as Wrapper, 'default', ...wrappers, node);
+      }
+    },
+    view<K extends keyof T & string, V, R>(...args: ViewArgs<T, K, V, R>) {
+      const { key, wrappers, def } = normalizeViewArgs(args);
+      return ctx.view(key, t.In as Wrapper, 'default', ...wrappers, def);
+    },
+  };
+}
 
 export function LayoutViewComponent<N extends number>({
   slots,
@@ -81,14 +91,19 @@ export function LayoutView<N extends number>(
     HTMLDivElement
   >
 ) {
-  return defineTransformView<Repeat<Tunnel, N> | undefined, Repeat<Wrapper, N>>(
+  return defineTransformView<
+    Repeat<Tunnel, N> | undefined,
+    Repeat<LayoutSlot<StateBase>, N>
+  >(
     (viewProps) => (
       <LayoutViewComponent {...viewProps} slots={slots} slotProps={slotProps} />
     ),
-    ({ value }) => {
+    ({ value, display, view }) => {
       const tunnels = (value ?? []) as Tunnel[];
-      const wrappers = tunnels.map((t) => t.In);
-      return wrappers as Repeat<Wrapper, N>;
+      const subContext = tunnels.map((t) =>
+        createLayoutSlot({ display, view }, t)
+      );
+      return subContext as Repeat<LayoutSlot<StateBase>, N>;
     }
   );
 }
