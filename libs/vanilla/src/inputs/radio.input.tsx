@@ -14,11 +14,8 @@ export type RadioInputProps<T> = Omit<
   'value' | 'disabled' | 'className'
 > & {
   data: T[];
-  label?: string | React.ReactNode;
   className?: {
-    container?: string;
     wrapper?: string;
-    label?: string;
     item?: {
       wrapper?: string;
       input?: string;
@@ -40,52 +37,42 @@ export const RadioInputComponent = <T,>({
   format,
   valueof,
   disabled,
-  label,
   ...props
 }: RadioInputProps<T> & ViewComponentProps<string | T>) => {
   return (
-    <div className={className?.container}>
-      {label && (
-        <label htmlFor={stateKey} className={className?.label}>
-          {label}
-        </label>
-      )}
-      <div className={className?.wrapper}>
-        {data.map((item) => {
-          const isChecked = valueof ? valueof(item) === value : item === value;
-          const itemKey = `${stateKey}-${valueof?.(item) ?? item.toString()}`;
-          let disabledValue = false;
+    <div className={className?.wrapper}>
+      {data.map((item) => {
+        const isChecked = valueof ? valueof(item) === value : item === value;
+        const itemKey = `${stateKey}-${valueof?.(item) ?? item.toString()}`;
+        let disabledValue = false;
 
-          if (typeof disabled === 'function') {
-            disabledValue = disabled(item);
-          } else if (Array.isArray(disabled)) {
-            disabledValue = disabled.includes(
-              valueof?.(item) ?? item.toString()
-            );
-          }
+        if (typeof disabled === 'function') {
+          disabledValue = disabled(item);
+        } else if (Array.isArray(disabled)) {
+          disabledValue = disabled.includes(valueof?.(item) ?? item.toString());
+        }
 
-          return (
-            <div key={itemKey} className={className?.item?.wrapper}>
-              <input
-                type="radio"
-                checked={isChecked}
-                id={itemKey}
-                name={itemKey}
-                className={className?.item?.input}
-                onChange={(e) => {
-                  const _value = valueof?.(item) ?? item;
-                  if (e.target.checked) setValue(_value);
-                }}
-                disabled={disabledValue}
-                {...props}
-              />
-              <label htmlFor={itemKey} className={className?.item?.label}>
-                {format?.(item) ?? item.toString()}
-              </label>
-            </div>
-          );
-        })}
-      </div>
+        return (
+          <div key={itemKey} className={className?.item?.wrapper}>
+            <input
+              type="radio"
+              checked={isChecked}
+              id={itemKey}
+              name={itemKey}
+              className={className?.item?.input}
+              onChange={(e) => {
+                const _value = valueof?.(item) ?? item;
+                if (e.target.checked) setValue(_value);
+              }}
+              disabled={disabledValue}
+              {...props}
+            />
+            <label htmlFor={itemKey} className={className?.item?.label}>
+              {format?.(item) ?? item.toString()}
+            </label>
+          </div>
+        );
+      })}
     </div>
   );
 };

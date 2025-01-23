@@ -1,8 +1,17 @@
-import { Reactlit, useReactlitState } from '@reactlit/core';
+import {
+  LayoutView,
+  Reactlit,
+  useReactlitState,
+  Wrapper,
+} from '@reactlit/core';
 import { Inputs } from '@reactlit/vanilla';
 
+const InputWrapper: Wrapper = ({ children }) => {
+  return <div className="flex flex-col gap-2">{children}</div>;
+};
+
 export default function HelloWorldVanilla() {
-  const [appState, setAppState] = useReactlitState({
+  const [appState, setAppState] = useReactlitState<any>({
     name: '',
     pickedNumbers: [],
     pickedColors: [],
@@ -12,32 +21,58 @@ export default function HelloWorldVanilla() {
   return (
     <Reactlit state={appState} setState={setAppState}>
       {async ({ display, view }) => {
-        display(<div className="text-2xl">Hello World Vanilla</div>);
-        const name = view(
+        display(<div className="text-2xl mb-4">Hello World Vanilla</div>);
+
+        const [labelElement, inputElement] = view(
+          'nameWrapper',
+          <div className="flex items-center gap-2" />,
+          LayoutView(2)
+        );
+
+        labelElement.display(<label htmlFor="name-input">Name:</label>);
+
+        const name = inputElement.view(
           'name',
           Inputs.Text({
             id: 'name-input',
             className: 'border p-0.5',
-            label: 'Name',
             placeholder: 'Enter your name',
           })
         );
+
         display(<div>Hello {name}!</div>);
-        const picked = view(
+
+        const [checkLabelElement, checkElement] = view(
+          'pickedNumbersWrapper',
+          <div className="flex items-center gap-2" />,
+          LayoutView(2)
+        );
+
+        checkLabelElement.display(
+          <label htmlFor="picked-numbers-input">Pick any number:</label>
+        );
+        const picked = checkElement.view(
           'pickedNumbers',
           Inputs.Check(['One', 'Two', 'Three'], {
             className: {
-              container: 'flex gap-2 items-center',
               wrapper: 'flex gap-2',
               item: {
                 input: 'border p-0.5 mr-1',
               },
             },
-            label: 'Pick any number',
           })
         );
         display(<div>Picked: {picked.join(', ')}!</div>);
-        const pickedColors = view(
+
+        const [pickedColorsLabelElement, pickedColorsElement] = view(
+          'pickedColorsWrapper',
+          <div className="flex items-center gap-2" />,
+          LayoutView(2)
+        );
+        pickedColorsLabelElement.display(
+          <label htmlFor="picked-colors-input">Pick any color:</label>
+        );
+        const pickedColors = pickedColorsElement.view(
           'pickedColors',
           Inputs.Check(
             [
@@ -48,13 +83,11 @@ export default function HelloWorldVanilla() {
             ],
             {
               className: {
-                container: 'flex gap-2 items-center',
                 wrapper: 'flex gap-2',
                 item: {
                   input: 'border p-0.5 mr-1',
                 },
               },
-              label: 'Pick any color',
               valueof: (item) => item.value,
               format: (item) => (
                 <span
@@ -73,21 +106,37 @@ export default function HelloWorldVanilla() {
           )
         );
         display(<div>Colors: {JSON.stringify(pickedColors)}!</div>);
-        const chosenNumber = view(
+
+        const [chosenNumberLabelElement, chosenNumberElement] = view(
+          'chosenNumberWrapper',
+          <div className="flex items-center gap-2" />,
+          LayoutView(2)
+        );
+        chosenNumberLabelElement.display(
+          <label htmlFor="chosen-number-input">Choose a number:</label>
+        );
+        const chosenNumber = chosenNumberElement.view(
           'chosenNumber',
           Inputs.Radio(['One', 'Two', 'Three'], {
             className: {
-              container: 'flex gap-2 items-center',
               wrapper: 'flex gap-2',
               item: {
                 input: 'border p-0.5 mr-1',
               },
             },
-            label: 'Choose a number',
           })
         );
         display(<div>Chosen Number: {chosenNumber}!</div>);
-        const chosenColor = view(
+
+        const [chosenColorLabelElement, chosenColorElement] = view(
+          'chosenColorWrapper',
+          <div className="flex items-center gap-2" />,
+          LayoutView(2)
+        );
+        chosenColorLabelElement.display(
+          <label htmlFor="chosen-color-input">Choose a color:</label>
+        );
+        const chosenColor = chosenColorElement.view(
           'chosenColor',
           Inputs.Radio(
             [
@@ -98,13 +147,11 @@ export default function HelloWorldVanilla() {
             ],
             {
               className: {
-                container: 'flex gap-2 items-center',
                 wrapper: 'flex gap-2',
                 item: {
                   input: 'border p-0.5 mr-1',
                 },
               },
-              label: 'Choose a color',
               valueof: (item) => item.value,
               format: (item) => (
                 <span

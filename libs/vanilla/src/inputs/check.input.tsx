@@ -14,11 +14,8 @@ export type CheckInputProps<T> = Omit<
   'value' | 'disabled' | 'className'
 > & {
   data: T[];
-  label?: string | React.ReactNode;
   className?: {
-    container?: string;
     wrapper?: string;
-    label?: string;
     item?: {
       wrapper?: string;
       input?: string;
@@ -40,55 +37,45 @@ export const CheckInputComponent = <T,>({
   format,
   valueof,
   disabled,
-  label,
   ...props
 }: CheckInputProps<T> & ViewComponentProps<(string | T)[]>) => {
   return (
-    <div className={className?.container}>
-      {label && (
-        <label htmlFor={stateKey} className={className?.label}>
-          {label}
-        </label>
-      )}
-      <div className={className?.wrapper}>
-        {data.map((item) => {
-          const isChecked = !!value.find((v) =>
-            valueof ? valueof(item) === v : item === v
-          );
-          const itemKey = `${stateKey}-${valueof?.(item) ?? item.toString()}`;
-          let disabledValue = false;
+    <div className={className?.wrapper}>
+      {data.map((item) => {
+        const isChecked = !!value.find((v) =>
+          valueof ? valueof(item) === v : item === v
+        );
+        const itemKey = `${stateKey}-${valueof?.(item) ?? item.toString()}`;
+        let disabledValue = false;
 
-          if (typeof disabled === 'function') {
-            disabledValue = disabled(item);
-          } else if (Array.isArray(disabled)) {
-            disabledValue = disabled.includes(
-              valueof?.(item) ?? item.toString()
-            );
-          }
+        if (typeof disabled === 'function') {
+          disabledValue = disabled(item);
+        } else if (Array.isArray(disabled)) {
+          disabledValue = disabled.includes(valueof?.(item) ?? item.toString());
+        }
 
-          return (
-            <div key={itemKey} className={className?.item?.wrapper}>
-              <input
-                type="checkbox"
-                checked={isChecked}
-                id={itemKey}
-                name={itemKey}
-                className={className?.item?.input}
-                onChange={(e) => {
-                  const _value = valueof?.(item) ?? item;
-                  if (e.target.checked) setValue([...value, _value]);
-                  else setValue(value.filter((v) => v !== _value));
-                }}
-                disabled={disabledValue}
-                {...props}
-              />
-              <label htmlFor={itemKey} className={className?.item?.label}>
-                {format?.(item) ?? item.toString()}
-              </label>
-            </div>
-          );
-        })}
-      </div>
+        return (
+          <div key={itemKey} className={className?.item?.wrapper}>
+            <input
+              type="checkbox"
+              checked={isChecked}
+              id={itemKey}
+              name={itemKey}
+              className={className?.item?.input}
+              onChange={(e) => {
+                const _value = valueof?.(item) ?? item;
+                if (e.target.checked) setValue([...value, _value]);
+                else setValue(value.filter((v) => v !== _value));
+              }}
+              disabled={disabledValue}
+              {...props}
+            />
+            <label htmlFor={itemKey} className={className?.item?.label}>
+              {format?.(item) ?? item.toString()}
+            </label>
+          </div>
+        );
+      })}
     </div>
   );
 };
