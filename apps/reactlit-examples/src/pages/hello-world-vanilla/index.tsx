@@ -6,9 +6,16 @@ import {
 } from '@reactlit/core';
 import { Inputs } from '@reactlit/vanilla';
 
-const InputWrapper: Wrapper = ({ children }) => {
-  return <div className="flex flex-col gap-2">{children}</div>;
-};
+const InputLabelWrapper =
+  (label: string): Wrapper =>
+  ({ children }) => {
+    return (
+      <div className="flex items-center gap-2 mb-2">
+        <label>{label}</label>
+        <div className="flex-auto">{children}</div>
+      </div>
+    );
+  };
 
 export default function HelloWorldVanilla() {
   const [appState, setAppState] = useReactlitState<any>({
@@ -23,16 +30,9 @@ export default function HelloWorldVanilla() {
       {async ({ display, view }) => {
         display(<div className="text-2xl mb-4">Hello World Vanilla</div>);
 
-        const [labelElement, inputElement] = view(
-          'nameWrapper',
-          <div className="flex items-center gap-2" />,
-          LayoutView(2)
-        );
-
-        labelElement.display(<label htmlFor="name-input">Name:</label>);
-
-        const name = inputElement.view(
+        const name = view(
           'name',
+          InputLabelWrapper('Name'),
           Inputs.Text({
             id: 'name-input',
             className: 'border p-0.5',
@@ -42,17 +42,9 @@ export default function HelloWorldVanilla() {
 
         display(<div>Hello {name}!</div>);
 
-        const [checkLabelElement, checkElement] = view(
-          'pickedNumbersWrapper',
-          <div className="flex items-center gap-2" />,
-          LayoutView(2)
-        );
-
-        checkLabelElement.display(
-          <label htmlFor="picked-numbers-input">Pick any number:</label>
-        );
-        const picked = checkElement.view(
+        const picked = view(
           'pickedNumbers',
+          InputLabelWrapper('Pick any number'),
           Inputs.Check(['One', 'Two', 'Three'], {
             className: {
               wrapper: 'flex gap-2',
@@ -64,16 +56,9 @@ export default function HelloWorldVanilla() {
         );
         display(<div>Picked: {picked.join(', ')}!</div>);
 
-        const [pickedColorsLabelElement, pickedColorsElement] = view(
-          'pickedColorsWrapper',
-          <div className="flex items-center gap-2" />,
-          LayoutView(2)
-        );
-        pickedColorsLabelElement.display(
-          <label htmlFor="picked-colors-input">Pick any color:</label>
-        );
-        const pickedColors = pickedColorsElement.view(
+        const pickedColors = view(
           'pickedColors',
+          InputLabelWrapper('Pick any color'),
           Inputs.Check(
             [
               { label: 'Red', value: '#FF0000' },
@@ -107,16 +92,9 @@ export default function HelloWorldVanilla() {
         );
         display(<div>Colors: {JSON.stringify(pickedColors)}!</div>);
 
-        const [chosenNumberLabelElement, chosenNumberElement] = view(
-          'chosenNumberWrapper',
-          <div className="flex items-center gap-2" />,
-          LayoutView(2)
-        );
-        chosenNumberLabelElement.display(
-          <label htmlFor="chosen-number-input">Choose a number:</label>
-        );
-        const chosenNumber = chosenNumberElement.view(
+        const chosenNumber = view(
           'chosenNumber',
+          InputLabelWrapper('Choose a number'),
           Inputs.Radio(['One', 'Two', 'Three'], {
             className: {
               wrapper: 'flex gap-2',
@@ -128,16 +106,9 @@ export default function HelloWorldVanilla() {
         );
         display(<div>Chosen Number: {chosenNumber}!</div>);
 
-        const [chosenColorLabelElement, chosenColorElement] = view(
-          'chosenColorWrapper',
-          <div className="flex items-center gap-2" />,
-          LayoutView(2)
-        );
-        chosenColorLabelElement.display(
-          <label htmlFor="chosen-color-input">Choose a color:</label>
-        );
-        const chosenColor = chosenColorElement.view(
+        const chosenColor = view(
           'chosenColor',
+          InputLabelWrapper('Choose a color'),
           Inputs.Radio(
             [
               { label: 'Red', value: '#FF0000' },
