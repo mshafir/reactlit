@@ -1,30 +1,23 @@
 import { Slider, SliderProps } from '@radix-ui/themes';
 import { defineView, ViewComponentProps } from '@reactlit/core';
-import { LabelType, renderLabel } from '../label';
 
-export type SliderInputProps = Omit<SliderProps, 'value' | 'onValueChange'> & {
-  label?: LabelType;
-};
+export type SliderInputProps = Omit<SliderProps, 'value' | 'onValueChange'>;
 
 export const SliderInputComponent = ({
   value,
   stateKey,
   setValue,
   onChange,
-  label,
   ...props
 }: SliderInputProps & ViewComponentProps<number>) => {
   return (
-    <>
-      {renderLabel(label)}
-      <Slider
-        value={[value]}
-        onValueChange={(v) => {
-          setValue(v[0]);
-        }}
-        {...props}
-      />
-    </>
+    <Slider
+      value={[value]}
+      onValueChange={(v) => {
+        setValue(v[0]);
+      }}
+      {...props}
+    />
   );
 };
 
@@ -33,20 +26,16 @@ export const RangeSliderInputComponent = ({
   stateKey,
   setValue,
   onChange,
-  label,
   ...props
 }: SliderInputProps & ViewComponentProps<[number, number]>) => {
   return (
-    <>
-      {renderLabel(label)}
-      <Slider
-        value={value}
-        onValueChange={(v) => {
-          setValue(v as [number, number]);
-        }}
-        {...props}
-      />
-    </>
+    <Slider
+      value={value}
+      onValueChange={(v) => {
+        setValue(v as [number, number]);
+      }}
+      {...props}
+    />
   );
 };
 

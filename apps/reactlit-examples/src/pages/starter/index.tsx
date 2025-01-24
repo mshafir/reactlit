@@ -7,7 +7,7 @@ import {
   useReactlitState,
   Wrapper,
 } from '@reactlit/core';
-import { Inputs, RadixTheme } from '@reactlit/radix';
+import { Inputs, Label, RadixTheme } from '@reactlit/radix';
 
 const StarterWrapper: Wrapper = ({ children, stateKey }) => {
   return (
@@ -37,21 +37,20 @@ export default function Starter() {
           const { display, view } = ctx;
           const name = view(
             'name',
+            <Label label="What is your name?" />,
             Inputs.Text({
-              label: 'What is your name?',
               placeholder: 'Enter name',
             })
           );
           const weight = view(
             'weight',
-            Inputs.Radio(['light', 'regular', 'medium', 'bold'] as const, {
-              label: 'Weight',
-            })
+            <Label label="Weight" />,
+            Inputs.Radio(['light', 'regular', 'medium', 'bold'] as const)
           );
           const size = view(
             'size',
+            <Label label="Size" />,
             Inputs.Slider({
-              label: 'Size',
               min: 1,
               max: 9,
             })
@@ -63,7 +62,6 @@ export default function Starter() {
             </Box>
           );
           display(
-            StarterWrapper,
             <Box py={'2'} />,
             <Text
               weight={weight}
@@ -81,12 +79,14 @@ export default function Starter() {
           );
           const v1 = col1.view(
             'leftInput',
-            Inputs.Text({ label: 'Column Left' })
+            <Label label="Column Left" />,
+            Inputs.Text()
           );
           col1.display(v1);
           const v2 = col2.view(
             'rightInput',
-            Inputs.Text({ label: 'Column Right' })
+            <Label label="Column Right" />,
+            Inputs.Text()
           );
           col2.display(v2);
         }}
