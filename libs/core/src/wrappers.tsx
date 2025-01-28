@@ -3,6 +3,7 @@ import {
   Fragment,
   isValidElement,
   PropsWithChildren,
+  ReactElement,
   ReactNode,
   useMemo,
 } from 'react';
@@ -19,13 +20,13 @@ export type ReactlitWrapperComponent = React.FC<
 export type Wrapper = ReactlitWrapperComponent | React.ReactElement;
 
 function applyWrapper(
-  node: ReactNode,
+  node: ReactElement,
   Wrap?: Wrapper,
   props?: ReactlitWrapperProps
-) {
+): ReactElement {
   if (!Wrap) return node;
   if (isValidElement(Wrap)) return cloneElement(Wrap, {}, node);
-  return Wrap({ children: node, ...props }) as JSX.Element;
+  return Wrap({ children: node, ...props }) as ReactElement;
 }
 export function ApplyWrappers({
   wrappers,
