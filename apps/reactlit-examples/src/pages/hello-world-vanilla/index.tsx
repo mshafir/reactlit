@@ -1,14 +1,13 @@
 import { Reactlit, useReactlitState, Wrapper } from '@reactlit/core';
 import { Inputs } from '@reactlit/vanilla';
-import { useMemo } from 'react';
 
 const InputLabelWrapper =
   (label: string): Wrapper =>
-  ({ children }) => {
+  ({ children, stateKey }) => {
     return (
-      <div className="flex items-center gap-2 mb-2">
-        <label>{label}</label>
-        <div className="flex-auto">{children}</div>
+      <div key={stateKey} className="flex items-center gap-2 mb-2">
+        <label htmlFor={stateKey}>{label}</label>
+        {children}
       </div>
     );
   };
@@ -22,26 +21,6 @@ export default function HelloWorldVanilla() {
     chosenColor: '',
   });
 
-  const inputLabel = useMemo(() => {
-    return InputLabelWrapper('Name');
-  }, []);
-
-  const checkboxNumberLabel = useMemo(() => {
-    return InputLabelWrapper('Pick any number');
-  }, []);
-
-  const checkboxColorLabel = useMemo(() => {
-    return InputLabelWrapper('Pick any color');
-  }, []);
-
-  const radioNumberLabel = useMemo(() => {
-    return InputLabelWrapper('Choose a number');
-  }, []);
-
-  const radioColorLabel = useMemo(() => {
-    return InputLabelWrapper('Choose a color');
-  }, []);
-
   return (
     <Reactlit state={appState} setState={setAppState}>
       {async ({ display, view }) => {
@@ -49,7 +28,7 @@ export default function HelloWorldVanilla() {
 
         const name = view(
           'name',
-          inputLabel,
+          InputLabelWrapper('Name'),
           Inputs.Text({
             id: 'name',
             className: 'border p-0.5',
@@ -61,7 +40,7 @@ export default function HelloWorldVanilla() {
 
         const picked = view(
           'pickedNumbers',
-          checkboxNumberLabel,
+          InputLabelWrapper('Pick any number'),
           Inputs.Check(['One', 'Two', 'Three'], {
             className: {
               wrapper: 'flex gap-2',
@@ -75,7 +54,7 @@ export default function HelloWorldVanilla() {
 
         const pickedColors = view(
           'pickedColors',
-          checkboxColorLabel,
+          InputLabelWrapper('Pick any color'),
           Inputs.Check(
             [
               { label: 'Red', value: '#FF0000' },
@@ -111,7 +90,7 @@ export default function HelloWorldVanilla() {
 
         const chosenNumber = view(
           'chosenNumber',
-          radioNumberLabel,
+          InputLabelWrapper('Choose a number'),
           Inputs.Radio(['One', 'Two', 'Three'], {
             className: {
               wrapper: 'flex gap-2',
@@ -125,7 +104,7 @@ export default function HelloWorldVanilla() {
 
         const chosenColor = view(
           'chosenColor',
-          radioColorLabel,
+          InputLabelWrapper('Choose a color'),
           Inputs.Radio(
             [
               { label: 'Red', value: '#FF0000' },

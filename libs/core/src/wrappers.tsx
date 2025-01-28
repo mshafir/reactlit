@@ -25,7 +25,7 @@ function applyWrapper(
 ) {
   if (!Wrap) return node;
   if (isValidElement(Wrap)) return cloneElement(Wrap, {}, node);
-  return <Wrap {...props}>{node}</Wrap>;
+  return Wrap({ children: node, ...props }) as JSX.Element;
 }
 export function ApplyWrappers({
   wrappers,
