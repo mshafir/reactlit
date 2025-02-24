@@ -15,6 +15,8 @@ export type TextInputProps = Omit<
 export const TextInputComponent = ({
   value,
   stateKey,
+  display,
+  view,
   setValue,
   onChange,
   debounceDelay = 200,

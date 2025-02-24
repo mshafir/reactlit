@@ -30,6 +30,8 @@ export type RadioInputProps<T> = Omit<
 export const RadioInputComponent = <T,>({
   value,
   stateKey,
+  display,
+  view,
   setValue,
   onChange,
   data,

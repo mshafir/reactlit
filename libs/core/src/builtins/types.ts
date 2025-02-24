@@ -1,5 +1,4 @@
 import { Dispatch, ReactNode, SetStateAction } from 'react';
-import { Wrapper } from '../wrappers';
 import { DisplayArgs } from './display';
 import { ViewArgs } from './view';
 
@@ -59,10 +58,6 @@ export type ReactlitProps<T extends StateBase> = {
    * Whether to log debug messages to the console
    */
   debug?: boolean;
-  /**
-   * Wrapper to apply around all displayed elements
-   */
-  wrapper?: Wrapper;
   /**
    * Function for the Reactlit rendering logic
    */

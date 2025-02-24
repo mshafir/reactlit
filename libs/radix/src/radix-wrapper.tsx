@@ -1,15 +1,14 @@
-import { Box, Container, Flex, Theme, ThemeProps } from '@radix-ui/themes';
-import { Wrapper } from '@reactlit/core';
+import { Container, Flex, Theme, ThemeProps } from '@radix-ui/themes';
 import { PropsWithChildren } from 'react';
 
-export const BoxContainerWrapper: Wrapper = ({ children }) => (
-  <Box py="2">
-    <Container size="2" align={'left'}>
-      <Flex direction="column" gap="1">
-        {children}
-      </Flex>
-    </Container>
-  </Box>
+export const BoxContainerWrapper: React.FC<PropsWithChildren> = ({
+  children,
+}) => (
+  <Container size="2" align={'left'}>
+    <Flex direction="column" gap="3">
+      {children}
+    </Flex>
+  </Container>
 );
 
 export const RadixTheme = ({
@@ -24,7 +23,7 @@ export const RadixTheme = ({
 };
 
 export const RadixThemeWrapper = (theme?: ThemeProps) => {
-  const RadixThemeWrapper: Wrapper = ({ children }) => (
+  const RadixThemeWrapper: React.FC<PropsWithChildren> = ({ children }) => (
     <RadixTheme {...theme}>{children}</RadixTheme>
   );
   return RadixThemeWrapper;
@@ -32,9 +31,9 @@ export const RadixThemeWrapper = (theme?: ThemeProps) => {
 
 export const RadixWrapper = (theme?: ThemeProps) => {
   const ThemeWrapper = RadixThemeWrapper(theme);
-  const RadixWrapper: Wrapper = ({ children, ...props }) => (
-    <ThemeWrapper {...props}>
-      <BoxContainerWrapper {...props}>{children}</BoxContainerWrapper>
+  const RadixWrapper: React.FC<PropsWithChildren> = ({ children }) => (
+    <ThemeWrapper>
+      <BoxContainerWrapper>{children}</BoxContainerWrapper>
     </ThemeWrapper>
   );
   return RadixWrapper;

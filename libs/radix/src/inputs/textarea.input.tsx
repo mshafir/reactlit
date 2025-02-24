@@ -1,8 +1,8 @@
-import { Text, TextArea, TextAreaProps } from '@radix-ui/themes';
+import { TextArea, TextAreaProps } from '@radix-ui/themes';
 import { defineView, ViewComponentProps } from '@reactlit/core';
-import { useDebouncedCallback } from 'use-debounce';
-import { LabelType, renderLabel } from '../label';
 import { useEffect, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+import { LabelType } from '../label';
 
 export type TextAreaInputProps = Omit<TextAreaProps, 'value'> & {
   label?: LabelType;
@@ -15,6 +15,8 @@ export const TextAreaInputComponent = ({
   setValue,
   onChange,
   label,
+  display,
+  view,
   debounceDelay = 300,
   ...props
 }: TextAreaInputProps & ViewComponentProps<string>) => {
@@ -26,18 +28,15 @@ export const TextAreaInputComponent = ({
     setRawValue(value ?? '');
   }, [value]);
   return (
-    <Text as="label">
-      {renderLabel(label)}
-      <TextArea
-        value={rawValue}
-        onChange={(e) => {
-          setRawValue(e.target.value);
-          debouncedSetValue(e.target.value);
-          onChange?.(e);
-        }}
-        {...props}
-      />
-    </Text>
+    <TextArea
+      value={rawValue}
+      onChange={(e) => {
+        setRawValue(e.target.value);
+        debouncedSetValue(e.target.value);
+        onChange?.(e);
+      }}
+      {...props}
+    />
   );
 };
 

@@ -24,7 +24,7 @@ export function defineTransformView<ValueType, ReturnType = ValueType>(
 
 export type ViewArgs<T extends StateBase, K extends keyof T & string, V, R> = [
   key: K,
-  ...wrappers: (Wrapper | 'default')[],
+  ...wrappers: Wrapper[],
   def: ViewDefinition<V, R>
 ];
 

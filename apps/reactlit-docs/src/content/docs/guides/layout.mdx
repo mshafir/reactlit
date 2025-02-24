@@ -1,24 +1,19 @@
 ---
-title: Layout Plugin
-description: How to use the layout plugin
+title: Layout
+description: How to use the layout view
 ---
 
-By default, Reactlit uses a simple layout system where each `display` call
+By default, Reactlit uses a simple flat layout system where each `display` call
 concatenates a `ReactNode` to the DOM. This works great for simple applications,
 where you are ok just showing your content in a single column,
 but as your application grows, you may want to have more control over the layout.
 
-The plugin provides a `layout` helper function to let you define more custom layouts with
+The built-in layout view lets you define more custom layouts with
 your Reactlit script.
 
 import { Card, Aside } from '@astrojs/starlight/components';
 
-<Aside>
-  Currently this plugin is provided in the core package, but this may change in
-  the future.
-</Aside>
-
-The `layout` function works via the [tunnel-rat](https://github.com/pmndrs/tunnel-rat)
+The `layout` view works via a modified version of the [tunnel-rat](https://github.com/pmndrs/tunnel-rat)
 library. It takes a number of slots to expose and a render function that defines how
 those slots are layed out. Then, for each slot, it returns a mini-context with
 `view` and `display` functions that render specifically within that slot.

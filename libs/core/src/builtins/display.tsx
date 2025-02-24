@@ -1,7 +1,7 @@
-import { Fragment, ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-import { ApplyWrappers, Wrapper } from '../wrappers';
 import { tail } from '../utils/tail';
+import { ApplyWrappers, Wrapper } from '../wrappers';
 import { ReactlitContext, ReactlitProps, StateBase } from './types';
 
 interface DisplayState {
@@ -9,8 +9,8 @@ interface DisplayState {
   elements: [string, React.ReactNode][];
 }
 
-type KeyedDisplayArgs = [string, ...(Wrapper | 'default')[], ReactNode];
-type UnkeyedDisplayArgs = [...(Wrapper | 'default')[], ReactNode];
+type KeyedDisplayArgs = [string, ...Wrapper[], ReactNode];
+type UnkeyedDisplayArgs = [...Wrapper[], ReactNode];
 
 export type DisplayArgs = KeyedDisplayArgs | UnkeyedDisplayArgs;
 
@@ -35,8 +35,7 @@ export function normalizeDisplayArgs(args: DisplayArgs) {
 
 export function useReactlitDisplay<T extends StateBase>({
   renderError,
-  wrapper,
-}: Pick<ReactlitProps<T>, 'renderError' | 'wrapper'>) {
+}: Pick<ReactlitProps<T>, 'renderError'>) {
   const [renderState, setRenderState] = useState<DisplayState>({
     position: 0,
     elements: [],
@@ -56,11 +55,8 @@ export function useReactlitDisplay<T extends StateBase>({
           <ReactErrorBoundary key={key} fallbackRender={renderError}>
             <ApplyWrappers
               wrappers={wrappers}
-              defaultWrapper={wrapper}
-              props={{
-                position,
-                stateKey: key,
-              }}
+              position={position}
+              stateKey={key}
             >
               {node}
             </ApplyWrappers>
@@ -99,7 +95,7 @@ export function useReactlitDisplay<T extends StateBase>({
         }
       });
     },
-    [setRenderState, renderError, wrapper]
+    [setRenderState, renderError]
   );
 
   const resetRenderPosition = useCallback(() => {

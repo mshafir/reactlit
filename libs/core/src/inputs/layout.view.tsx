@@ -1,23 +1,21 @@
-import { useEffect, useRef } from 'react';
-import tunnel from 'tunnel-rat';
+import { Fragment, useEffect, useRef } from 'react';
+import { normalizeDisplayArgs } from '../builtins/display';
 import {
   ReactlitContext,
   StateBase,
   ViewComponentProps,
-  ViewDefinition,
 } from '../builtins/types';
 import {
   defineTransformView,
   normalizeViewArgs,
   ViewArgs,
 } from '../builtins/view';
-import { Wrapper } from '../wrappers';
-import { isKeyedDisplayArgs, normalizeDisplayArgs } from '../builtins/display';
-import { tail } from '../utils/tail';
+import tunnel from '../utils/tunnel';
+import { applySimpleWrapper, SimpleWrapper, Wrapper } from '../wrappers';
 
-type Tunnel = ReturnType<typeof tunnel>;
+export type Tunnel = ReturnType<typeof tunnel>;
 
-type Repeat<
+export type Repeat<
   T,
   C extends number,
   Result extends T[] = [],
@@ -31,22 +29,38 @@ export type LayoutSlot<T extends StateBase = StateBase> = Pick<
   'display' | 'view'
 >;
 
-function createLayoutSlot<T extends StateBase = StateBase>(
+// during initialization we create empty layout slots, these are only temporary
+// until the state gets set up
+export function createEmptyLayoutSlot<
+  T extends StateBase = StateBase
+>(): LayoutSlot<T> {
+  return {
+    display: () => <></>,
+    view<K extends keyof T & string, V, R>(...args: ViewArgs<T, K, V, R>) {
+      return undefined as R;
+    },
+  };
+}
+
+export function createLayoutSlot<T extends StateBase = StateBase>(
   ctx: Pick<ReactlitContext<T>, 'display' | 'view'>,
   t: ReturnType<typeof tunnel>
 ): LayoutSlot<T> {
+  const TunnelWrapper: Wrapper = ({ stateKey, children }) => {
+    return <t.In childKey={stateKey}>{children}</t.In>;
+  };
   return {
     display(...args) {
       const { manualKey, wrappers, node } = normalizeDisplayArgs(args);
       if (manualKey) {
-        ctx.display(manualKey, t.In as Wrapper, 'default', ...wrappers, node);
+        ctx.display(manualKey, TunnelWrapper, ...wrappers, node);
       } else {
-        ctx.display(t.In as Wrapper, 'default', ...wrappers, node);
+        ctx.display(TunnelWrapper, ...wrappers, node);
       }
     },
     view<K extends keyof T & string, V, R>(...args: ViewArgs<T, K, V, R>) {
       const { key, wrappers, def } = normalizeViewArgs(args);
-      return ctx.view(key, t.In as Wrapper, 'default', ...wrappers, def);
+      return ctx.view(key, TunnelWrapper, ...wrappers, def);
     },
   };
 }
@@ -55,13 +69,10 @@ export function LayoutViewComponent<N extends number>({
   slots,
   value,
   setValue,
-  slotProps,
+  slotWrapper,
 }: {
   slots: N;
-  slotProps: React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >;
+  slotWrapper?: SimpleWrapper;
 } & ViewComponentProps<Repeat<Tunnel, N>>) {
   const tunnels = useRef<Tunnel[]>([]);
   useEffect(() => {
@@ -76,30 +87,45 @@ export function LayoutViewComponent<N extends number>({
       {(value as Tunnel[])
         .map((t) => t.Out)
         .map((Slot, index) => (
-          <div key={index} {...slotProps}>
-            <Slot />
-          </div>
+          <Fragment key={index}>
+            {applySimpleWrapper(<Slot />, slotWrapper)}
+          </Fragment>
         ))}
     </>
   );
 }
 
+export type LayoutViewType<N extends number> = Repeat<Tunnel, N> | undefined;
+
+export function defaultLayoutState<N extends number>(
+  slots: N
+): LayoutViewType<N> {
+  return undefined;
+}
+
 export function LayoutView<N extends number>(
   slots: N,
-  slotProps?: React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >
+  slotWrapper?: SimpleWrapper
 ) {
   return defineTransformView<
     Repeat<Tunnel, N> | undefined,
     Repeat<LayoutSlot<StateBase>, N>
   >(
     (viewProps) => (
-      <LayoutViewComponent {...viewProps} slots={slots} slotProps={slotProps} />
+      <LayoutViewComponent
+        {...viewProps}
+        slots={slots}
+        slotWrapper={slotWrapper}
+      />
     ),
     ({ value, display, view }) => {
       const tunnels = (value ?? []) as Tunnel[];
+      if (tunnels.length !== slots) {
+        return Array.from({ length: slots }, createEmptyLayoutSlot) as Repeat<
+          LayoutSlot<StateBase>,
+          N
+        >;
+      }
       const subContext = tunnels.map((t) =>
         createLayoutSlot({ display, view }, t)
       );

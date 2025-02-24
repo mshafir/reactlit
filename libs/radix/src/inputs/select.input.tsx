@@ -1,7 +1,7 @@
 import { Select } from '@radix-ui/themes';
 import { defineView, ViewComponentProps } from '@reactlit/core';
 import { useMemo } from 'react';
-import { LabelType, renderLabel } from '../label';
+import { LabelType } from '../label';
 
 export type SelectOptionsType<T> = T[] | Record<string, T>;
 
@@ -20,6 +20,8 @@ export const SelectInputComponent = <T extends string>({
   setValue,
   label,
   options,
+  display,
+  view,
   ...props
 }: BaseSelectInputProps<T> & ViewComponentProps<T | undefined>) => {
   const optionsEntries = useMemo(() => {
@@ -29,19 +31,16 @@ export const SelectInputComponent = <T extends string>({
     return Object.entries(options) as [string, T][];
   }, [options]);
   return (
-    <>
-      {renderLabel(label)}
-      <Select.Root value={value} onValueChange={setValue} {...props}>
-        <Select.Trigger />
-        <Select.Content>
-          {optionsEntries.map(([label, value], i) => (
-            <Select.Item key={i} value={value}>
-              {label}
-            </Select.Item>
-          ))}
-        </Select.Content>
-      </Select.Root>
-    </>
+    <Select.Root value={value} onValueChange={setValue} {...props}>
+      <Select.Trigger />
+      <Select.Content>
+        {optionsEntries.map(([label, value], i) => (
+          <Select.Item key={i} value={value}>
+            {label}
+          </Select.Item>
+        ))}
+      </Select.Content>
+    </Select.Root>
   );
 };
 

@@ -30,6 +30,8 @@ export type CheckInputProps<T> = Omit<
 export const CheckInputComponent = <T,>({
   value,
   stateKey,
+  display,
+  view,
   setValue,
   onChange,
   data,

@@ -1,10 +1,11 @@
 import {
   cloneElement,
+  createElement,
   Fragment,
   isValidElement,
   PropsWithChildren,
+  ReactElement,
   ReactNode,
-  useMemo,
 } from 'react';
 
 export interface ReactlitWrapperProps {
@@ -12,43 +13,53 @@ export interface ReactlitWrapperProps {
   stateKey: string;
 }
 
-export type ReactlitWrapperComponent = React.FC<
+export type WrapperComponent = React.FC<
   PropsWithChildren<ReactlitWrapperProps>
 >;
 
-export type Wrapper = ReactlitWrapperComponent | React.ReactElement;
+export type Wrapper = WrapperComponent | React.ReactElement;
 
-function applyWrapper(
-  node: ReactNode,
+export type SimpleWrapperComponent = React.FC<React.PropsWithChildren>;
+
+export type SimpleWrapper = SimpleWrapperComponent | React.ReactElement;
+
+export function applySimpleWrapper(
+  children: ReactElement,
+  Wrap?: SimpleWrapper
+): ReactNode {
+  if (!Wrap) return children;
+  if (isValidElement(Wrap)) return cloneElement(Wrap, {}, children);
+  return Wrap({ children });
+}
+
+export function applyWrapper(
+  children: ReactElement,
   Wrap?: Wrapper,
   props?: ReactlitWrapperProps
-) {
-  if (!Wrap) return node;
-  if (isValidElement(Wrap)) return cloneElement(Wrap, {}, node);
-  return Wrap({ children: node, ...props }) as JSX.Element;
+): ReactElement {
+  if (!Wrap) return children;
+  if (isValidElement(Wrap)) return cloneElement(Wrap, {}, children);
+  return Wrap({ children, ...props }) as ReactElement;
+  // return createElement(Wrap, props, children);
 }
 export function ApplyWrappers({
   wrappers,
-  defaultWrapper,
   children,
-  props,
+  ...props
 }: {
-  wrappers: (Wrapper | 'default')[];
-  defaultWrapper: Wrapper;
+  wrappers: Wrapper[];
   children: ReactNode;
-  props: ReactlitWrapperProps;
-}) {
-  const wrappedContent = useMemo(() => {
-    const base = wrappers.includes('default')
-      ? [...wrappers]
-      : [defaultWrapper, ...wrappers];
-    return base.reverse().reduce(
-      (acc, W) =>
-        applyWrapper(acc, W === 'default' ? defaultWrapper : W, props),
-      // this extra Fragment wrapper at the end is necessary for some
-      // very mysterious reason to keep plain string nodes from shifting positions around
-      <Fragment>{children}</Fragment>
-    );
-  }, [children, wrappers, defaultWrapper, props]);
+} & ReactlitWrapperProps) {
+  const base = [...wrappers];
+  const wrappedContent = base.reverse().reduce(
+    (acc, W) => applyWrapper(acc, W, props),
+    // this extra Fragment wrapper at the end is necessary for some
+    // very mysterious reason to keep plain string nodes from shifting positions around
+    <Fragment>{children}</Fragment>
+  );
   return wrappedContent;
 }
+
+export const FragmentWrapper: Wrapper = ({ children, stateKey }) => {
+  return <Fragment key={stateKey}>{children}</Fragment>;
+};

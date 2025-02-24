@@ -1,16 +1,7 @@
-import { Reactlit, useReactlitState, Wrapper } from '@reactlit/core';
-import { Inputs } from '@reactlit/vanilla';
+import { Reactlit, useReactlitState } from '@reactlit/core';
+import { Inputs, Label } from '@reactlit/vanilla';
 
-const InputLabelWrapper =
-  (label: string): Wrapper =>
-  ({ children, stateKey }) => {
-    return (
-      <div key={stateKey} className="flex items-center gap-2 mb-2">
-        <label htmlFor={stateKey}>{label}</label>
-        {children}
-      </div>
-    );
-  };
+const LabelProps = { className: 'flex items-center gap-2 mb-2' };
 
 export default function HelloWorldVanilla() {
   const [appState, setAppState] = useReactlitState<any>({
@@ -28,7 +19,7 @@ export default function HelloWorldVanilla() {
 
         const name = view(
           'name',
-          InputLabelWrapper('Name'),
+          Label('Name', LabelProps),
           Inputs.Text({
             id: 'name',
             className: 'border p-0.5',
@@ -40,7 +31,7 @@ export default function HelloWorldVanilla() {
 
         const picked = view(
           'pickedNumbers',
-          InputLabelWrapper('Pick any number'),
+          Label('Pick any number', LabelProps),
           Inputs.Check(['One', 'Two', 'Three'], {
             className: {
               wrapper: 'flex gap-2',
@@ -54,13 +45,12 @@ export default function HelloWorldVanilla() {
 
         const pickedColors = view(
           'pickedColors',
-          InputLabelWrapper('Pick any color'),
+          Label('Pick any color', LabelProps),
           Inputs.Check(
             [
               { label: 'Red', value: '#FF0000' },
               { label: 'Green', value: '#00FF00' },
               { label: 'Blue', value: '#0000FF' },
-              { label: 'White', value: '#FFFFFF' },
             ],
             {
               className: {
@@ -74,7 +64,6 @@ export default function HelloWorldVanilla() {
                 <span
                   style={{
                     color: item.value,
-                    backgroundColor: '#aaa',
                     padding: '0rem 0.5rem',
                     borderRadius: '0.2rem',
                   }}
@@ -90,7 +79,7 @@ export default function HelloWorldVanilla() {
 
         const chosenNumber = view(
           'chosenNumber',
-          InputLabelWrapper('Choose a number'),
+          Label('Choose a number', LabelProps),
           Inputs.Radio(['One', 'Two', 'Three'], {
             className: {
               wrapper: 'flex gap-2',
@@ -104,13 +93,12 @@ export default function HelloWorldVanilla() {
 
         const chosenColor = view(
           'chosenColor',
-          InputLabelWrapper('Choose a color'),
+          Label('Choose a color', LabelProps),
           Inputs.Radio(
             [
               { label: 'Red', value: '#FF0000' },
               { label: 'Green', value: '#00FF00' },
               { label: 'Blue', value: '#0000FF' },
-              { label: 'White', value: '#FFFFFF' },
             ],
             {
               className: {
@@ -124,7 +112,6 @@ export default function HelloWorldVanilla() {
                 <span
                   style={{
                     color: item.value,
-                    backgroundColor: '#aaa',
                     padding: '0rem 0.5rem',
                     borderRadius: '0.2rem',
                   }}

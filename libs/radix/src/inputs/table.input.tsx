@@ -45,6 +45,8 @@ export function TableInputViewComponent<T>({
   getRowId,
   maxHeight = '300px',
   loading,
+  display,
+  view,
   ...props
 }: TableInputProps<T> & ViewComponentProps<string[]>) {
   const colDefs = useMemo<ColDef<T>[]>(() => {

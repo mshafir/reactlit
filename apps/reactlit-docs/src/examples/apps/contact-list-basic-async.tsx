@@ -1,6 +1,6 @@
 import { Button } from '@radix-ui/themes';
-import { FormView, type ReactlitContext } from '@reactlit/core';
-import { Inputs } from '@reactlit/radix';
+import { type ReactlitContext } from '@reactlit/core';
+import { Inputs, Label } from '@reactlit/radix';
 import { TopRightLoader } from '../components/loader';
 import { ContactsMockService } from '../mocks/contacts';
 
@@ -32,15 +32,13 @@ export async function ContactListApp(app: ReactlitContext) {
   if (!selectedContact) return;
   app.display(<h3 style={{ paddingTop: '1rem' }}>Selected Contact Details</h3>);
   if (app.changed('selectedContact')) {
-    app.set('updates', selectedContact);
+    app.set('name', selectedContact.name);
+    app.set('email', selectedContact.email);
   }
-  const updates = app.view(
-    'updates',
-    FormView({
-      name: Inputs.Text({ label: 'Name' }),
-      email: Inputs.Text({ label: 'Email' }),
-    })
-  );
+  const updates = {
+    name: app.view('name', Label('Name'), Inputs.Text()),
+    email: app.view('email', Label('Email'), Inputs.Text()),
+  };
   // if you wish, you can use an AsyncButton view for a button that
   // has a loading state during async operations
   app.view(

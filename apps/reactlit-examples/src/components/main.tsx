@@ -1,8 +1,10 @@
-import { Box, Container, Flex, Text } from '@radix-ui/themes';
+import { Box, Button, Container, Flex, Text } from '@radix-ui/themes';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Head from 'next/head';
 import { Menu } from './menu';
 import { ThemeToggle } from './theme-toggle';
+import React, { useContext } from 'react';
+import { DebugToggle } from './debug-toggle';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,6 +37,7 @@ export function Main({
               width="100%"
               p="4"
               align="center"
+              gap="4"
               style={{
                 background: 'var(--color-background)',
                 borderBottom: '1px solid var(--gray-4)',
@@ -44,6 +47,7 @@ export function Main({
                 {title}
               </Text>
               <Box flexGrow={'1'} />
+              <DebugToggle />
               <ThemeToggle />
             </Flex>
             <Flex flexGrow={'1'} overflow={'hidden'}>

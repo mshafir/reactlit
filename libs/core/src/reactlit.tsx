@@ -14,15 +14,12 @@ import { useReactlitSet } from './builtins/set';
 import { ReactlitProps, StateBase } from './builtins/types';
 import { useReactlitView } from './builtins/view';
 import { useReactlitState } from './hooks/use-reactlit-state';
-import { Wrapper } from './wrappers';
 
 const defaultRenderError = ({ error }) => (
   <div style={{ color: 'red' }}>
     {'message' in error ? error.message : `${error}`}
   </div>
 );
-
-const DefaultWrapper: Wrapper = ({ children }) => children;
 
 export function Reactlit<T extends StateBase = any>({
   state: rawState,
@@ -31,7 +28,6 @@ export function Reactlit<T extends StateBase = any>({
   renderError = defaultRenderError,
   debug,
   children,
-  wrapper = DefaultWrapper,
 }: ReactlitProps<T>) {
   const [defaultRawState, defaultSetState] = useReactlitState<T>({} as T);
   rawState = rawState ?? defaultRawState;
@@ -42,7 +38,7 @@ export function Reactlit<T extends StateBase = any>({
   const set = useReactlitSet(internalState);
   const changed = useReactlitChanged(internalState, debug);
   const { renderState, resetRenderPosition, finalizeRender, display } =
-    useReactlitDisplay({ renderError, wrapper });
+    useReactlitDisplay({ renderError });
   const view = useReactlitView({ set, display, state });
 
   const [triggerCounter, setTriggerCounter] = useState(0);

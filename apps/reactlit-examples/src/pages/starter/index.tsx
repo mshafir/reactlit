@@ -1,22 +1,12 @@
+import { Debug, useDebug } from '@/components/debug-toggle';
 import { Box, Text } from '@radix-ui/themes';
 import { textPropDefs } from '@radix-ui/themes/props';
 import {
   DataFetchingPlugin,
-  LayoutView,
   useReactlit,
   useReactlitState,
-  Wrapper,
 } from '@reactlit/core';
-import { Inputs, RadixTheme } from '@reactlit/radix';
-
-const StarterWrapper: Wrapper = ({ children, stateKey }) => {
-  return (
-    <div className="grid grid-cols-[auto_1fr] gap-2 items-center border rounded-md mb-2 overflow-hidden">
-      <div className="min-w-16 p-2 h-full border-r text-xs">{stateKey}</div>
-      <div className="flex-auto p-2">{children}</div>
-    </div>
-  );
-};
+import { DefaultRadixWrapper, Inputs, Label } from '@reactlit/radix';
 
 export default function Starter() {
   const [appState, setAppState] = useReactlitState<any>({
@@ -25,46 +15,39 @@ export default function Starter() {
     size: 1,
   });
   const Reactlit = useReactlit(DataFetchingPlugin);
+  const debug = useDebug();
   return (
-    <RadixTheme>
-      <Reactlit
-        debug
-        state={appState}
-        setState={setAppState}
-        wrapper={StarterWrapper}
-      >
+    <DefaultRadixWrapper>
+      <Reactlit debug={debug} state={appState} setState={setAppState}>
         {async (ctx) => {
           const { display, view } = ctx;
           const name = view(
             'name',
+            Debug,
+            Label('What is your name?'),
             Inputs.Text({
-              label: 'What is your name?',
               placeholder: 'Enter name',
             })
           );
           const weight = view(
             'weight',
-            Inputs.Radio(['light', 'regular', 'medium', 'bold'] as const, {
-              label: 'Weight',
-            })
+            Debug,
+            Label('Weight'),
+            Inputs.Radio(['light', 'regular', 'medium', 'bold'] as const)
           );
           const size = view(
             'size',
+            Debug,
+            Label('Size'),
             Inputs.Slider({
-              label: 'Size',
               min: 1,
               max: 9,
             })
           );
 
+          display(<hr />);
           display(
-            <Box py={'4'}>
-              <hr />
-            </Box>
-          );
-          display(
-            StarterWrapper,
-            <Box py={'2'} />,
+            Debug,
             <Text
               weight={weight}
               size={`${size}` as (typeof textPropDefs.size.values)[number]}
@@ -73,24 +56,8 @@ export default function Starter() {
               Reactlit!
             </Text>
           );
-
-          const [col1, col2] = view(
-            'l1',
-            <div className="grid grid-cols-2 gap-4" />,
-            LayoutView(2)
-          );
-          const v1 = col1.view(
-            'leftInput',
-            Inputs.Text({ label: 'Column Left' })
-          );
-          col1.display(v1);
-          const v2 = col2.view(
-            'rightInput',
-            Inputs.Text({ label: 'Column Right' })
-          );
-          col2.display(v2);
         }}
       </Reactlit>
-    </RadixTheme>
+    </DefaultRadixWrapper>
   );
 }

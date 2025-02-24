@@ -5,8 +5,21 @@ export default function LayoutExample() {
   const Reactlit = useReactlit();
   return (
     <Reactlit>
-      {async ({ display, view }) => {
-        const [col1, col2, col3] = view('cols', LayoutView(3));
+      {async ({ view }) => {
+        const [col1, col2, col3] = view(
+          'cols',
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr',
+              gap: '1rem',
+              alignItems: 'end',
+            }}
+          />,
+          // the second argument here wraps each slot in a div so that they show
+          // up as a single grid column in the layout
+          LayoutView(3, <div />)
+        );
 
         col1.display('First Name');
         const first = col1.view('first', TextInput);
