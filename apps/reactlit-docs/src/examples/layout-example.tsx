@@ -1,13 +1,25 @@
-import { LayoutPlugin, useReactlit } from '@reactlit/core';
+import { LayoutView, useReactlit } from '@reactlit/core';
 import { TextInput } from './inputs/basic-text-input';
-import { ThreeColumnLayout } from './layouts/three-column-layout';
 
 export default function LayoutExample() {
-  const Reactlit = useReactlit(LayoutPlugin);
+  const Reactlit = useReactlit();
   return (
     <Reactlit>
-      {async ({ layout }) => {
-        const [col1, col2, col3] = layout(ThreeColumnLayout);
+      {async ({ view }) => {
+        const [col1, col2, col3] = view(
+          'cols',
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr',
+              gap: '1rem',
+              alignItems: 'end',
+            }}
+          />,
+          // the second argument here wraps each slot in a div so that they show
+          // up as a single grid column in the layout
+          LayoutView(3, <div />)
+        );
 
         col1.display('First Name');
         const first = col1.view('first', TextInput);

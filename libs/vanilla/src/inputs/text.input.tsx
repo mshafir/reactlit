@@ -9,35 +9,32 @@ export type TextInputProps = Omit<
   >,
   'value'
 > & {
-  label?: string | React.ReactNode;
   debounceDelay?: number;
 };
 
 export const TextInputComponent = ({
   value,
   stateKey,
+  display,
+  view,
   setValue,
   onChange,
   debounceDelay = 200,
-  label,
   ...props
 }: TextInputProps & ViewComponentProps<string>) => {
   const debouncedSetValue = useDebouncedCallback((value) => {
     setValue(value);
   }, debounceDelay);
   return (
-    <div className="flex gap-2 items-center">
-      {label && <label htmlFor={props.id}>{label}</label>}
-      <input
-        type="text"
-        defaultValue={value}
-        onChange={(e) => {
-          debouncedSetValue(e.target.value);
-          onChange?.(e);
-        }}
-        {...props}
-      />
-    </div>
+    <input
+      type="text"
+      defaultValue={value}
+      onChange={(e) => {
+        debouncedSetValue(e.target.value);
+        onChange?.(e);
+      }}
+      {...props}
+    />
   );
 };
 

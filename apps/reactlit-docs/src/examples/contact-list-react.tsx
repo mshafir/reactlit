@@ -89,6 +89,8 @@ function ContactListApp() {
         value={selectedContactId}
         setValue={(id) => setSelectedContactId(id)}
         getRowId={(c) => c.id}
+        display={() => {}}
+        view={() => undefined as any}
       />
       {selectedContact && (
         <>
@@ -98,12 +100,16 @@ function ContactListApp() {
             label="Name"
             value={name}
             setValue={setName}
+            display={() => {}}
+            view={() => undefined as any}
           />
           <TextInputComponent
             stateKey="email"
             label="Email"
             value={email}
             setValue={setEmail}
+            display={() => {}}
+            view={() => undefined as any}
           />
           <Button
             disabled={isFetching}

@@ -1,0 +1,64 @@
+---
+title: Wrappers
+---
+
+You might encounter use cases that make Reactlit feel limiting when it comes to the heirarchical nature
+of UI. The fact that the render is a flat list of elements can make it hard to build even moderately complex
+interfaces.
+
+To solve this, Reactlit provides a way to wrap elements in custom components. These wrappers can be used to
+apply styles and add structure to your UI.
+
+Any `display` or `view` call actually allows a varidic number of arguments. Penultmate arguments are considered wrappers
+and will automatically `wrap` their successors. The structure can look a bit unusual coming from standard React, but
+it does allow for a lot of flexibility in a very succinct format.
+
+Wrappers come in two flavors.
+
+1. They can be static React elements with their children omitted:
+
+```tsx
+const name = view(
+  'name',
+  <div style={{ padding: '2rem' }} />,
+  Inputs.Text({ placeholder: 'Enter your name' })
+);
+display(
+  <div style={{ padding: '2rem' }} />,
+  <div>
+    <h1>Hello World</h1>
+  </div>
+);
+```
+
+2. They can react components of type `WrapperComponent`.
+
+define the component builder. This is a function that creates the wrapper component
+you want to use.
+
+```tsx
+export const Label = (label: string) => {
+  const LabelComponent: WrapperComponent = ({ children, stateKey }) => {
+    return (
+      <div>
+        <label htmlFor={stateKey}>{label}</label>
+        {children}
+      </div>
+    );
+  };
+  return LabelComponent;
+};
+```
+
+use the component:
+
+```tsx
+const name = view(
+  'name',
+  Label('Name'),
+  Inputs.Text({ placeholder: 'Enter your name' })
+);
+```
+
+This makes views and displays much more composable allowing you to build
+custom interfaces without a lot of boilerplate.

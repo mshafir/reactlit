@@ -23,6 +23,7 @@ export function Menu() {
       <MenuItem href="/radix-inputs">Radix Inputs</MenuItem>
       <MenuItem href="/todo-list">Todo List</MenuItem>
       <MenuItem href="/starter">Starter</MenuItem>
+      <MenuItem href="/layout-test">Layout Test</MenuItem>
     </Flex>
   );
 }

@@ -1,6 +1,20 @@
-import { Badge, DataList } from '@radix-ui/themes';
-import { Reactlit, useReactlitState } from '@reactlit/core';
-import { DefaultRadixWrapper, Inputs } from '@reactlit/radix';
+import { useDebug } from '@/components/debug-toggle';
+import {
+  Badge,
+  ChevronDownIcon,
+  DataList,
+  ThickChevronRightIcon,
+} from '@radix-ui/themes';
+import {
+  defaultLayoutState,
+  LayoutView,
+  Reactlit,
+  useReactlitState,
+  Wrapper,
+  WrapperComponent,
+} from '@reactlit/core';
+import { DefaultRadixWrapper, Inputs, Label } from '@reactlit/radix';
+import { useState } from 'react';
 
 interface Country {
   name: string;
@@ -12,7 +26,7 @@ interface Country {
 
 export async function fetchCountries(): Promise<Country[]> {
   const results = await fetch(
-    'https://restcountries.com/v3.1/all?fields=name,region,subregion,population,cca3',
+    'https://restcountries.com/v3.1/all?fields=name,region,subregion,population,cca2',
     {
       cache: 'force-cache',
       next: {
@@ -28,132 +42,146 @@ export async function fetchCountries(): Promise<Country[]> {
     region: r.region,
     subregion: r.subregion,
     population: r.population,
-    code: r.cca3,
+    code: r.cca2,
   }));
 }
+
+const DisplayLabel = (label: string) => {
+  const DisplayLabelComponent: WrapperComponent = ({ children }) => (
+    <DataList.Item>
+      <DataList.Label>{label}</DataList.Label>
+      <DataList.Value>{children}</DataList.Value>
+    </DataList.Item>
+  );
+  return DisplayLabelComponent;
+};
+
+const ResultsWrapper: Wrapper = ({ children }) => {
+  const [open, setOpen] = useState(true);
+  return (
+    <div
+      className={`overlay ${open ? 'open' : ''}`}
+      onClick={() => setOpen(!open)}
+    >
+      <h3 className="overlay-header">
+        {open ? <ChevronDownIcon /> : <ThickChevronRightIcon />}
+        Results
+      </h3>
+      <DataList.Root orientation={'vertical'}>{children}</DataList.Root>
+    </div>
+  );
+};
 
 export default function RadixInputs() {
   const [appState, setAppState] = useReactlitState({
     countrySearch: '',
     country: undefined as Country | undefined,
-    form: {
-      name: '',
-      bio: '',
-      number: [],
-      letter: undefined as string | undefined,
-      color: 'red',
-      slider: 0,
-      rangeSlider: [20, 80],
-    },
+    results: defaultLayoutState(1),
+    name: '',
+    bio: '',
+    number: [],
+    letter: undefined as string | undefined,
+    color: 'red',
+    slider: 0,
+    rangeSlider: [20, 80],
   });
+  const debug = useDebug();
   return (
-    <Reactlit
-      state={appState}
-      setState={setAppState}
-      wrapper={DefaultRadixWrapper}
-    >
-      {async ({ display, view }) => {
-        display(<div className="text-2xl">Inputs test</div>);
-        const results = view(
-          'form',
-          Inputs.Form({
-            name: Inputs.Text({
-              label: 'Name',
+    <DefaultRadixWrapper>
+      <Reactlit debug={debug} state={appState} setState={setAppState}>
+        {async ({ display, view }) => {
+          display(<div className="text-2xl">Inputs test</div>);
+          const [results] = view('results', ResultsWrapper, LayoutView(1));
+          const name = view(
+            'name',
+            Label('Name'),
+            Inputs.Text({
               placeholder: 'Enter your name',
-            }),
-            bio: Inputs.TextArea({
-              label: 'Bio',
+            })
+          );
+          results.display(DisplayLabel('Name'), name);
+          const bio = view(
+            'bio',
+            Label('Bio'),
+            Inputs.TextArea({
               placeholder: 'Enter your bio',
-            }),
-            number: Inputs.Check(
-              { one: '1', two: '2', three: '3' },
-              {
-                label: 'Pick any numbers',
-              }
-            ),
-            letter: Inputs.Radio(['A', 'B', 'C'], {
-              label: 'Pick one Letter',
-            }),
-            color: Inputs.Select(['red', 'blue', 'green'] as const, {
-              label: 'Pick a color',
-            }),
-            slider: Inputs.Slider({
-              label: 'Slider',
+            })
+          );
+          results.display(DisplayLabel('Bio'), bio);
+          const number = view(
+            'number',
+            Label('Pick any numbers'),
+            Inputs.Check({ one: '1', two: '2', three: '3' })
+          );
+          results.display(DisplayLabel('Numbers'), number);
+          const letter = view(
+            'letter',
+            Label('Pick one Letter'),
+            Inputs.Radio(['A', 'B', 'C'])
+          );
+          results.display(DisplayLabel('Letter'), letter);
+          const color = view(
+            'color',
+            Label('Pick a color'),
+            <div />,
+            Inputs.Select(['red', 'blue', 'green'] as const)
+          );
+          results.display(
+            DisplayLabel('Color'),
+            <Badge color={color}>{color}</Badge>
+          );
+          const slider = view(
+            'slider',
+            Label('Slider'),
+            Inputs.Slider({
               min: 0,
               max: 100,
-            }),
-            rangeSlider: Inputs.RangeSlider({
-              label: 'Range Slider',
+            })
+          );
+          results.display(DisplayLabel('Slider'), slider);
+          const rangeSlider = view(
+            'rangeSlider',
+            Label('Range Slider'),
+            Inputs.RangeSlider({
               min: 0,
               max: 100,
-            }),
-          })
-        );
-
-        const countries = await fetchCountries();
-        display(<div className="even:bg-gray-50">Select a country</div>);
-        const filteredCountries = view(
-          'countrySearch',
-          Inputs.Search(countries, {
-            label: 'Search',
-            placeholder: 'Search countries...',
-          })
-        );
-        const selectedCountry = view(
-          'country',
-          Inputs.Table(filteredCountries, {
-            getRowId: (country) => country.code,
-            className: 'h-[300px]',
-            label: 'Countries',
-          })
-        );
-
-        const { name, bio, number, letter, color, slider, rangeSlider } =
-          results;
-        display(
-          <>
-            <div className="text-2xl mt-4 py-2">Results</div>
-            <DataList.Root>
-              <DataList.Item>
-                <DataList.Label>Name</DataList.Label>
-                <DataList.Value>{name}</DataList.Value>
-              </DataList.Item>
-              <DataList.Item>
-                <DataList.Label>Bio</DataList.Label>
-                <DataList.Value>
-                  <div className="whitespace-pre">{bio}</div>
-                </DataList.Value>
-              </DataList.Item>
-              <DataList.Item>
-                <DataList.Label>Numbers</DataList.Label>
-                <DataList.Value>{number.join(', ')}</DataList.Value>
-              </DataList.Item>
-              <DataList.Item>
-                <DataList.Label>Letter</DataList.Label>
-                <DataList.Value>{letter}</DataList.Value>
-              </DataList.Item>
-              <DataList.Item>
-                <DataList.Label>Color</DataList.Label>
-                <DataList.Value>
-                  <Badge color={color}>{color}</Badge>
-                </DataList.Value>
-              </DataList.Item>
-              <DataList.Item>
-                <DataList.Label>Slider</DataList.Label>
-                <DataList.Value>{slider}</DataList.Value>
-              </DataList.Item>
-              <DataList.Item>
-                <DataList.Label>Range Slider</DataList.Label>
-                <DataList.Value>{rangeSlider.join(' - ')}</DataList.Value>
-              </DataList.Item>
-              <DataList.Item>
-                <DataList.Label>Country</DataList.Label>
-                <DataList.Value>{selectedCountry?.name}</DataList.Value>
-              </DataList.Item>
-            </DataList.Root>
-          </>
-        );
-      }}
-    </Reactlit>
+            })
+          );
+          results.display(
+            DisplayLabel('Range Slider'),
+            rangeSlider.join(' - ')
+          );
+          const countries = await fetchCountries();
+          display(<div className="font-semibold">Select a country</div>);
+          const filteredCountries = view(
+            'countrySearch',
+            Label('Search'),
+            Inputs.Search(countries, {
+              placeholder: 'Search countries...',
+            })
+          );
+          const selectedCountry = view(
+            'country',
+            Label('Countries'),
+            Inputs.Table(filteredCountries, {
+              getRowId: (country) => country.code,
+              className: 'h-[300px]',
+            })
+          );
+          results.display(
+            DisplayLabel('Country'),
+            <>
+              {selectedCountry?.code ? (
+                <img
+                  src={`https://flagsapi.com/${selectedCountry.code}/flat/64.png`}
+                />
+              ) : (
+                'Select a country'
+              )}
+            </>
+          );
+        }}
+      </Reactlit>
+    </DefaultRadixWrapper>
   );
 }

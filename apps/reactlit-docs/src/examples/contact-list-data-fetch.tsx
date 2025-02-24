@@ -1,7 +1,7 @@
 import { Button, Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';
-import { DataFetchingPlugin, FormInput, useReactlit } from '@reactlit/core';
-import { Inputs } from '@reactlit/radix';
+import { DataFetchingPlugin, useReactlit } from '@reactlit/core';
+import { Inputs, Label } from '@reactlit/radix';
 import { TopRightLoader } from './components/loader';
 import { ContactsMockService } from './mocks/contacts';
 
@@ -68,15 +68,13 @@ const ContactListApp = () => {
           <h3 style={{ paddingTop: '1rem' }}>Selected Contact Details</h3>
         );
         if (app.changed('selectedContact')) {
-          app.set('updates', selectedContact);
+          app.set('name', selectedContact.name);
+          app.set('email', selectedContact.email);
         }
-        const updates = app.view(
-          'updates',
-          FormInput({
-            name: Inputs.Text({ label: 'Name' }),
-            email: Inputs.Text({ label: 'Email' }),
-          })
-        );
+        const updates = {
+          name: app.view('name', Label('Name'), Inputs.Text()),
+          email: app.view('email', Label('Email'), Inputs.Text()),
+        };
         app.display(
           <Button
             onClick={async () => {

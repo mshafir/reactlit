@@ -16,6 +16,8 @@ export const AsyncButtonViewComponent = ({
   setValue,
   value,
   stateKey,
+  display,
+  view,
   ...props
 }: AsyncButtonInputProps & ViewComponentProps<boolean>) => {
   return (

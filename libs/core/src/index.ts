@@ -1,10 +1,11 @@
 export * from './reactlit';
+export * from './builtins/types';
+export { defineView, defineTransformView } from './builtins/view';
 export * from './hooks/use-reactlit';
 export * from './hooks/use-reactlit-state';
-export * from './utils/apply-wrapper';
-export * from './inputs/form.input';
+export * from './wrappers';
+export * from './inputs/layout.view';
 export * from './plugins/data-fetching';
-export * from './plugins/layout';
 
 // see https://github.com/mdx-js/mdx/issues/2487
 import type { JSX as Jsx } from 'react/jsx-runtime';

@@ -23,3 +23,36 @@ body {
 tr.rt-TableRow:nth-child(even) {
   background-color: var(--gray-2);
 }
+
+.overlay {
+  position: fixed;
+  cursor: pointer;
+  top: 4rem;
+  right: 2rem;
+  padding: 1rem;
+  background: var(--gray-2);
+  border: 1px solid #bbb;
+  border-radius: 0.5rem;
+  opacity: 0.8;
+  transition: all 0.2s;
+  z-index: 100;
+  width: 25%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  max-height: 3.5rem;
+}
+
+.overlay.open {
+  max-height: 45rem;
+}
+
+.overlay-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.overlay:hover {
+  opacity: 1;
+}
