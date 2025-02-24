@@ -4,11 +4,13 @@ import {
   LayoutView,
   useReactlit,
   useReactlitState,
+  defaultLayoutState,
 } from '@reactlit/core';
 import { Inputs, Label, RadixTheme } from '@reactlit/radix';
 
 export default function Starter() {
-  const [appState, setAppState] = useReactlitState<any>({
+  const [appState, setAppState] = useReactlitState({
+    layout1: defaultLayoutState(2),
     name: '',
     weight: 'regular',
     size: 1,

@@ -11,9 +11,10 @@ import {
   Reactlit,
   useReactlitState,
   Wrapper,
+  WrapperComponent,
 } from '@reactlit/core';
 import { DefaultRadixWrapper, Inputs, Label } from '@reactlit/radix';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 
 interface Country {
   name: string;
@@ -45,15 +46,15 @@ export async function fetchCountries(): Promise<Country[]> {
   }));
 }
 
-const DisplayLabel =
-  (label: string): Wrapper =>
-  ({ children }) =>
-    (
-      <DataList.Item>
-        <DataList.Label>{label}</DataList.Label>
-        <DataList.Value>{children}</DataList.Value>
-      </DataList.Item>
-    );
+const DisplayLabel = (label: string) => {
+  const DisplayLabelComponent: WrapperComponent = ({ children }) => (
+    <DataList.Item>
+      <DataList.Label>{label}</DataList.Label>
+      <DataList.Value>{children}</DataList.Value>
+    </DataList.Item>
+  );
+  return DisplayLabelComponent;
+};
 
 const ResultsWrapper: Wrapper = ({ children }) => {
   const [open, setOpen] = useState(true);

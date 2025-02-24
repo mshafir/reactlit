@@ -1,5 +1,5 @@
 import { Debug, useDebug } from '@/components/debug-toggle';
-import { Box, Text } from '@radix-ui/themes';
+import { Text } from '@radix-ui/themes';
 import { textPropDefs } from '@radix-ui/themes/props';
 import {
   DataFetchingPlugin,
@@ -9,7 +9,7 @@ import {
 import { DefaultRadixWrapper, Inputs, Label } from '@reactlit/radix';
 
 export default function Starter() {
-  const [appState, setAppState] = useReactlitState<any>({
+  const [appState, setAppState] = useReactlitState({
     name: '',
     weight: 'regular',
     size: 1,

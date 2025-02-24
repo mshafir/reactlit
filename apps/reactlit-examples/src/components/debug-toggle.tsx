@@ -4,9 +4,14 @@ import { Wrapper } from '@reactlit/core';
 import { Bug, BugOff } from 'lucide-react';
 import { createContext, useContext, useState } from 'react';
 
-const DebugContext = createContext({
+type DebugContextType = {
+  debug: boolean;
+  setDebug: (debug: boolean) => void;
+};
+
+const DebugContext = createContext<DebugContextType>({
   debug: false,
-  setDebug: (debug: boolean) => {},
+  setDebug: () => {},
 });
 
 export const DebugToggle = () => {

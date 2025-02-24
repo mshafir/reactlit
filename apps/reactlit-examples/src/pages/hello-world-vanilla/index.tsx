@@ -4,7 +4,7 @@ import { Inputs, Label } from '@reactlit/vanilla';
 const LabelProps = { className: 'flex items-center gap-2 mb-2' };
 
 export default function HelloWorldVanilla() {
-  const [appState, setAppState] = useReactlitState<any>({
+  const [appState, setAppState] = useReactlitState({
     name: '',
     pickedNumbers: [],
     pickedColors: [],

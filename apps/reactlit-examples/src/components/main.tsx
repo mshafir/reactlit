@@ -1,10 +1,10 @@
-import { Box, Button, Container, Flex, Text } from '@radix-ui/themes';
+import { Box, Container, Flex, Text } from '@radix-ui/themes';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Head from 'next/head';
+import React from 'react';
+import { DebugToggle } from './debug-toggle';
 import { Menu } from './menu';
 import { ThemeToggle } from './theme-toggle';
-import React, { useContext } from 'react';
-import { DebugToggle } from './debug-toggle';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
