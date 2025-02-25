@@ -1,5 +1,11 @@
 # @reactlit/core
 
+## 0.2.0
+
+### Minor Changes
+
+- 228c219: Make layout plugin into a view, wrapper functionality
+
 ## 0.1.4
 
 ### Patch Changes
