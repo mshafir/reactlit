@@ -1,4 +1,4 @@
-import { useDebug } from '@/components/debug-toggle';
+import { Debug, useDebug } from '@/components/debug-toggle';
 import {
   Badge,
   ChevronDownIcon,
@@ -60,14 +60,16 @@ const ResultsWrapper: Wrapper = ({ children }) => {
   const [open, setOpen] = useState(true);
   return (
     <div
-      className={`overlay ${open ? 'open' : ''}`}
+      className={`flex flex-col overlay ${open ? 'open' : ''}`}
       onClick={() => setOpen(!open)}
     >
       <h3 className="overlay-header">
         {open ? <ChevronDownIcon /> : <ThickChevronRightIcon />}
         Results
       </h3>
-      <DataList.Root orientation={'vertical'}>{children}</DataList.Root>
+      <div className="overflow-y-auto flex-auto">
+        <DataList.Root orientation={'vertical'}>{children}</DataList.Root>
+      </div>
     </div>
   );
 };
@@ -84,6 +86,7 @@ export default function RadixInputs() {
     color: 'red',
     slider: 0,
     rangeSlider: [20, 80],
+    enableLetter: true,
   });
   const debug = useDebug();
   return (
@@ -92,6 +95,9 @@ export default function RadixInputs() {
         {async ({ display, view }) => {
           display(<div className="text-2xl">Inputs test</div>);
           const [results] = view('results', ResultsWrapper, LayoutView(1));
+          const displayResult = (label: string, value: React.ReactNode) => {
+            results.display(Debug, DisplayLabel(label), value);
+          };
           const name = view(
             'name',
             Label('Name'),
@@ -99,7 +105,7 @@ export default function RadixInputs() {
               placeholder: 'Enter your name',
             })
           );
-          results.display(DisplayLabel('Name'), name);
+          displayResult('Name', name);
           const bio = view(
             'bio',
             Label('Bio'),
@@ -107,29 +113,35 @@ export default function RadixInputs() {
               placeholder: 'Enter your bio',
             })
           );
-          results.display(DisplayLabel('Bio'), bio);
+          displayResult('Bio', bio);
           const number = view(
             'number',
             Label('Pick any numbers'),
             Inputs.Check({ one: '1', two: '2', three: '3' })
           );
-          results.display(DisplayLabel('Numbers'), number);
-          const letter = view(
-            'letter',
-            Label('Pick one Letter'),
-            Inputs.Radio(['A', 'B', 'C'])
-          );
-          results.display(DisplayLabel('Letter'), letter);
+          displayResult('Numbers', number);
+          if (
+            view(
+              'enableLetter',
+              Label('Letter Selection'),
+              <div />,
+              Inputs.Switch()
+            )
+          ) {
+            const letter = view(
+              'letter',
+              Label('Pick one Letter'),
+              Inputs.Radio(['A', 'B', 'C'])
+            );
+            displayResult('Letter', letter);
+          }
           const color = view(
             'color',
             Label('Pick a color'),
             <div />,
             Inputs.Select(['red', 'blue', 'green'] as const)
           );
-          results.display(
-            DisplayLabel('Color'),
-            <Badge color={color}>{color}</Badge>
-          );
+          displayResult('Color', <Badge color={color}>{color}</Badge>);
           const slider = view(
             'slider',
             Label('Slider'),
@@ -138,7 +150,7 @@ export default function RadixInputs() {
               max: 100,
             })
           );
-          results.display(DisplayLabel('Slider'), slider);
+          displayResult('Slider', slider);
           const rangeSlider = view(
             'rangeSlider',
             Label('Range Slider'),
@@ -147,10 +159,7 @@ export default function RadixInputs() {
               max: 100,
             })
           );
-          results.display(
-            DisplayLabel('Range Slider'),
-            rangeSlider.join(' - ')
-          );
+          displayResult('Range Slider', rangeSlider.join(' - '));
           const countries = await fetchCountries();
           display(<div className="font-semibold">Select a country</div>);
           const filteredCountries = view(
@@ -168,8 +177,8 @@ export default function RadixInputs() {
               className: 'h-[300px]',
             })
           );
-          results.display(
-            DisplayLabel('Country'),
+          displayResult(
+            'Country',
             <>
               {selectedCountry?.code ? (
                 <img

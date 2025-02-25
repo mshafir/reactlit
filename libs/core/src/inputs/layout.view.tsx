@@ -46,8 +46,12 @@ export function createLayoutSlot<T extends StateBase = StateBase>(
   ctx: Pick<ReactlitContext<T>, 'display' | 'view'>,
   t: ReturnType<typeof tunnel>
 ): LayoutSlot<T> {
-  const TunnelWrapper: Wrapper = ({ stateKey, children }) => {
-    return <t.In childKey={stateKey}>{children}</t.In>;
+  const TunnelWrapper: Wrapper = ({ stateKey, position, children }) => {
+    return (
+      <t.In childKey={stateKey} order={position}>
+        {children}
+      </t.In>
+    );
   };
   return {
     display(...args) {

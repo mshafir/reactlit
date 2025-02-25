@@ -14,6 +14,8 @@ import { useReactlitSet } from './builtins/set';
 import { ReactlitProps, StateBase } from './builtins/types';
 import { useReactlitView } from './builtins/view';
 import { useReactlitState } from './hooks/use-reactlit-state';
+import { useIsomorphicLayoutEffect } from './utils/use-isomorphic-layout-effect';
+import { uniqueBy } from './utils/unique-by';
 
 const defaultRenderError = ({ error }) => (
   <div style={{ color: 'red' }}>
@@ -55,7 +57,7 @@ export function Reactlit<T extends StateBase = any>({
 
   const renderLock = useRef(false);
   const renderAfter = useRef(false);
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     async function runScript() {
       setRendering(true);
       if (renderLock.current) {
@@ -103,7 +105,7 @@ export function Reactlit<T extends StateBase = any>({
 
   return (
     <>
-      {renderState.elements.map(([key, node]) => (
+      {uniqueBy(renderState.elements, '0').map(([key, node]) => (
         <Fragment key={key}>{node}</Fragment>
       ))}
       {renderLoading?.(rendering) ?? <></>}
