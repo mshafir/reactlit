@@ -1,5 +1,13 @@
 # @reactlit/vanilla
 
+## 0.2.1
+
+### Patch Changes
+
+- 0989641: fix to tunnel ordering
+- Updated dependencies [0989641]
+  - @reactlit/core@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
