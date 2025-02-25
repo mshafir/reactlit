@@ -43,7 +43,7 @@ tr.rt-TableRow:nth-child(even) {
 }
 
 .overlay.open {
-  max-height: 45rem;
+  max-height: 80%;
 }
 
 .overlay-header {

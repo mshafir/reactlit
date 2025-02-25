@@ -5,15 +5,12 @@ import { LabelType } from '../label';
 export type SwitchInputProps = Omit<
   SwitchProps,
   'checked' | 'onCheckedChange' | 'value' | 'onValueChange'
-> & {
-  label?: LabelType;
-};
+>;
 
 export const SwitchInputComponent = ({
   value,
   stateKey,
   setValue,
-  label,
   display,
   view,
   ...props

@@ -5,7 +5,6 @@ import { useDebouncedCallback } from 'use-debounce';
 import { LabelType } from '../label';
 
 export type TextInputProps = Omit<TextField.RootProps, 'value' | 'children'> & {
-  label?: LabelType;
   children?:
     | React.ReactNode
     | ((props: ViewComponentProps<string>) => React.ReactNode);
@@ -17,7 +16,6 @@ export const TextInputComponent = ({
   stateKey,
   setValue,
   onChange,
-  label,
   debounceDelay = 200,
   children,
   display,

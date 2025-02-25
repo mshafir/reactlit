@@ -1,26 +1,31 @@
 import React, { Fragment } from 'react';
 import { create, StoreApi } from 'zustand';
 import { useIsomorphicLayoutEffect } from './use-isomorphic-layout-effect';
+import { uniqueBy } from './unique-by';
 
 // modified from tunnel-rat
 
-type Props = { childKey: string; children: React.ReactNode };
+type Props = { childKey: string; order: number; children: React.ReactNode };
 
 type State = {
-  current: Array<{ childKey: string; node: React.ReactNode }>;
+  current: Array<Props>;
   version: number;
   set: StoreApi<State>['setState'];
 };
 
+function sortByOrder(array: Props[]) {
+  return array.sort((a, b) => a.order - b.order);
+}
+
 export default function tunnel() {
   const useStore = create<State>((set) => ({
-    current: new Array<{ childKey: string; node: React.ReactNode }>(),
+    current: new Array<Props>(),
     version: 0,
     set,
   }));
 
   return {
-    In: ({ childKey, children }: Props) => {
+    In: ({ childKey, order, children }: Props) => {
       const set = useStore((state) => state.set);
       const version = useStore((state) => state.version);
 
@@ -40,22 +45,25 @@ export default function tunnel() {
         set(({ current }) => {
           const existing = current.findIndex((c) => c.childKey === childKey);
           return {
-            current:
+            current: sortByOrder(
               existing !== -1
                 ? [
                     ...current.slice(0, existing),
-                    { childKey, node: children },
+                    { childKey, order, children },
                     ...current.slice(existing + 1),
                   ]
-                : [...current, { childKey, node: children }],
+                : [...current, { childKey, order, children }]
+            ),
           };
         });
 
         // remove the cleanup logic so that nodes stay in position, the key logic keeps things from getting too messy
-        // return () =>
-        //   set(({ current }) => ({
-        //     current: current.filter((c) => c.node !== children),
-        //   }));
+        return () =>
+          set(({ current }) => {
+            return {
+              current: current.filter((c) => c.childKey !== childKey),
+            };
+          });
       }, [children, version]);
 
       return null;
@@ -65,8 +73,8 @@ export default function tunnel() {
       const current = useStore((state) => state.current);
       return (
         <>
-          {current.map((c) => (
-            <Fragment key={c.childKey}>{c.node}</Fragment>
+          {uniqueBy(current, 'childKey').map((c) => (
+            <Fragment key={c.childKey}>{c.children}</Fragment>
           ))}
         </>
       );
