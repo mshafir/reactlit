@@ -1,6 +1,6 @@
 import { Button, Callout, Spinner } from '@radix-ui/themes';
 import { DataFetchingPlugin, useReactlit } from '@reactlit/core';
-import { DefaultRadixWrapper, Inputs } from '@reactlit/radix';
+import { DefaultRadixWrapper, Inputs, Label } from '@reactlit/radix';
 import { InfoIcon } from 'lucide-react';
 import { TodoService } from '../../mocks/todos';
 
@@ -67,17 +67,11 @@ export default function TodoList() {
               set('task', selectedTodo.task);
               set('completed', selectedTodo.completed);
             }
-            const task = view(
-              'task',
-              Inputs.Text({
-                label: 'Task',
-              })
-            );
+            const task = view('task', Label('Task'), Inputs.Text());
             const completed = view(
               'completed',
-              Inputs.Switch({
-                label: 'Completed',
-              })
+              Label('Completed'),
+              Inputs.Switch()
             );
             view(
               'updaing',

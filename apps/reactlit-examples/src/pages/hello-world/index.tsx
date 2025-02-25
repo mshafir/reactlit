@@ -1,5 +1,5 @@
 import { Reactlit, useReactlitState } from '@reactlit/core';
-import { Inputs } from '@reactlit/radix';
+import { Inputs, Label } from '@reactlit/radix';
 
 export default function HelloWorld() {
   const [appState, setAppState] = useReactlitState({
@@ -11,8 +11,8 @@ export default function HelloWorld() {
         display(<div className="text-2xl">Hello World</div>);
         const name = view(
           'name',
+          Label('Name'),
           Inputs.Text({
-            label: 'Name',
             placeholder: 'Enter your name',
           })
         );

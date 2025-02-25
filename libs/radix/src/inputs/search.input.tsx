@@ -37,7 +37,6 @@ export function SearchInput<T>(
     (viewProps) => (
       <TextInputComponent
         {...viewProps}
-        label={'Search'}
         placeholder={'Search...'}
         type={'search' as const}
         {...props}
