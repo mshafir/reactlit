@@ -1,57 +1,51 @@
 {
-  "name": "@reactlit/radix",
-  "description": "Radix-ui themes input components for Reactlit",
-  "version": "0.2.1",
-  "license": "MIT",
-  "homepage": "https://github.com/mshafir/reactlit",
-  "repository": "github:mshafir/reactlit",
-  "author": "Michael Shafir <michael.shafir@gmail.com>",
-  "type": "module",
-  "main": "./dist/index.js",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
-  "scripts": {
-    "prebuild": "cp ../../README.md .",
-    "build": "tsup && tsc",
-    "dev": "tsup --dts --watch",
-    "clean": "rm -rf node_modules && rm -rf .turbo && rm -rf dist",
-    "lint": "eslint src/**/*.ts* --fix"
-  },
-  "dependencies": {
-    "@radix-ui/themes": "^3.1.6",
-    "@reactlit/core": "workspace:*",
-    "clsx": "^2.1.1",
-    "fuse.js": "^7.0.0",
-    "lucide-react": "^0.468.0",
-    "tailwind-merge": "^2.5.5",
-    "use-debounce": "^10.0.4"
-  },
-  "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "eslint": "^7.23.0",
-    "eslint-config-next": "^12.0.8",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "7.28.0",
-    "prettier": "^2.8.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tsup": "^8.3.5",
-    "typescript": "latest"
-  },
-  "peerDependencies": {
-    "react": ">=17 <=19",
-    "react-dom": ">=17 <=19"
-  }
+	"name": "@reactlit/radix",
+	"description": "Radix-ui themes input components for Reactlit",
+	"version": "0.2.1",
+	"license": "MIT",
+	"homepage": "https://github.com/mshafir/reactlit",
+	"repository": "github:mshafir/reactlit",
+	"author": "Michael Shafir <michael.shafir@gmail.com>",
+	"type": "module",
+	"main": "./dist/index.js",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": ["dist"],
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"scripts": {
+		"prebuild": "cp ../../README.md .",
+		"build": "tsup && tsc",
+		"dev": "tsup --dts --watch",
+		"clean": "rm -rf node_modules && rm -rf .turbo && rm -rf dist",
+		"lint": "biome check --write"
+	},
+	"dependencies": {
+		"@radix-ui/themes": "^3.1.6",
+		"@reactlit/core": "workspace:*",
+		"clsx": "^2.1.1",
+		"fuse.js": "^7.0.0",
+		"lucide-react": "^0.468.0",
+		"tailwind-merge": "^2.5.5",
+		"use-debounce": "^10.0.4"
+	},
+	"devDependencies": {
+		"@types/react": "^19.0.1",
+		"@types/react-dom": "^19.0.2",
+		"@biomejs/biome": "1.9.4",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"tsup": "^8.3.5",
+		"typescript": "*"
+	},
+	"peerDependencies": {
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0"
+	}
 }

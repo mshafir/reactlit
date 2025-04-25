@@ -1,17 +1,17 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "jsx": "react-jsx",
-    "module": "ESNext",
-    "target": "ES6",
-    "allowSyntheticDefaultImports": true,
-    "lib": ["ES2021", "DOM"],
-    "moduleResolution": "node",
-    "declaration": true,
-    "emitDeclarationOnly": true
-  },
-  "exclude": ["node_modules", "dist"],
-  "include": ["src"]
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": "src",
+		"jsx": "react-jsx",
+		"module": "ESNext",
+		"target": "ES6",
+		"allowSyntheticDefaultImports": true,
+		"lib": ["ES2021", "DOM"],
+		"moduleResolution": "node",
+		"declaration": true,
+		"emitDeclarationOnly": true
+	},
+	"exclude": ["node_modules", "dist"],
+	"include": ["src"]
 }

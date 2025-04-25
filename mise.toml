@@ -1,0 +1,22 @@
+[tools]
+node = "22.14.0"
+pnpm = "10.7.1"
+
+[tasks.build]
+description = "Build everything"
+run = "pnpm run build"
+
+[tasks.rebuild]
+run = "pnpm run rebuild"
+
+[tasks.dev]
+description = "Run development"
+run = "pnpm run dev"
+
+[tasks.devdocs]
+description = "Run tests"
+run = "pnpm run dev:docs"
+
+[tasks.format]
+description = "Reformat code"
+run = "pnpm run format"
