@@ -1,19 +1,19 @@
-export * from './reactlit';
-export * from './builtins/types';
-export { defineView, defineTransformView } from './builtins/view';
-export * from './hooks/use-reactlit';
-export * from './hooks/use-reactlit-state';
-export * from './wrappers';
-export * from './inputs/layout.view';
-export * from './plugins/data-fetching';
+export * from "./reactlit";
+export * from "./builtins/types";
+export { defineView, defineTransformView } from "./builtins/view";
+export * from "./hooks/use-reactlit";
+export * from "./hooks/use-reactlit-state";
+export * from "./wrappers";
+export * from "./inputs/layout.view";
+export * from "./plugins/data-fetching";
 
 // see https://github.com/mdx-js/mdx/issues/2487
-import type { JSX as Jsx } from 'react/jsx-runtime';
+import type { JSX as Jsx } from "react/jsx-runtime";
 
 declare global {
-  namespace JSX {
-    type ElementClass = Jsx.ElementClass;
-    type Element = Jsx.Element;
-    type IntrinsicElements = Jsx.IntrinsicElements;
-  }
+	namespace JSX {
+		type ElementClass = Jsx.ElementClass;
+		type Element = Jsx.Element;
+		type IntrinsicElements = Jsx.IntrinsicElements;
+	}
 }

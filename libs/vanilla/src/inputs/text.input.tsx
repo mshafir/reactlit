@@ -1,44 +1,44 @@
-import { defineView, ViewComponentProps } from '@reactlit/core';
-import { DetailedHTMLProps } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
+import { ViewComponentProps, defineView } from "@reactlit/core";
+import { DetailedHTMLProps } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 export type TextInputProps = Omit<
-  DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  >,
-  'value'
+	DetailedHTMLProps<
+		React.InputHTMLAttributes<HTMLInputElement>,
+		HTMLInputElement
+	>,
+	"value"
 > & {
-  debounceDelay?: number;
+	debounceDelay?: number;
 };
 
 export const TextInputComponent = ({
-  value,
-  stateKey,
-  display,
-  view,
-  setValue,
-  onChange,
-  debounceDelay = 200,
-  ...props
+	value,
+	stateKey,
+	display,
+	view,
+	setValue,
+	onChange,
+	debounceDelay = 200,
+	...props
 }: TextInputProps & ViewComponentProps<string>) => {
-  const debouncedSetValue = useDebouncedCallback((value) => {
-    setValue(value);
-  }, debounceDelay);
-  return (
-    <input
-      type="text"
-      defaultValue={value}
-      onChange={(e) => {
-        debouncedSetValue(e.target.value);
-        onChange?.(e);
-      }}
-      {...props}
-    />
-  );
+	const debouncedSetValue = useDebouncedCallback((value) => {
+		setValue(value);
+	}, debounceDelay);
+	return (
+		<input
+			type="text"
+			defaultValue={value}
+			onChange={(e) => {
+				debouncedSetValue(e.target.value);
+				onChange?.(e);
+			}}
+			{...props}
+		/>
+	);
 };
 
 export const TextInput = (props: TextInputProps) =>
-  defineView<string>((viewProps) => (
-    <TextInputComponent {...viewProps} {...props} />
-  ));
+	defineView<string>((viewProps) => (
+		<TextInputComponent {...viewProps} {...props} />
+	));

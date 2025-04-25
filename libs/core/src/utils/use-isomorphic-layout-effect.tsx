@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // taken from tunnel-rat
 
@@ -12,14 +12,16 @@ import React from 'react';
  * @see https://github.com/facebook/react/issues/14927
  */
 export const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' &&
-  (window.document?.createElement ||
-    window.navigator?.product === 'ReactNative')
-    ? React.useLayoutEffect
-    : React.useEffect;
+	typeof window !== "undefined" &&
+	(window.document?.createElement ||
+		window.navigator?.product === "ReactNative")
+		? React.useLayoutEffect
+		: React.useEffect;
 
 export function useMutableCallback<T>(fn: T) {
-  const ref = React.useRef<T>(fn);
-  useIsomorphicLayoutEffect(() => void (ref.current = fn), [fn]);
-  return ref;
+	const ref = React.useRef<T>(fn);
+	useIsomorphicLayoutEffect(() => {
+		ref.current = fn;
+	}, [fn]);
+	return ref;
 }

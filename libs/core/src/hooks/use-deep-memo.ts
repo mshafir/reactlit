@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { deepEqual } from '../utils/deep-equal';
+import { useRef } from "react";
+import { deepEqual } from "../utils/deep-equal";
 
 /**
  * Memoize a result using deep equality. This hook has two advantages over
@@ -9,14 +9,14 @@ import { deepEqual } from '../utils/deep-equal';
  * optimization (see https://reactjs.org/docs/hooks-reference.html#usememo).
  */
 export function useDeepMemo<TKey, TValue>(
-  memoFn: () => TValue,
-  key: TKey
+	memoFn: () => TValue,
+	key: TKey,
 ): TValue {
-  const ref = useRef<{ key: TKey; value: TValue }>(null);
+	const ref = useRef<{ key: TKey; value: TValue }>(null);
 
-  if (!ref.current || !deepEqual(key, ref.current.key)) {
-    ref.current = { key, value: memoFn() };
-  }
+	if (!ref.current || !deepEqual(key, ref.current.key)) {
+		ref.current = { key, value: memoFn() };
+	}
 
-  return ref.current.value;
+	return ref.current.value;
 }

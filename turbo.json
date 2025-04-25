@@ -1,37 +1,25 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
-  "tasks": {
-    "prebuild": {
-      "cache": false
-    },
-    "build": {
-      "dependsOn": [
-        "prebuild",
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        ".astro/**",
-        "!.next/cache/**"
-      ]
-    },
-    "test": {
-      "dependsOn": [
-        "build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
-    },
-    "lint": {
-      "outputs": []
-    },
-    "dev": {
-      "cache": false
-    },
-    "clean": {
-      "cache": false
-    }
-  }
+	"$schema": "https://turborepo.org/schema.json",
+	"tasks": {
+		"prebuild": {
+			"cache": false
+		},
+		"build": {
+			"dependsOn": ["prebuild", "^build"],
+			"outputs": ["dist/**", ".next/**", ".astro/**", "!.next/cache/**"]
+		},
+		"test": {
+			"dependsOn": ["build"],
+			"outputs": ["coverage/**"]
+		},
+		"lint": {
+			"outputs": []
+		},
+		"dev": {
+			"cache": false
+		},
+		"clean": {
+			"cache": false
+		}
+	}
 }
